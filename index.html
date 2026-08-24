@@ -800,6 +800,38 @@ td{ color:#c4c4cf; }
   .mobile-menu{ display:block; }
   .grid, .dash-stats{ grid-template-columns:1fr; }
 }
+
+/* INVYX ENHANCEMENT LAYER */
+@keyframes invyxGlow{0%,100%{filter:drop-shadow(0 0 0 rgba(139,92,246,0))}50%{filter:drop-shadow(0 0 18px rgba(139,92,246,.32))}}
+@keyframes invyxShimmer{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+@keyframes invyxRise{from{opacity:0;transform:translateY(16px) scale(.985)}to{opacity:1;transform:none}}
+@keyframes invyxMessage{from{opacity:0;transform:translateY(9px) scale(.97)}to{opacity:1;transform:none}}
+@keyframes invyxCover{0%,100%{transform:translateY(0) rotate(0deg);opacity:.75}50%{transform:translateY(-12px) rotate(2deg);opacity:1}}
+.logo,.points,.avatar{animation:invyxGlow 4s ease-in-out infinite}
+.card,.stat-card,.friend-item,.request-card{animation:invyxRise .45s ease both}
+.card:hover,.stat-card:hover{transform:translateY(-7px) scale(1.008)}
+.btn-primary{background-size:180% 180%;animation:invyxShimmer 7s ease infinite}
+.msg-bubble{animation:invyxMessage .22s ease both}
+.image-attach-btn{width:42px;height:42px;display:grid;place-items:center;border:1px solid var(--border2);border-radius:50%;background:rgba(255,255,255,.045);color:#fff;font-size:18px;transition:.2s ease}
+.image-attach-btn:hover{transform:translateY(-2px) rotate(-4deg);background:rgba(139,92,246,.14)}
+.chat-image{display:block;width:min(320px,100%);max-height:320px;object-fit:cover;border-radius:15px;margin-top:8px;border:1px solid rgba(255,255,255,.14);cursor:zoom-in;transition:transform .25s ease,box-shadow .25s ease}
+.chat-image:hover{transform:scale(1.015);box-shadow:0 18px 45px rgba(0,0,0,.35)}
+.profile-shell{position:relative;overflow:visible;padding:2px;margin:28px 0}
+.profile-shell:before,.profile-shell:after{content:"";position:absolute;top:5%;bottom:5%;width:8px;border-radius:999px;opacity:0;pointer-events:none;transition:opacity .35s ease,filter .35s ease}
+.profile-shell:before{left:-18px;background:linear-gradient(180deg,#ec4899,#8b5cf6,#22d3ee);box-shadow:0 0 35px rgba(139,92,246,.5)}
+.profile-shell:after{right:-18px;background:linear-gradient(180deg,#22d3ee,#3b82f6,#ec4899);box-shadow:0 0 35px rgba(34,211,238,.45)}
+.profile-shell.cover-active:before,.profile-shell.cover-active:after{opacity:.9;animation:invyxCover 4s ease-in-out infinite}
+.profile-shell.cover-active:after{animation-delay:-1.8s}
+.profile-card{position:relative;z-index:1;padding:22px;border:1px solid var(--border2);border-radius:26px;background:linear-gradient(145deg,rgba(255,255,255,.055),rgba(255,255,255,.015)),#0b0b12;box-shadow:var(--shadow);overflow:hidden}
+.profile-card:after{content:"";position:absolute;inset:-40%;background:conic-gradient(from 90deg,transparent,rgba(139,92,246,.08),transparent 25%);animation:spin 12s linear infinite;pointer-events:none}
+@keyframes spin{to{transform:rotate(360deg)}}
+.profile-avatar-wrap{position:relative;width:92px;height:92px;flex:0 0 92px}
+.profile-avatar{width:92px;height:92px;border-radius:28px;object-fit:cover;display:grid;place-items:center;background:var(--gradient2);font-size:34px;font-weight:950;border:1px solid rgba(255,255,255,.14);box-shadow:0 18px 45px rgba(0,0,0,.35)}
+.profile-avatar-edit{position:absolute;right:-6px;bottom:-6px;width:32px;height:32px;border-radius:50%;border:1px solid rgba(255,255,255,.18);background:#141421;color:#fff;cursor:pointer}
+.profile-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+.permission-note{margin-top:10px;padding:10px 12px;border-radius:12px;background:rgba(139,92,246,.06);border:1px solid rgba(139,92,246,.14);color:var(--muted);font-size:12px}
+@media(max-width:700px){.profile-shell:before{left:-7px}.profile-shell:after{right:-7px}.chat-input-area{flex-wrap:wrap}}
+
 </style>
 </head>
 
@@ -898,6 +930,8 @@ td{ color:#c4c4cf; }
       </div>
       <div class="chat-messages" id="chatMessages"></div>
       <div class="chat-input-area">
+        <input type="file" id="chatImageInput" accept="image/*" hidden onchange="sendChatImage(this)">
+        <button class="image-attach-btn" type="button" onclick="document.getElementById('chatImageInput').click()" title="Send picture">📷</button>
         <input id="chatInput" placeholder="Write a message..." onkeydown="if(event.key==='Enter') sendMessage()">
         <button class="btn btn-primary btn-small" onclick="sendMessage()">Send</button>
       </div>
@@ -1006,6 +1040,8 @@ td{ color:#c4c4cf; }
       <button onclick="ownerSection('adminKeys',this)">Admin Keys Generator</button>
       <button onclick="ownerSection('ownerKeys',this)">Owner Keys Generator</button>
       <button onclick="ownerSection('users',this)">Users & Points Control 💎</button>
+      <button onclick="ownerSection('profilePermissions',this)">Profile Permissions ✨</button>
+      <button onclick="ownerSection('pricing',this)">Pricing & Packages 💰</button>
       <button onclick="ownerSection('guides',this)">Guides</button>
       <button onclick="ownerSection('logs',this)">Security Logs</button>
     </aside>
@@ -1111,6 +1147,17 @@ td{ color:#c4c4cf; }
   </div>
 </div>
 
+<div class="modal" id="nameChangeModal">
+  <div class="modal-box">
+    <div class="modal-head"><h2>Change your name</h2><button class="close" onclick="closeModal('nameChangeModal')">×</button></div>
+    <p style="color:var(--muted);margin-bottom:18px;line-height:1.6">Your first name change is included. Additional changes can only be granted by the Owner.</p>
+    <form onsubmit="changeUsername(event)">
+      <div class="field"><label>New username</label><input id="newUsername" minlength="3" required></div>
+      <button class="btn btn-primary">Save new name</button>
+    </form>
+  </div>
+</div>
+
 <div class="modal" id="roleKeyModal">
   <div class="modal-box">
     <div class="modal-head"><h2>Redeem Admin / Owner Key</h2><button class="close" onclick="closeModal('roleKeyModal')">×</button></div>
@@ -1159,6 +1206,15 @@ const DEFAULT_DB = {
   ownedGuides: [],
   adminKeys: [],
   ownerKeys: [],
+  settings: {
+    coverPrice: 1000,
+    pointPackages: [
+      { amount: 100, price: 5 },
+      { amount: 500, price: 20 },
+      { amount: 1000, price: 35 },
+      { amount: 2500, price: 75 }
+    ]
+  },
   logs: [
     { id: "l1", action: "Persistent Memory Initialized", user: "SYSTEM", timestamp: new Date().toISOString() }
   ]
@@ -1183,6 +1239,15 @@ function loadDB(){
       ownedGuides: parsed.ownedGuides || [],
       adminKeys: parsed.adminKeys || [],
       ownerKeys: parsed.ownerKeys || [],
+      settings: parsed.settings || {
+        coverPrice: 1000,
+        pointPackages: [
+          { amount: 100, price: 5 },
+          { amount: 500, price: 20 },
+          { amount: 1000, price: 35 },
+          { amount: 2500, price: 75 }
+        ]
+      },
       logs: parsed.logs || []
     };
   } catch(e) {
@@ -1246,6 +1311,11 @@ function ensureOwner(){
       role: "OWNER",
       points: 5000,
       banned: false,
+      pfp: "",
+      nameChangesUsed: 0,
+      extraNameChanges: 999,
+      coverUnlocked: true,
+      coverEnabled: true,
       joined: new Date().toISOString()
     });
     saveDB();
@@ -1281,7 +1351,11 @@ function updateNav(){
 
   if(u){
     document.getElementById("navPoints").textContent = `${u.points||0} XP`;
-    document.getElementById("navAvatar").textContent = u.username.charAt(0).toUpperCase();
+    if(u.pfp){
+      document.getElementById("navAvatar").innerHTML = `<img src="${u.pfp}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
+    }else{
+      document.getElementById("navAvatar").textContent = u.username.charAt(0).toUpperCase();
+    }
     document.getElementById("authBtn").textContent = "Logout";
     document.getElementById("authBtn").onclick = logout;
   }else{
@@ -1396,9 +1470,14 @@ function register(e){
     passwordHash: hashPassword(password), 
     gender, 
     role: assignedRole, 
-    points: 100, 
+    points: 100,
     ownedGuides: [],
-    banned: false, 
+    banned: false,
+    pfp: "",
+    nameChangesUsed: 0,
+    extraNameChanges: 0,
+    coverUnlocked: false,
+    coverEnabled: false,
     joined: new Date().toISOString() 
   };
 
@@ -1439,7 +1518,7 @@ function logout(){
 }
 
 /* TRANSACTION & OWNER POINTS MANAGEMENT SYSTEM */
-function openBuyModal(){ openModal('buyPointsModal'); }
+function openBuyModal(){ refreshBuyPackageOptions(); openModal('buyPointsModal'); }
 
 function openGivePointsModal(userId, username){
   document.getElementById("givePointsUserId").value = userId;
@@ -1565,7 +1644,7 @@ function renderChat(){
       div.className = "request-card";
       div.innerHTML = `
         <div style="display:flex; align-items:center; gap:10px">
-          <div class="friend-avatar" style="width:34px; height:34px; font-size:12px">${sender.username.charAt(0).toUpperCase()}</div>
+          ${avatarMarkup(sender, "friend-avatar", "width:34px;height:34px;font-size:12px")}
           <div class="friend-info">
             <strong>${sender.username}</strong>
             <small style="color:var(--muted)">Wants to connect</small>
@@ -1596,7 +1675,7 @@ function renderChat(){
       div.className = "friend-item";
       div.style.opacity = "0.6";
       div.innerHTML = `
-        <div class="friend-avatar">${target.username.charAt(0).toUpperCase()}</div>
+        ${avatarMarkup(target, "friend-avatar")}
         <div class="friend-info">
           <strong>${target.username}</strong>
           <small>Pending Acceptance...</small>
@@ -1629,7 +1708,7 @@ function renderChat(){
       div.className = `friend-item ${activeFriendId === friendUser.id ? 'active' : ''}`;
       div.onclick = () => selectChatFriend(friendUser);
       div.innerHTML = `
-        <div class="friend-avatar">${friendUser.username.charAt(0).toUpperCase()}</div>
+        ${avatarMarkup(friendUser, "friend-avatar")}
         <div class="friend-info">
           <strong>${friendUser.username}</strong>
           <small>${friendUser.role}</small>
@@ -1644,7 +1723,12 @@ function renderChat(){
 
 function selectChatFriend(friendUser){
   activeFriendId = friendUser.id;
-  document.getElementById("activeChatAvatar").textContent = friendUser.username.charAt(0).toUpperCase();
+  const activeAvatar = document.getElementById("activeChatAvatar");
+  if(friendUser.pfp){
+    activeAvatar.innerHTML = `<img src="${friendUser.pfp}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
+  }else{
+    activeAvatar.textContent = friendUser.username.charAt(0).toUpperCase();
+  }
   document.getElementById("activeChatName").textContent = friendUser.username;
   document.getElementById("activeChatStatus").textContent = "Active Direct Message";
   renderChat();
@@ -1672,11 +1756,31 @@ function loadMessages(){
     const isSent = m.senderId === u.id;
     const div = document.createElement("div");
     div.className = `msg-bubble ${isSent ? 'sent' : 'received'}`;
-    div.textContent = m.text;
+    if(m.text){
+      const textNode = document.createElement("div");
+      textNode.textContent = m.text;
+      div.appendChild(textNode);
+    }
+    if(m.image){
+      const img = document.createElement("img");
+      img.className = "chat-image";
+      img.src = m.image;
+      img.alt = "Shared picture";
+      img.loading = "lazy";
+      img.onclick = () => window.open(m.image, "_blank", "noopener");
+      div.appendChild(img);
+    }
     chatMsgs.appendChild(div);
   });
 
   chatMsgs.scrollTop = chatMsgs.scrollHeight;
+}
+
+function isConfirmedFriend(userId, friendId){
+  return db.friends.some(f =>
+    ((f.user1 === userId && f.user2 === friendId) || (f.user1 === friendId && f.user2 === userId)) &&
+    f.status === "ACCEPTED"
+  );
 }
 
 function sendMessage(){
@@ -1685,11 +1789,7 @@ function sendMessage(){
   const text = input.value.trim();
   if(!text || !activeFriendId || !u) return;
 
-  const isFriend = db.friends.some(f => 
-    ((f.user1 === u.id && f.user2 === activeFriendId) || (f.user1 === activeFriendId && f.user2 === u.id)) && f.status === "ACCEPTED"
-  );
-
-  if(!isFriend){
+  if(!isConfirmedFriend(u.id, activeFriendId)){
     toast("You can only send messages to accepted friends!", "error");
     return;
   }
@@ -1699,12 +1799,55 @@ function sendMessage(){
     senderId: u.id,
     receiverId: activeFriendId,
     text,
+    image: "",
     timestamp: new Date().toISOString()
   });
 
   saveDB();
   input.value = "";
   loadMessages();
+}
+
+function sendChatImage(input){
+  const u = currentUser();
+  const file = input.files && input.files[0];
+  if(!u || !activeFriendId || !file) return;
+  if(!isConfirmedFriend(u.id, activeFriendId)){
+    toast("You can only send pictures to accepted friends!", "error");
+    input.value = "";
+    return;
+  }
+  if(!file.type.startsWith("image/")){
+    toast("Please select an image file.", "error");
+    input.value = "";
+    return;
+  }
+  if(file.size > 4 * 1024 * 1024){
+    toast("Pictures must be 4 MB or smaller.", "error");
+    input.value = "";
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = () => {
+    db.messages.push({
+      id: uid("msg"),
+      senderId: u.id,
+      receiverId: activeFriendId,
+      text: "",
+      image: reader.result,
+      timestamp: new Date().toISOString()
+    });
+    saveDB();
+    loadMessages();
+    toast("Picture sent!");
+    input.value = "";
+  };
+  reader.onerror = () => {
+    toast("Could not read that picture.", "error");
+    input.value = "";
+  };
+  reader.readAsDataURL(file);
 }
 
 function openAddFriendModal(){ openModal('addFriendModal'); }
@@ -1943,6 +2086,45 @@ function ownerSection(sec, btn){
   else if(sec === 'requests'){ renderRequestsView(content); }
   else if(sec === 'users'){ renderOwnerUsersView(content); }
   else if(sec === 'guides'){ renderGuidesAdminView(content); }
+  else if(sec === 'profilePermissions'){
+    const rows = db.users.map(user => `
+      <tr>
+        <td><strong>${user.username}</strong></td>
+        <td>${user.role}</td>
+        <td>${Number(user.nameChangesUsed || 0)}</td>
+        <td>${Number(user.extraNameChanges || 0)}</td>
+        <td>
+          <button class="btn btn-primary btn-small" onclick="grantNameChange('${user.id}')">+1 Name Change</button>
+          <button class="btn btn-light btn-small" onclick="setExtraNameChanges('${user.id}')">Set Extra</button>
+        </td>
+      </tr>
+    `).join('');
+    content.innerHTML = `
+      <h2>Profile Permissions</h2>
+      <p style="color:var(--muted);font-size:13px;margin:6px 0 15px">Everyone can change their PFP. Each account gets one name change; the Owner can grant more to selected users.</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>User</th><th>Role</th><th>Used</th><th>Extra</th><th>Actions</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table></div>
+    `;
+  }
+  else if(sec === 'pricing'){
+    const packages = Array.isArray(db.settings?.pointPackages) ? db.settings.pointPackages : [];
+    content.innerHTML = `
+      <h2>Pricing & Packages</h2>
+      <p style="color:var(--muted);font-size:13px;margin:6px 0 18px">Only the Owner can change these prices. Changes apply to the site immediately.</p>
+      <form onsubmit="savePlatformPricing(event)" style="display:grid;gap:12px;max-width:720px">
+        <div class="field"><label>Animated profile side cover price (XP)</label><input id="coverPriceInput" type="number" min="0" value="${Number(db.settings?.coverPrice || 1000)}" required></div>
+        ${packages.map((pkg,i)=>`
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <div class="field"><label>Package ${i+1} XP</label><input type="number" min="1" id="pkgAmount${i}" value="${Number(pkg.amount)}" required></div>
+            <div class="field"><label>Package ${i+1} price ($)</label><input type="number" min="0" step="0.01" id="pkgPrice${i}" value="${Number(pkg.price)}" required></div>
+          </div>
+        `).join('')}
+        <button class="btn btn-primary">Save Pricing</button>
+      </form>
+    `;
+  }
   else if(sec === 'logs'){
     let logRows = (db.logs || []).map(l => `
       <tr>
@@ -2134,6 +2316,163 @@ function renderReviewsAdminView(container){
   `;
 }
 
+function grantNameChange(userId){
+  const owner = currentUser();
+  if(!owner || owner.role !== "OWNER"){ toast("Unauthorized action","error"); return; }
+  const user = db.users.find(u => u.id === userId);
+  if(!user) return;
+  user.extraNameChanges = Number(user.extraNameChanges || 0) + 1;
+  logAction(`Granted an extra name change to ${user.username}`, owner.username);
+  saveDB();
+  toast(`Granted +1 name change to ${user.username}`);
+  ownerSection('profilePermissions');
+}
+
+function setExtraNameChanges(userId){
+  const owner = currentUser();
+  if(!owner || owner.role !== "OWNER"){ toast("Unauthorized action","error"); return; }
+  const user = db.users.find(u => u.id === userId);
+  if(!user) return;
+  const current = Number(user.extraNameChanges || 0);
+  const raw = prompt(`How many extra name changes should ${user.username} have?`, current);
+  if(raw === null) return;
+  const value = Math.max(0, parseInt(raw) || 0);
+  user.extraNameChanges = value;
+  logAction(`Set extra name changes for ${user.username} to ${value}`, owner.username);
+  saveDB();
+  toast(`Updated ${user.username}'s extra name changes.`);
+  ownerSection('profilePermissions');
+}
+
+function savePlatformPricing(e){
+  e.preventDefault();
+  const owner = currentUser();
+  if(!owner || owner.role !== "OWNER"){ toast("Unauthorized action","error"); return; }
+
+  db.settings = db.settings || {};
+  db.settings.coverPrice = Math.max(0, parseInt(document.getElementById("coverPriceInput").value) || 0);
+  const oldPackages = Array.isArray(db.settings.pointPackages) ? db.settings.pointPackages : [];
+  db.settings.pointPackages = oldPackages.map((pkg,i) => ({
+    amount: Math.max(1, parseInt(document.getElementById(`pkgAmount${i}`).value) || pkg.amount || 1),
+    price: Math.max(0, parseFloat(document.getElementById(`pkgPrice${i}`).value) || 0)
+  }));
+
+  logAction(`Updated platform pricing and animated cover price`, owner.username);
+  saveDB();
+  refreshBuyPackageOptions();
+  toast("Pricing updated.");
+  ownerSection('pricing');
+}
+
+function refreshBuyPackageOptions(){
+  const select = document.getElementById("buyAmount");
+  if(!select) return;
+  const packages = Array.isArray(db.settings?.pointPackages) ? db.settings.pointPackages : [];
+  select.innerHTML = packages.map(pkg =>
+    `<option value="${Number(pkg.amount)}">${Number(pkg.amount)} XP - $${Number(pkg.price).toFixed(2).replace(/\.00$/,'')}</option>`
+  ).join('');
+}
+
+function avatarMarkup(user, className="friend-avatar", extraStyle=""){
+  const style = extraStyle ? ` style="${extraStyle}"` : "";
+  if(user?.pfp){
+    return `<div class="${className}"${style}><img src="${user.pfp}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:inherit"></div>`;
+  }
+  return `<div class="${className}"${style}>${(user?.username || "?").charAt(0).toUpperCase()}</div>`;
+}
+
+function changeProfilePicture(input){
+  const u = currentUser();
+  const file = input.files && input.files[0];
+  if(!u || !file) return;
+  if(!file.type.startsWith("image/")){ toast("Please choose an image file.","error"); input.value=""; return; }
+  if(file.size > 5 * 1024 * 1024){ toast("PFP images must be 5 MB or smaller.","error"); input.value=""; return; }
+
+  const reader = new FileReader();
+  reader.onload = () => {
+    u.pfp = reader.result;
+    saveDB();
+    updateNav();
+    renderDashboard();
+    toast("Profile picture updated!");
+    input.value = "";
+  };
+  reader.onerror = () => { toast("Could not read that image.","error"); input.value=""; };
+  reader.readAsDataURL(file);
+}
+
+function openNameChangeModal(){
+  const u = currentUser();
+  if(!u){ go("login"); return; }
+  const remaining = Math.max(0, 1 - Number(u.nameChangesUsed || 0)) + Number(u.extraNameChanges || 0);
+  if(remaining <= 0){
+    toast("You have no name changes left. Ask the Owner for another one.","error");
+    return;
+  }
+  document.getElementById("newUsername").value = u.username;
+  openModal("nameChangeModal");
+}
+
+function changeUsername(e){
+  e.preventDefault();
+  const u = currentUser();
+  if(!u) return;
+  const newName = document.getElementById("newUsername").value.trim();
+
+  if(newName.length < 3){ toast("Username must be at least 3 characters.","error"); return; }
+  if(newName.toLowerCase() !== u.username.toLowerCase() &&
+     db.users.some(x => x.id !== u.id && x.username.toLowerCase() === newName.toLowerCase())){
+    toast("That username is already taken.","error"); return;
+  }
+
+  const freeFirstChange = Number(u.nameChangesUsed || 0) < 1;
+  if(!freeFirstChange && Number(u.extraNameChanges || 0) <= 0){
+    toast("You have no name changes left.","error"); return;
+  }
+  if(newName === u.username){ closeModal("nameChangeModal"); return; }
+
+  if(freeFirstChange) u.nameChangesUsed = Number(u.nameChangesUsed || 0) + 1;
+  else u.extraNameChanges = Math.max(0, Number(u.extraNameChanges || 0) - 1);
+
+  const oldName = u.username;
+  u.username = newName;
+  db.reviews.forEach(r => { if(r.username === oldName) r.username = newName; });
+  logAction(`Changed username from ${oldName} to ${newName}`, newName);
+  saveDB();
+  closeModal("nameChangeModal");
+  updateNav();
+  renderDashboard();
+  if(document.querySelector(".page.active")?.id === "chat") renderChat();
+  toast("Username changed successfully.");
+}
+
+function toggleAnimatedCover(){
+  const u = currentUser();
+  if(!u) return;
+
+  if(!u.coverUnlocked){
+    const price = Number(db.settings?.coverPrice || 1000);
+    if((u.points || 0) < price){
+      toast(`You need ${price - (u.points || 0)} more XP to unlock the animated cover.`, "error");
+      return;
+    }
+    u.points -= price;
+    u.coverUnlocked = true;
+    u.coverEnabled = true;
+    logAction(`Unlocked animated profile side cover for ${price} XP`, u.username);
+    saveDB();
+    updateNav();
+    renderDashboard();
+    toast("Animated side cover unlocked!");
+    return;
+  }
+
+  u.coverEnabled = !u.coverEnabled;
+  saveDB();
+  renderDashboard();
+  toast(u.coverEnabled ? "Animated side cover enabled." : "Animated side cover disabled.");
+}
+
 function toggleBanUser(id){
   const u = db.users.find(x => x.id === id);
   if(u){
@@ -2196,6 +2535,33 @@ function renderDashboard(){
       <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end">
         <button class="btn btn-light" onclick="openRoleKeyModal()">🔑 Redeem Admin / Owner Key</button>
         <button class="btn btn-primary" onclick="openBuyModal()">💳 Buy Points / XP</button>
+      </div>
+    </div>
+
+    <div class="profile-shell ${u.coverEnabled ? 'cover-active' : ''}">
+      <div class="profile-card">
+        <div style="display:flex;align-items:center;gap:18px;position:relative;z-index:2;flex-wrap:wrap">
+          <div class="profile-avatar-wrap">
+            <div class="profile-avatar" id="dashboardProfileAvatar">${u.pfp ? `<img src="${u.pfp}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:28px">` : u.username.charAt(0).toUpperCase()}</div>
+            <button class="profile-avatar-edit" type="button" onclick="document.getElementById('pfpInput').click()">✎</button>
+            <input id="pfpInput" type="file" accept="image/*" hidden onchange="changeProfilePicture(this)">
+          </div>
+          <div style="flex:1;min-width:220px">
+            <span class="badge">PROFILE</span>
+            <h2 style="margin-top:8px">${u.username}</h2>
+            <p style="color:var(--muted);margin-top:5px">Change your picture anytime. Your display name can be changed once unless the Owner grants more changes.</p>
+          </div>
+        </div>
+        <div class="profile-actions" style="position:relative;z-index:2">
+          <button class="btn btn-light btn-small" type="button" onclick="openNameChangeModal()">✎ Change Name</button>
+          <button class="btn ${u.coverUnlocked ? 'btn-success' : 'btn-primary'} btn-small" type="button" onclick="toggleAnimatedCover()">
+            ${u.coverUnlocked ? (u.coverEnabled ? '✨ Disable Side Cover' : '✨ Enable Side Cover') : `✨ Unlock Animated Side Cover · ${Number(db.settings?.coverPrice || 1000)} XP`}
+          </button>
+        </div>
+        <div class="permission-note" style="position:relative;z-index:2">
+          ${u.coverUnlocked ? 'Animated profile side cover unlocked.' : `Animated side cover costs ${Number(db.settings?.coverPrice || 1000)} XP and is available when you have enough points.`}
+          ${((u.extraNameChanges||0) > 0) ? ` You have ${u.extraNameChanges} extra name change${u.extraNameChanges===1?'':'s'} granted by the Owner.` : ''}
+        </div>
       </div>
     </div>
 
@@ -2301,8 +2667,21 @@ function supportSubmitted(e){
   e.target.reset();
 }
 
+function removeBrokenResourceCards(){
+  document.querySelectorAll("body *").forEach(el => {
+    if(el.children.length > 0) return;
+    const t = (el.textContent || "").trim();
+    if(t.includes("${db.guides.length}") || t.includes("${db.guides.filter") || t.includes("${currentUser().points")){
+      const card = el.closest(".stat-card,.card");
+      if(card) card.remove();
+    }
+  });
+}
+
 /* INITIAL APP INIT */
 updateNav();
+refreshBuyPackageOptions();
+removeBrokenResourceCards();
 renderGuides();
 renderReviews();
 </script>
@@ -2382,9 +2761,18 @@ renderReviews();
     db.adminKeys = Array.isArray(db.adminKeys) ? db.adminKeys : [];
     db.ownerKeys = Array.isArray(db.ownerKeys) ? db.ownerKeys : [];
     db.logs = Array.isArray(db.logs) ? db.logs : [];
+    db.settings = db.settings || { coverPrice: 1000, pointPackages: [
+      { amount: 100, price: 5 }, { amount: 500, price: 20 },
+      { amount: 1000, price: 35 }, { amount: 2500, price: 75 }
+    ]};
 
     db.users.forEach(u => {
       if(!Array.isArray(u.ownedGuides)) u.ownedGuides = [];
+      if(typeof u.pfp !== "string") u.pfp = "";
+      if(typeof u.nameChangesUsed !== "number") u.nameChangesUsed = 0;
+      if(typeof u.extraNameChanges !== "number") u.extraNameChanges = 0;
+      if(typeof u.coverUnlocked !== "boolean") u.coverUnlocked = false;
+      if(typeof u.coverEnabled !== "boolean") u.coverEnabled = false;
     });
 
     ensureOwner();
