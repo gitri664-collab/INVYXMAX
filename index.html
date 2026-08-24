@@ -78,10 +78,7 @@ body:before{
   mask-image:linear-gradient(to bottom,black,transparent 85%);
 }
 
-/* ==============================
-   NAVIGATION
-============================== */
-
+/* NAVIGATION */
 .nav{
   position:sticky;
   top:0;
@@ -113,6 +110,7 @@ body:before{
   background-clip:text;
   color:transparent;
   user-select:none;
+  cursor:pointer;
 }
 
 .nav-links{
@@ -176,10 +174,7 @@ body:before{
   color:white;
 }
 
-/* ==============================
-   BUTTONS
-============================== */
-
+/* BUTTONS */
 button{
   cursor:pointer;
 }
@@ -260,10 +255,7 @@ button{
   font-size:12px;
 }
 
-/* ==============================
-   GENERAL
-============================== */
-
+/* GENERAL LAYOUT */
 .container{
   width:min(1280px,100%);
   margin:auto;
@@ -280,19 +272,11 @@ button{
 }
 
 @keyframes pageIn{
-  from{
-    opacity:0;
-    transform:translateY(8px);
-  }
-  to{
-    opacity:1;
-    transform:none;
-  }
+  from{ opacity:0; transform:translateY(8px); }
+  to{ opacity:1; transform:none; }
 }
 
-.section{
-  margin-top:95px;
-}
+.section{ margin-top:95px; }
 
 .section-title{
   display:flex;
@@ -326,10 +310,7 @@ button{
   text-transform:uppercase;
 }
 
-/* ==============================
-   HERO
-============================== */
-
+/* HERO */
 .hero{
   min-height:650px;
   display:grid;
@@ -401,29 +382,20 @@ button{
 }
 
 .orb.one{
-  width:190px;
-  height:190px;
-  top:10%;
-  left:10%;
+  width:190px; height:190px; top:10%; left:10%;
   background:rgba(139,92,246,.45);
   box-shadow:0 0 100px rgba(139,92,246,.35);
 }
 
 .orb.two{
-  width:130px;
-  height:130px;
-  right:13%;
-  top:33%;
+  width:130px; height:130px; right:13%; top:33%;
   background:rgba(34,211,238,.35);
   box-shadow:0 0 80px rgba(34,211,238,.25);
   animation-delay:-2s;
 }
 
 .orb.three{
-  width:150px;
-  height:150px;
-  left:38%;
-  bottom:2%;
+  width:150px; height:150px; left:38%; bottom:2%;
   background:rgba(236,72,153,.30);
   box-shadow:0 0 90px rgba(236,72,153,.22);
   animation-delay:-4s;
@@ -447,47 +419,39 @@ button{
   box-shadow:0 25px 50px rgba(0,0,0,.3);
 }
 
-.floating-card small{
-  color:#9999aa;
-  font-size:10px;
-  font-weight:800;
-  letter-spacing:.8px;
-}
+.floating-card small{ color:#9999aa; font-size:10px; font-weight:800; letter-spacing:.8px; }
+.floating-card h2{ margin:5px 0; font-size:26px; }
+.floating-card span{ color:#aaaaba; font-size:12px; }
 
-.floating-card h2{
-  margin:5px 0;
-  font-size:26px;
-}
+.fc1{ left:28px; bottom:45px; }
+.fc2{ top:45px; right:28px; }
+.fc3{ right:40px; bottom:40px; }
 
-.floating-card span{
-  color:#aaaaba;
-  font-size:12px;
-}
-
-.fc1{
-  left:28px;
-  bottom:45px;
-}
-
-.fc2{
-  top:45px;
-  right:28px;
-}
-
-.fc3{
-  right:40px;
-  bottom:40px;
-}
-
-/* ==============================
-   CARDS
-============================== */
-
+/* CARDS & DASHBOARD */
 .grid{
   display:grid;
   grid-template-columns:repeat(3,1fr);
   gap:18px;
 }
+
+.dash-stats{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:18px;
+  margin-bottom:25px;
+}
+
+.stat-card{
+  padding:22px;
+  border-radius:var(--radius);
+  border:1px solid var(--border);
+  background:linear-gradient(145deg,rgba(255,255,255,.045),rgba(255,255,255,.018)),rgba(10,10,16,.8);
+  box-shadow:var(--shadow2);
+}
+
+.stat-card small{ color:var(--muted); font-size:11px; font-weight:800; letter-spacing:1px; text-transform:uppercase; }
+.stat-card h2{ font-size:32px; margin:8px 0 4px; color:#fff; }
+.stat-card span{ font-size:12px; color:var(--cyan); }
 
 .card{
   position:relative;
@@ -499,10 +463,7 @@ button{
     linear-gradient(145deg,rgba(255,255,255,.045),rgba(255,255,255,.018)),
     rgba(10,10,16,.8);
   box-shadow:var(--shadow2);
-  transition:
-    transform .25s ease,
-    border-color .25s ease,
-    box-shadow .25s ease;
+  transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease;
 }
 
 .card:before{
@@ -516,75 +477,14 @@ button{
 .card:hover{
   transform:translateY(-5px);
   border-color:rgba(139,92,246,.20);
-  box-shadow:
-    0 25px 70px rgba(0,0,0,.5),
-    0 0 40px rgba(139,92,246,.045);
+  box-shadow:0 25px 70px rgba(0,0,0,.5), 0 0 40px rgba(139,92,246,.045);
 }
 
-.card h3{
-  position:relative;
-  margin:12px 0 8px;
-  font-size:20px;
-}
+.card h3{ position:relative; margin:12px 0 8px; font-size:20px; }
+.card p{ position:relative; color:var(--muted); line-height:1.65; }
 
-.card p{
-  position:relative;
-  color:var(--muted);
-  line-height:1.65;
-}
-
-.card-footer{
-  position:relative;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:10px;
-  margin-top:18px;
-}
-
-.guide-image{
-  height:180px;
-  position:relative;
-  overflow:hidden;
-  margin-bottom:18px;
-  border-radius:17px;
-  background:
-    radial-gradient(circle at 20% 20%,rgba(236,72,153,.55),transparent 30%),
-    radial-gradient(circle at 80% 30%,rgba(34,211,238,.4),transparent 30%),
-    linear-gradient(135deg,#251447,#101d42);
-  border:1px solid rgba(255,255,255,.08);
-}
-
-.guide-image:after{
-  content:"";
-  position:absolute;
-  width:160%;
-  height:100%;
-  top:0;
-  left:-180%;
-  background:linear-gradient(
-    110deg,
-    transparent,
-    rgba(255,255,255,.10),
-    transparent
-  );
-  transform:skewX(-20deg);
-  animation:shine 4.5s infinite;
-}
-
-@keyframes shine{
-  0%,55%{left:-180%}
-  100%{left:150%}
-}
-
-/* ==============================
-   FORMS
-============================== */
-
-.field{
-  margin-bottom:15px;
-}
-
+/* FORMS */
+.field{ margin-bottom:15px; }
 .field label{
   display:block;
   margin-bottom:7px;
@@ -593,12 +493,7 @@ button{
   font-weight:800;
 }
 
-.field input,
-.field textarea,
-.field select,
-input,
-textarea,
-select{
+.field input, .field textarea, .field select, input, textarea, select{
   width:100%;
   color:white;
   background:#0b0b12;
@@ -609,33 +504,16 @@ select{
   transition:.2s ease;
 }
 
-.field input::placeholder,
-input::placeholder,
-textarea::placeholder{
-  color:#5f5f70;
-}
+.field input::placeholder, input::placeholder, textarea::placeholder{ color:#5f5f70; }
 
-.field input:focus,
-.field textarea:focus,
-.field select:focus,
-input:focus,
-textarea:focus,
-select:focus{
+.field input:focus, .field textarea:focus, .field select:focus, input:focus, textarea:focus, select:focus{
   border-color:rgba(139,92,246,.65);
-  box-shadow:
-    0 0 0 4px rgba(139,92,246,.08),
-    0 0 25px rgba(139,92,246,.06);
+  box-shadow: 0 0 0 4px rgba(139,92,246,.08), 0 0 25px rgba(139,92,246,.06);
 }
 
-select option{
-  background:#11111a;
-  color:white;
-}
+select option{ background:#11111a; color:white; }
 
-/* ==============================
-   AUTH
-============================== */
-
+/* AUTH */
 .auth-wrap{
   min-height:calc(100vh - 76px);
   display:grid;
@@ -653,85 +531,135 @@ select option{
   box-shadow:var(--shadow);
 }
 
-.auth h1{
-  font-size:34px;
-  letter-spacing:-1.5px;
-}
+.auth h1{ font-size:34px; letter-spacing:-1.5px; }
+.auth>p{ margin:7px 0 25px; color:var(--muted); }
+.auth .btn{ width:100%; margin-top:8px; }
 
-.auth>p{
-  margin:7px 0 25px;
-  color:var(--muted);
-}
-
-.auth .btn{
-  width:100%;
-  margin-top:8px;
-}
-
-/* ==============================
-   DASHBOARD
-============================== */
-
-.dashboard-head{
-  position:relative;
-  overflow:hidden;
-  padding:38px;
-  margin-bottom:22px;
+/* INSTAGRAM DIRECT CHAT STYLE */
+.chat-container{
+  display:grid;
+  grid-template-columns:300px 1fr;
+  height:calc(100vh - 160px);
+  min-height:550px;
   border-radius:28px;
-  border:1px solid rgba(139,92,246,.15);
-  background:
-    radial-gradient(circle at 90% 10%,rgba(34,211,238,.13),transparent 30%),
-    radial-gradient(circle at 60% 100%,rgba(139,92,246,.18),transparent 40%),
-    linear-gradient(120deg,#09090f,#141021,#0b1727);
+  border:1px solid var(--border2);
+  background:rgba(9,9,14,.92);
+  overflow:hidden;
   box-shadow:var(--shadow);
 }
 
-.dashboard-head h1{
-  position:relative;
-  z-index:2;
-  font-size:38px;
-  letter-spacing:-1.8px;
+.chat-sidebar{
+  border-right:1px solid var(--border);
+  display:flex;
+  flex-direction:column;
+  background:#07070d;
 }
 
-.dashboard-head p{
-  position:relative;
-  z-index:2;
-  margin-top:7px;
-  color:#9999a9;
+.chat-sidebar-head{
+  padding:18px;
+  border-bottom:1px solid var(--border);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
 }
 
-.stat-grid{
+.friend-list{
+  overflow-y:auto;
+  flex:1;
+}
+
+.friend-item{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:14px 18px;
+  cursor:pointer;
+  transition:.2s ease;
+  border-bottom:1px solid rgba(255,255,255,.02);
+}
+
+.friend-item:hover, .friend-item.active{
+  background:rgba(139,92,246,.12);
+}
+
+.friend-avatar{
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  background:var(--gradient);
   display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:16px;
-  margin-bottom:22px;
+  place-items:center;
+  font-weight:900;
+  position:relative;
 }
 
-.stat{
-  padding:21px;
+.friend-info strong{ display:block; font-size:14px; color:#fff; }
+.friend-info small{ color:var(--muted); font-size:12px; }
+
+.chat-main{
+  display:flex;
+  flex-direction:column;
+  background:#0b0b14;
+}
+
+.chat-main-head{
+  padding:15px 22px;
+  border-bottom:1px solid var(--border);
+  display:flex;
+  align-items:center;
+  gap:12px;
+  background:rgba(18,18,29,.5);
+}
+
+.chat-messages{
+  flex:1;
+  padding:20px;
+  overflow-y:auto;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.msg-bubble{
+  max-width:65%;
+  padding:12px 16px;
   border-radius:20px;
+  font-size:14px;
+  line-height:1.45;
+  word-wrap:break-word;
+}
+
+.msg-bubble.sent{
+  align-self:flex-end;
+  background:linear-gradient(135deg,var(--purple),var(--blue));
+  color:white;
+  border-bottom-right-radius:4px;
+}
+
+.msg-bubble.received{
+  align-self:flex-start;
+  background:#181826;
+  color:#e2e2ec;
+  border-bottom-left-radius:4px;
   border:1px solid var(--border);
-  background:rgba(255,255,255,.028);
-  box-shadow:var(--shadow2);
 }
 
-.stat small{
-  color:var(--muted2);
-  font-size:11px;
-  text-transform:uppercase;
-  letter-spacing:.7px;
+.chat-input-area{
+  padding:15px 20px;
+  border-top:1px solid var(--border);
+  display:flex;
+  gap:10px;
+  align-items:center;
+  background:#07070d;
 }
 
-.stat strong{
-  display:block;
-  margin-top:8px;
-  font-size:31px;
+.chat-input-area input{
+  border-radius:999px;
+  padding:12px 20px;
+  background:#12121d;
 }
 
-/* ==============================
-   ADMIN
-============================== */
-
+/* ADMIN / OWNER Sidebar & Table */
 .admin-layout{
   display:grid;
   grid-template-columns:235px minmax(0,1fr);
@@ -774,301 +702,89 @@ select option{
   transition:.2s;
 }
 
-.sidebar button:hover{
-  color:white;
-  background:rgba(255,255,255,.04);
-}
-
+.sidebar button:hover{ color:white; background:rgba(255,255,255,.04); }
 .sidebar button.active{
   color:white;
   border-color:rgba(139,92,246,.15);
-  background:
-    linear-gradient(90deg,rgba(139,92,246,.17),rgba(59,130,246,.06));
+  background:linear-gradient(90deg,rgba(139,92,246,.17),rgba(59,130,246,.06));
 }
 
-/* ==============================
-   TABLES
-============================== */
+.table-wrap{ overflow:auto; }
+table{ width:100%; border-collapse:collapse; }
+th, td{ padding:14px 12px; text-align:left; border-bottom:1px solid var(--border); font-size:13px; }
+th{ color:#777789; font-size:10px; text-transform:uppercase; letter-spacing:.9px; }
+td{ color:#c4c4cf; }
 
-.table-wrap{
-  overflow:auto;
+.req-card{
+  padding:16px;
+  border-radius:16px;
+  border:1px solid var(--border2);
+  background:#11111c;
+  margin-bottom:12px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
 }
 
-table{
-  width:100%;
-  border-collapse:collapse;
-}
-
-th,
-td{
-  padding:14px 12px;
-  text-align:left;
-  border-bottom:1px solid var(--border);
-  font-size:13px;
-}
-
-th{
-  color:#777789;
-  font-size:10px;
-  text-transform:uppercase;
-  letter-spacing:.9px;
-}
-
-td{
-  color:#c4c4cf;
-}
-
-/* ==============================
-   MODALS
-============================== */
-
+/* MODALS */
 .modal{
-  position:fixed;
-  inset:0;
-  z-index:500;
-  display:none;
-  place-items:center;
-  padding:20px;
-  background:rgba(0,0,0,.72);
-  backdrop-filter:blur(10px);
+  position:fixed; inset:0; z-index:500;
+  display:none; place-items:center; padding:20px;
+  background:rgba(0,0,0,.72); backdrop-filter:blur(10px);
 }
-
-.modal.show{
-  display:grid;
-}
+.modal.show{ display:grid; }
 
 .modal-box{
-  width:min(560px,100%);
-  max-height:90vh;
-  overflow:auto;
-  padding:26px;
-  border:1px solid var(--border2);
-  border-radius:25px;
-  background:
-    linear-gradient(145deg,rgba(255,255,255,.05),rgba(255,255,255,.018)),
-    #0b0b12;
-  box-shadow:
-    0 40px 120px rgba(0,0,0,.65),
-    0 0 70px rgba(139,92,246,.08);
+  width:min(560px,100%); max-height:90vh; overflow:auto; padding:26px;
+  border:1px solid var(--border2); border-radius:25px;
+  background: linear-gradient(145deg,rgba(255,255,255,.05),rgba(255,255,255,.018)), #0b0b12;
+  box-shadow: 0 40px 120px rgba(0,0,0,.65), 0 0 70px rgba(139,92,246,.08);
   animation:modalIn .25s ease;
 }
 
 @keyframes modalIn{
-  from{
-    opacity:0;
-    transform:translateY(18px) scale(.97);
-  }
-  to{
-    opacity:1;
-    transform:none;
-  }
+  from{ opacity:0; transform:translateY(18px) scale(.97); }
+  to{ opacity:1; transform:none; }
 }
 
-.modal-head{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:15px;
-  margin-bottom:20px;
-}
+.modal-head{ display:flex; align-items:center; justify-content:space-between; gap:15px; margin-bottom:20px; }
+.close{ width:36px; height:36px; border:1px solid var(--border); border-radius:50%; background:rgba(255,255,255,.04); color:#aaa; font-size:20px; }
+.close:hover{ color:white; background:rgba(255,255,255,.08); }
 
-.modal-head h2{
-  letter-spacing:-.8px;
-}
-
-.close{
-  width:36px;
-  height:36px;
-  border:1px solid var(--border);
-  border-radius:50%;
-  background:rgba(255,255,255,.04);
-  color:#aaa;
-  font-size:20px;
-}
-
-.close:hover{
-  color:white;
-  background:rgba(255,255,255,.08);
-}
-
-/* ==============================
-   TOASTS
-============================== */
-
-.toasts{
-  position:fixed;
-  right:20px;
-  bottom:20px;
-  z-index:1000;
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-}
-
+/* TOASTS */
+.toasts{ position:fixed; right:20px; bottom:20px; z-index:1000; display:flex; flex-direction:column; gap:10px; }
 .toast{
-  min-width:280px;
-  padding:15px 17px;
-  color:white;
-  border:1px solid var(--border2);
-  border-left:3px solid var(--purple);
-  border-radius:15px;
-  background:rgba(13,13,20,.95);
-  backdrop-filter:blur(15px);
-  box-shadow:var(--shadow2);
-  animation:toastIn .3s ease;
+  min-width:280px; padding:15px 17px; color:white;
+  border:1px solid var(--border2); border-left:3px solid var(--purple);
+  border-radius:15px; background:rgba(13,13,20,.95); backdrop-filter:blur(15px);
+  box-shadow:var(--shadow2); animation:toastIn .3s ease;
 }
-
-.toast.success{
-  border-left-color:var(--success);
-}
-
-.toast.error{
-  border-left-color:var(--danger);
-}
+.toast.success{ border-left-color:var(--success); }
+.toast.error{ border-left-color:var(--danger); }
 
 @keyframes toastIn{
-  from{
-    opacity:0;
-    transform:translateX(30px);
-  }
-  to{
-    opacity:1;
-    transform:none;
-  }
+  from{ opacity:0; transform:translateX(30px); }
+  to{ opacity:1; transform:none; }
 }
 
-/* ==============================
-   MOBILE
-============================== */
-
 @media(max-width:950px){
-
-  .hero{
-    grid-template-columns:1fr;
-    padding-top:35px;
-  }
-
-  .grid{
-    grid-template-columns:repeat(2,1fr);
-  }
-
-  .stat-grid{
-    grid-template-columns:repeat(2,1fr);
-  }
-
-  .admin-layout{
-    grid-template-columns:1fr;
-  }
-
-  .sidebar{
-    position:static;
-  }
+  .hero{ grid-template-columns:1fr; padding-top:35px; }
+  .grid{ grid-template-columns:repeat(2,1fr); }
+  .dash-stats{ grid-template-columns:repeat(2,1fr); }
+  .admin-layout{ grid-template-columns:1fr; }
+  .chat-container{ grid-template-columns:1fr; }
+  .chat-sidebar{ display:none; }
 }
 
 @media(max-width:700px){
-
   .nav-links{
-    display:none;
-    position:absolute;
-    top:76px;
-    left:0;
-    right:0;
-    padding:12px;
-    flex-direction:column;
-    align-items:stretch;
-    background:rgba(7,7,11,.97);
-    border-bottom:1px solid var(--border);
-    backdrop-filter:blur(20px);
+    display:none; position:absolute; top:76px; left:0; right:0; padding:12px;
+    flex-direction:column; align-items:stretch; background:rgba(7,7,11,.97);
+    border-bottom:1px solid var(--border); backdrop-filter:blur(20px);
   }
-
-  .nav-links.open{
-    display:flex;
-  }
-
-  .nav-links button{
-    width:100%;
-    text-align:left;
-  }
-
-  .mobile-menu{
-    display:block;
-  }
-
-  .nav-inner{
-    padding:0 15px;
-  }
-
-  .nav-actions .points{
-    display:none;
-  }
-
-  .hero h1{
-    font-size:52px;
-    letter-spacing:-3.5px;
-  }
-
-  .hero p{
-    font-size:16px;
-  }
-
-  .hero-visual{
-    min-height:350px;
-  }
-
-  .grid{
-    grid-template-columns:1fr;
-  }
-
-  .stat-grid{
-    grid-template-columns:1fr 1fr;
-  }
-
-  .section-title{
-    display:block;
-  }
-
-  .section-title .btn{
-    margin-top:15px;
-  }
-
-  .container{
-    padding-left:15px;
-    padding-right:15px;
-  }
-}
-
-@media(max-width:450px){
-
-  .hero h1{
-    font-size:44px;
-  }
-
-  .floating-card{
-    transform:scale(.88);
-  }
-
-  .fc1{
-    left:5px;
-    bottom:20px;
-  }
-
-  .fc2{
-    right:5px;
-    top:25px;
-  }
-
-  .fc3{
-    right:15px;
-    bottom:15px;
-  }
-
-  .stat-grid{
-    grid-template-columns:1fr;
-  }
-
-  .auth{
-    padding:22px;
-  }
+  .nav-links.open{ display:flex; }
+  .mobile-menu{ display:block; }
+  .grid, .dash-stats{ grid-template-columns:1fr; }
 }
 </style>
 </head>
@@ -1076,4081 +792,1190 @@ td{
 <body>
 
 <nav class="nav">
-
   <div class="nav-inner">
-
-    <div class="logo">INVYX</div>
-
+    <div class="logo" onclick="go('home')">INVYX</div>
     <button class="mobile-menu" onclick="toggleMenu()">☰</button>
-
     <div class="nav-links" id="navLinks">
-
       <button onclick="go('home')">Home</button>
       <button onclick="go('guides')">Guides</button>
+      <button onclick="go('chat')">Chat 💬</button>
       <button onclick="go('reviews')">Reviews</button>
       <button onclick="go('support')">Support</button>
       <button onclick="go('dashboard')">Dashboard</button>
-
-      <button
-        id="adminNav"
-        style="display:none"
-        onclick="go('admin')">
-        Admin
-      </button>
-
-      <button
-        id="ownerNav"
-        style="display:none"
-        onclick="go('owner')">
-        Owner
-      </button>
-
+      <button id="adminNav" style="display:none" onclick="go('admin')">Admin</button>
+      <button id="ownerNav" style="display:none" onclick="go('owner')">Owner</button>
     </div>
-
     <div class="nav-actions">
-
-      <div class="points" id="navPoints">
-        0 XP
-      </div>
-
-      <div class="avatar" id="navAvatar">
-        ?
-      </div>
-
-      <button
-        class="btn btn-light btn-small"
-        id="authBtn"
-        onclick="go('login')">
-        Login
-      </button>
-
+      <div class="points" id="navPoints">0 XP</div>
+      <div class="avatar" id="navAvatar">?</div>
+      <button class="btn btn-light btn-small" id="authBtn" onclick="go('login')">Login</button>
     </div>
-
   </div>
-
 </nav>
 
 <main class="container">
 
-<!-- ================= HOME ================= -->
-
 <section id="home" class="page active">
-
   <div class="hero">
-
     <div>
-
-      <span class="badge">
-        NEXT-GEN SELF-IMPROVEMENT PLATFORM
-      </span>
-
-      <h1>
-        Upgrade your
-        <span class="gradient-text">
-          appearance.
-        </span>
-      </h1>
-
-      <p>
-        Guides, resources, community reviews, rewards and
-        structured self-improvement tools — all inside one
-        premium platform.
-      </p>
-
+      <span class="badge">NEXT-GEN SELF-IMPROVEMENT PLATFORM</span>
+      <h1>Upgrade your <span class="gradient-text">appearance.</span></h1>
+      <p>Guides, resources, private social chat, community reviews, rewards and structured self-improvement tools — all inside one premium platform.</p>
       <div class="hero-buttons">
-
-        <button
-          class="btn btn-primary"
-          onclick="go('guides')">
-          Explore Guides →
-        </button>
-
-        <button
-          class="btn btn-light"
-          onclick="go('register')">
-          Create Account
-        </button>
-
+        <button class="btn btn-primary" onclick="go('guides')">Explore Guides →</button>
+        <button class="btn btn-light" onclick="go('register')">Create Account</button>
       </div>
-
     </div>
-
     <div class="hero-visual">
-
-      <div class="orb one"></div>
-      <div class="orb two"></div>
-      <div class="orb three"></div>
-
-      <div class="floating-card fc1">
-        <small>YOUR PROGRESS</small>
-        <h2>+24%</h2>
-        <span>This month</span>
-      </div>
-
-      <div class="floating-card fc2">
-        <small>GUIDES</small>
-        <h2>∞</h2>
-        <span>Resources</span>
-      </div>
-
-      <div class="floating-card fc3">
-        <small>GIVEAWAY</small>
-        <h2>500 XP</h2>
-        <span>Prize pool</span>
-      </div>
-
+      <div class="orb one"></div><div class="orb two"></div><div class="orb three"></div>
+      <div class="floating-card fc1"><small>YOUR PROGRESS</small><h2>+24%</h2><span>This month</span></div>
+      <div class="floating-card fc2"><small>GUIDES</small><h2>∞</h2><span>Resources</span></div>
+      <div class="floating-card fc3"><small>GIVEAWAY</small><h2>500 XP</h2><span>Prize pool</span></div>
     </div>
-
   </div>
-
   <div class="section">
-
     <div class="section-title">
-
-      <div>
-        <h2>Featured guides</h2>
-        <p>Start with the resources people are checking out.</p>
-      </div>
-
-      <button
-        class="btn btn-light"
-        onclick="go('guides')">
-        View all
-      </button>
-
+      <div><h2>Featured guides</h2><p>Start with the resources people are checking out.</p></div>
+      <button class="btn btn-light" onclick="go('guides')">View all</button>
     </div>
-
-    <div
-      class="grid"
-      id="featuredGuides">
-    </div>
-
+    <div class="grid" id="featuredGuides"></div>
   </div>
-
 </section>
 
-<!-- ================= GUIDES ================= -->
-
 <section id="guides" class="page">
-
   <div class="section-title">
-
-    <div>
-      <h2>Guide marketplace</h2>
-      <p>Explore the INVYX resource library.</p>
-    </div>
-
-    <button
-      id="addGuideBtn"
-      class="btn btn-primary"
-      style="display:none"
-      onclick="openGuideModal()">
-      + Add Guide
-    </button>
-
+    <div><h2>Guide Marketplace</h2><p>Explore the INVYX resource library with ZIP, Video, Picture, and Link attachments.</p></div>
+    <button id="addGuideBtn" class="btn btn-primary" style="display:none" onclick="openGuideModal()">+ Add Guide</button>
   </div>
-
-  <div
-    class="card"
-    style="margin-bottom:20px">
-
-    <div
-      style="
-        display:grid;
-        grid-template-columns:2fr 1fr 1fr;
-        gap:10px">
-
-      <input
-        id="guideSearch"
-        placeholder="Search guides..."
-        oninput="renderGuides()">
-
-      <select
-        id="guideFilter"
-        onchange="renderGuides()">
-
+  <div class="card" style="margin-bottom:20px">
+    <div style="display:grid; grid-template-columns:2fr 1fr 1fr; gap:10px">
+      <input id="guideSearch" placeholder="Search guides..." oninput="renderGuides()">
+      <select id="guideFilter" onchange="renderGuides()">
         <option value="all">All guides</option>
         <option value="free">Free</option>
         <option value="points">Points</option>
-
       </select>
-
-      <select
-        id="guideSort"
-        onchange="renderGuides()">
-
+      <select id="guideSort" onchange="renderGuides()">
         <option value="new">Newest</option>
         <option value="price">Lowest points</option>
-
       </select>
-
     </div>
-
   </div>
-
-  <div
-    class="grid"
-    id="guidesGrid">
-  </div>
-
+  <div class="grid" id="guidesGrid"></div>
 </section>
 
-<!-- ================= REVIEWS ================= -->
+<section id="chat" class="page">
+  <div class="section-title">
+    <div><h2>Direct Messages</h2><p>Private Instagram-style direct messaging between friends.</p></div>
+    <button class="btn btn-light" onclick="openAddFriendModal()">+ Add Friend</button>
+  </div>
+  <div class="chat-container">
+    <div class="chat-sidebar">
+      <div class="chat-sidebar-head"><strong>Messages</strong></div>
+      <div class="friend-list" id="friendList"></div>
+    </div>
+    <div class="chat-main">
+      <div class="chat-main-head" id="chatHeader">
+        <div class="friend-avatar" id="activeChatAvatar">?</div>
+        <div>
+          <strong id="activeChatName">Select a friend</strong>
+          <small style="display:block; color:var(--muted)" id="activeChatStatus">Start messaging</small>
+        </div>
+      </div>
+      <div class="chat-messages" id="chatMessages"></div>
+      <div class="chat-input-area">
+        <input id="chatInput" placeholder="Write a message..." onkeydown="if(event.key==='Enter') sendMessage()">
+        <button class="btn btn-primary btn-small" onclick="sendMessage()">Send</button>
+      </div>
+    </div>
+  </div>
+</section>
 
 <section id="reviews" class="page">
-
   <div class="section-title">
-
-    <div>
-      <h2>Community reviews</h2>
-      <p>See what members think about INVYX.</p>
-    </div>
-
-    <button
-      class="btn btn-primary"
-      onclick="openReviewModal()">
-      Write review
-    </button>
-
+    <div><h2>Community reviews</h2><p>See what members think about INVYX.</p></div>
+    <button class="btn btn-primary" onclick="openReviewModal()">Write review</button>
   </div>
-
-  <div
-    class="grid"
-    id="reviewsGrid">
-  </div>
-
+  <div class="grid" id="reviewsGrid"></div>
 </section>
-
-<!-- ================= SUPPORT ================= -->
 
 <section id="support" class="page">
-
   <div class="section-title">
-
-    <div>
-      <h2>Support</h2>
-      <p>Need help? Contact the INVYX team.</p>
-    </div>
-
+    <div><h2>Support</h2><p>Need help? Contact the INVYX team.</p></div>
   </div>
-
   <div class="grid">
-
     <div class="card">
-
-      <span class="badge">
-        SOCIAL
-      </span>
-
+      <span class="badge">SOCIAL</span>
       <h3>TikTok</h3>
-
-      <p>
-        Follow the official INVYX account.
-      </p>
-
-      <button
-        class="btn btn-light"
-        style="margin-top:15px"
-        onclick="
-          window.open(
-            'https://www.tiktok.com/@invyx_',
-            '_blank',
-            'noopener'
-          )
-        ">
-        Open TikTok
-      </button>
-
+      <p>Follow the official INVYX account.</p>
+      <button class="btn btn-light" style="margin-top:15px" onclick="window.open('https://www.tiktok.com/@invyx_','_blank','noopener')">Open TikTok</button>
     </div>
-
     <div class="card">
-
-      <span class="badge">
-        EMAIL
-      </span>
-
+      <span class="badge">EMAIL</span>
       <h3>Contact support</h3>
-
-      <form
-        action="https://formspree.io/f/maewegao"
-        method="POST"
-        onsubmit="supportSubmitted(event)">
-
-        <div class="field">
-          <label>Name / Username</label>
-          <input name="name" required>
-        </div>
-
-        <div class="field">
-          <label>Email</label>
-          <input
-            name="email"
-            type="email"
-            required>
-        </div>
-
-        <div class="field">
-          <label>Subject</label>
-          <input name="subject" required>
-        </div>
-
-        <div class="field">
-          <label>Message</label>
-          <textarea
-            name="message"
-            rows="5"
-            required></textarea>
-        </div>
-
-        <button class="btn btn-primary">
-          Send message
-        </button>
-
+      <form action="https://formspree.io/f/maewegao" method="POST" onsubmit="supportSubmitted(event)">
+        <div class="field"><label>Name / Username</label><input name="name" required></div>
+        <div class="field"><label>Email</label><input name="email" type="email" required></div>
+        <div class="field"><label>Subject</label><input name="subject" required></div>
+        <div class="field"><label>Message</label><textarea name="message" rows="4" required></textarea></div>
+        <button class="btn btn-primary">Send message</button>
       </form>
-
     </div>
-
   </div>
-
 </section>
-
-<!-- ================= LOGIN ================= -->
 
 <section id="login" class="page">
-
   <div class="auth-wrap">
-
     <div class="auth">
-
       <h1>Welcome back.</h1>
-
-      <p>
-        Log into your INVYX account.
-      </p>
-
+      <p>Log into your INVYX account.</p>
       <form onsubmit="login(event)">
-
-        <div class="field">
-          <label>Username or Email</label>
-          <input
-            id="loginIdentity"
-            required>
-        </div>
-
-        <div class="field">
-          <label>Password</label>
-          <input
-            id="loginPassword"
-            type="password"
-            required>
-        </div>
-
-        <button class="btn btn-primary">
-          Login
-        </button>
-
+        <div class="field"><label>Username or Email</label><input id="loginIdentity" required></div>
+        <div class="field"><label>Password</label><input id="loginPassword" type="password" required></div>
+        <button class="btn btn-primary">Login</button>
       </form>
-
-      <p
-        style="
-          margin-top:18px;
-          text-align:center">
-
-        Don't have an account?
-
-        <button
-          style="
-            border:0;
-            background:none;
-            color:#a78bfa;
-            font-weight:900"
-          onclick="go('register')">
-          Register
-        </button>
-
-      </p>
-
+      <p style="margin-top:18px; text-align:center">Don't have an account? <button style="border:0; background:none; color:#a78bfa; font-weight:900" onclick="go('register')">Register</button></p>
     </div>
-
   </div>
-
 </section>
-
-<!-- ================= REGISTER ================= -->
 
 <section id="register" class="page">
-
   <div class="auth-wrap">
-
     <div class="auth">
-
       <h1>Create account.</h1>
-
-      <p>
-        Join the INVYX community.
-      </p>
-
+      <p>Join the INVYX community.</p>
       <form onsubmit="register(event)">
-
-        <div class="field">
-          <label>Username</label>
-          <input
-            id="regUsername"
-            minlength="3"
-            required>
-        </div>
-
-        <div class="field">
-          <label>Email</label>
-          <input
-            id="regEmail"
-            type="email"
-            required>
-        </div>
-
-        <div class="field">
-          <label>Password</label>
-          <input
-            id="regPassword"
-            type="password"
-            minlength="6"
-            required>
-        </div>
-
-        <div class="field">
-          <label>Confirm password</label>
-          <input
-            id="regConfirm"
-            type="password"
-            required>
-        </div>
-
+        <div class="field"><label>Username</label><input id="regUsername" minlength="3" required></div>
+        <div class="field"><label>Email</label><input id="regEmail" type="email" required></div>
+        <div class="field"><label>Password</label><input id="regPassword" type="password" minlength="6" required></div>
+        <div class="field"><label>Confirm password</label><input id="regConfirm" type="password" required></div>
         <div class="field">
           <label>Gender</label>
-
-          <select
-            id="regGender"
-            required>
-
-            <option value="">
-              Select
-            </option>
-
-            <option>Male</option>
-            <option>Female</option>
-            <option>Other</option>
-            <option>Prefer not to say</option>
-
+          <select id="regGender" required>
+            <option value="">Select</option>
+            <option>Male</option><option>Female</option><option>Other</option><option>Prefer not to say</option>
           </select>
-
         </div>
-
-        <div class="field">
-
-          <label>
-            Referral / Admin Key
-          </label>
-
-          <input id="regKey">
-
-        </div>
-
-        <label
-          style="
-            display:flex;
-            gap:8px;
-            margin:15px 0;
-            color:#999;
-            font-size:13px">
-
-          <input
-            id="regTerms"
-            type="checkbox"
-            style="width:auto"
-            required>
-
-          I agree to the terms.
-
-        </label>
-
-        <button class="btn btn-primary">
-          Create account
-        </button>
-
+        <div class="field"><label>Referral / Admin Key / Owner Key</label><input id="regKey" placeholder="Enter key (optional)"></div>
+        <label style="display:flex; gap:8px; margin:15px 0; color:#999; font-size:13px"><input id="regTerms" type="checkbox" style="width:auto" required> I agree to terms.</label>
+        <button class="btn btn-primary">Create account</button>
       </form>
-
     </div>
-
   </div>
-
 </section>
-
-<!-- ================= DASHBOARD ================= -->
 
 <section id="dashboard" class="page">
-
   <div id="dashboardContent"></div>
-
 </section>
-
-<!-- ================= ADMIN ================= -->
 
 <section id="admin" class="page">
-
   <div class="admin-layout">
-
     <aside class="sidebar">
-
-      <strong>ADMIN</strong>
-
-      <button
-        class="active"
-        onclick="adminSection('overview',this)">
-        Overview
-      </button>
-
-      <button
-        onclick="adminSection('users',this)">
-        Users
-      </button>
-
-      <button
-        onclick="adminSection('guides',this)">
-        Guides
-      </button>
-
-      <button
-        onclick="adminSection('reviews',this)">
-        Reviews
-      </button>
-
-      <button
-        onclick="adminSection('transactions',this)">
-        Transactions
-      </button>
-
+      <strong>ADMIN DIVERSITY</strong>
+      <button class="active" onclick="adminSection('overview',this)">Overview</button>
+      <button onclick="adminSection('requests',this)">Buy Requests 💳</button>
+      <button onclick="adminSection('users',this)">Users</button>
+      <button onclick="adminSection('guides',this)">Guides</button>
+      <button onclick="adminSection('reviews',this)">Reviews</button>
     </aside>
-
-    <div
-      class="admin-content"
-      id="adminContent">
-    </div>
-
+    <div class="admin-content" id="adminContent"></div>
   </div>
-
 </section>
 
-<!-- ================= OWNER ================= -->
-
 <section id="owner" class="page">
-
   <div class="admin-layout">
-
     <aside class="sidebar">
-
-      <strong>OWNER</strong>
-
-      <button
-        class="active"
-        onclick="ownerSection('overview',this)">
-        Overview
-      </button>
-
-      <button
-        onclick="ownerSection('users',this)">
-        Users
-      </button>
-
-      <button
-        onclick="ownerSection('admins',this)">
-        Admins
-      </button>
-
-      <button
-        onclick="ownerSection('keys',this)">
-        Admin Keys
-      </button>
-
-      <button
-        onclick="ownerSection('ownerkeys',this)">
-        Owner Keys
-      </button>
-
-      <button
-        onclick="ownerSection('guides',this)">
-        Guides
-      </button>
-
-      <button
-        onclick="ownerSection('points',this)">
-        Points
-      </button>
-
-      <button
-        onclick="ownerSection('giveaways',this)">
-        Giveaways
-      </button>
-
-      <button
-        onclick="ownerSection('logs',this)">
-        Security Logs
-      </button>
-
+      <strong>OWNER DASHBOARD</strong>
+      <button class="active" onclick="ownerSection('overview',this)">Overview</button>
+      <button onclick="ownerSection('requests',this)">Buy Requests 💳</button>
+      <button onclick="ownerSection('admins',this)">Admins List</button>
+      <button onclick="ownerSection('adminKeys',this)">Admin Keys Generator</button>
+      <button onclick="ownerSection('ownerKeys',this)">Owner Keys Generator</button>
+      <button onclick="ownerSection('users',this)">Users</button>
+      <button onclick="ownerSection('guides',this)">Guides</button>
+      <button onclick="ownerSection('logs',this)">Security Logs</button>
     </aside>
-
-    <div
-      class="admin-content"
-      id="ownerContent">
-    </div>
-
+    <div class="admin-content" id="ownerContent"></div>
   </div>
-
 </section>
 
 </main>
 
-<!-- ================= GUIDE MODAL ================= -->
-
-<div
-  class="modal"
-  id="guideModal">
-
+<div class="modal" id="buyPointsModal">
   <div class="modal-box">
+    <div class="modal-head"><h2>Buy XP / Points</h2><button class="close" onclick="closeModal('buyPointsModal')">×</button></div>
+    <form onsubmit="submitBuyRequest(event)">
+      <div class="field">
+        <label>Select Points Package</label>
+        <select id="buyAmount">
+          <option value="100">100 XP - $5</option>
+          <option value="500">500 XP - $20</option>
+          <option value="1000">1000 XP - $35</option>
+          <option value="2500">2500 XP - $75</option>
+        </select>
+      </div>
+      <div class="field"><label>Payment Method / Note to Admin</label><textarea id="buyNote" placeholder="e.g. Paid via Paypal/Crypto ref #123456" required></textarea></div>
+      <p style="font-size:12px; color:var(--muted); margin-bottom:15px;">⚠️ Your request will be sent to Admins & Owner. Points will be added to your account ONLY after manual approval.</p>
+      <button class="btn btn-primary">Send Buy Request</button>
+    </form>
+  </div>
+</div>
 
-    <div class="modal-head">
-
-      <h2>Add guide</h2>
-
-      <button
-        class="close"
-        onclick="closeModal('guideModal')">
-        ×
-      </button>
-
-    </div>
-
+<div class="modal" id="guideModal">
+  <div class="modal-box">
+    <div class="modal-head"><h2>Add guide</h2><button class="close" onclick="closeModal('guideModal')">×</button></div>
     <form onsubmit="createGuide(event)">
-
+      <div class="field"><label>Title</label><input id="guideTitle" required></div>
+      <div class="field"><label>Description</label><textarea id="guideDescription" required></textarea></div>
+      <div class="field"><label>Category</label><input id="guideCategory" required></div>
       <div class="field">
-        <label>Title</label>
-        <input
-          id="guideTitle"
-          required>
+        <label>Attachment Type</label>
+        <select id="guideAttachmentType">
+          <option value="none">Text Only</option>
+          <option value="zip">ZIP File Link</option>
+          <option value="video">Video Link / Embed</option>
+          <option value="picture">Picture URL</option>
+          <option value="link">General External Link</option>
+        </select>
       </div>
-
+      <div class="field"><label>Attachment URL / Link</label><input id="guideAttachmentUrl" placeholder="https://..."></div>
       <div class="field">
-        <label>Description</label>
-        <textarea
-          id="guideDescription"
-          required></textarea>
-      </div>
-
-      <div class="field">
-        <label>Category</label>
-        <input
-          id="guideCategory"
-          required>
-      </div>
-
-      <div class="field">
-
         <label>Access</label>
-
-        <select id="guideAccess">
-
-          <option value="free">
-            Free
-          </option>
-
-          <option value="points">
-            Points only
-          </option>
-
-        </select>
-
+        <select id="guideAccess"><option value="free">Free</option><option value="points">Points only</option></select>
       </div>
-
-      <div class="field">
-        <label>Points price</label>
-
-        <input
-          id="guidePrice"
-          type="number"
-          min="0"
-          value="0">
-      </div>
-
-      <div class="field">
-
-        <label>Content</label>
-
-        <textarea
-          id="guideContent"
-          rows="7"
-          required></textarea>
-
-      </div>
-
-      <button class="btn btn-primary">
-        Create guide
-      </button>
-
+      <div class="field"><label>Points price</label><input id="guidePrice" type="number" min="0" value="0"></div>
+      <div class="field"><label>Content</label><textarea id="guideContent" rows="5" required></textarea></div>
+      <button class="btn btn-primary">Create guide</button>
     </form>
-
   </div>
-
 </div>
 
-<!-- ================= REVIEW MODAL ================= -->
-
-<div
-  class="modal"
-  id="reviewModal">
-
+<div class="modal" id="addFriendModal">
   <div class="modal-box">
-
-    <div class="modal-head">
-
-      <h2>Write a review</h2>
-
-      <button
-        class="close"
-        onclick="closeModal('reviewModal')">
-        ×
-      </button>
-
-    </div>
-
-    <form onsubmit="createReview(event)">
-
-      <div class="field">
-
-        <label>Rating</label>
-
-        <select id="reviewRating">
-
-          <option value="5">
-            ★★★★★
-          </option>
-
-          <option value="4">
-            ★★★★☆
-          </option>
-
-          <option value="3">
-            ★★★☆☆
-          </option>
-
-          <option value="2">
-            ★★☆☆☆
-          </option>
-
-          <option value="1">
-            ★☆☆☆☆
-          </option>
-
-        </select>
-
-      </div>
-
-      <div class="field">
-
-        <label>Review</label>
-
-        <textarea
-          id="reviewText"
-          rows="5"
-          required></textarea>
-
-      </div>
-
-      <button class="btn btn-primary">
-        Publish review
-      </button>
-
+    <div class="modal-head"><h2>Add Friend</h2><button class="close" onclick="closeModal('addFriendModal')">×</button></div>
+    <form onsubmit="addFriend(event)">
+      <div class="field"><label>Username</label><input id="friendUsername" placeholder="Enter username..." required></div>
+      <button class="btn btn-primary">Send Request / Add</button>
     </form>
-
   </div>
-
 </div>
 
-<div
-  class="toasts"
-  id="toasts">
+<div class="modal" id="reviewModal">
+  <div class="modal-box">
+    <div class="modal-head"><h2>Write a review</h2><button class="close" onclick="closeModal('reviewModal')">×</button></div>
+    <form onsubmit="createReview(event)">
+      <div class="field">
+        <label>Rating</label>
+        <select id="reviewRating">
+          <option value="5">★★★★★</option><option value="4">★★★★☆</option>
+          <option value="3">★★★☆☆</option><option value="2">★★☆☆☆</option><option value="1">★☆☆☆☆</option>
+        </select>
+      </div>
+      <div class="field"><label>Review</label><textarea id="reviewText" rows="4" required></textarea></div>
+      <button class="btn btn-primary">Publish review</button>
+    </form>
+  </div>
 </div>
+
+<div class="toasts" id="toasts"></div>
 
 <script>
-/* =========================================================
-   INVYX CLIENT-SIDE APP
-========================================================= */
+/* FULL PERSISTENCE CORE DATABASE */
+const DB_KEY = "INVYX_DATABASE_V4";
+const SESSION_KEY = "INVYX_SESSION";
 
-const DB_KEY="INVYX_DB_DARK_V1";
-const SESSION_KEY="INVYX_SESSION";
-
-const DEFAULT_DB={
-  users:[],
-
-  guides:[
+const DEFAULT_DB = {
+  users: [],
+  friends: [], 
+  messages: [], 
+  pointRequests: [], 
+  guides: [
     {
-      id:"g1",
-      title:"Face Fundamentals",
-      description:"Learn the fundamentals of facial presentation, grooming and photography.",
-      category:"Foundations",
-      access:"free",
-      price:0,
-      content:"Start with the basics: grooming, skincare, sleep, hydration and consistent presentation.",
-      created:new Date().toISOString()
-    },
-    {
-      id:"g2",
-      title:"Photography & Angles",
-      description:"Improve how you present yourself in photos without relying on filters.",
-      category:"Photography",
-      access:"points",
-      price:150,
-      content:"Use consistent lighting, neutral expressions and multiple camera distances when evaluating photos.",
-      created:new Date().toISOString()
-    },
-    {
-      id:"g3",
-      title:"Style Upgrade",
-      description:"Build a cleaner personal style and improve your overall presentation.",
-      category:"Style",
-      access:"points",
-      price:250,
-      content:"Focus on fit, color coordination, grooming and clothing that matches your proportions.",
-      created:new Date().toISOString()
+      id: "g1",
+      title: "Face Fundamentals",
+      description: "Learn the fundamentals of facial presentation, grooming and photography.",
+      category: "Foundations",
+      access: "free",
+      price: 0,
+      attachmentType: "picture",
+      attachmentUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500",
+      content: "Start with the basics: grooming, skincare, sleep, hydration and consistent presentation.",
+      created: new Date().toISOString()
     }
   ],
-
-  purchases:[],
-
-  reviews:[
-    {
-      id:"r1",
-      username:"Alex",
-      rating:5,
-      text:"The platform is clean and the guides are easy to navigate.",
-      date:new Date().toISOString()
-    },
-    {
-      id:"r2",
-      username:"Noah",
-      rating:4,
-      text:"Good resource library and the UI is super smooth.",
-      date:new Date().toISOString()
-    }
-  ],
-
-  adminKeys:[],
-  ownerKeys:[],
-  giveaways:[],
-  transactions:[],
-  logs:[],
-
-  settings:{
-    platformName:"INVYX"
-  }
+  reviews: [],
+  adminKeys: [],
+  ownerKeys: [],
+  logs: [
+    { id: "l1", action: "Persistent Memory Initialized", user: "SYSTEM", timestamp: new Date().toISOString() }
+  ]
 };
 
+/* LOAD PERSISTED DATA ON APPLICATION START */
 function loadDB(){
-
-  const raw=localStorage.getItem(DB_KEY);
-
+  const raw = localStorage.getItem(DB_KEY);
   if(!raw){
-
-    localStorage.setItem(
-      DB_KEY,
-      JSON.stringify(DEFAULT_DB)
-    );
-
+    localStorage.setItem(DB_KEY, JSON.stringify(DEFAULT_DB));
     return structuredClone(DEFAULT_DB);
   }
-
-  try{
-    return JSON.parse(raw);
-  }catch{
-
-    localStorage.setItem(
-      DB_KEY,
-      JSON.stringify(DEFAULT_DB)
-    );
-
+  try {
+    const parsed = JSON.parse(raw);
+    return {
+      users: parsed.users || [],
+      friends: parsed.friends || [],
+      messages: parsed.messages || [],
+      pointRequests: parsed.pointRequests || [],
+      guides: parsed.guides || [],
+      reviews: parsed.reviews || [],
+      adminKeys: parsed.adminKeys || [],
+      ownerKeys: parsed.ownerKeys || [],
+      logs: parsed.logs || []
+    };
+  } catch(e) {
     return structuredClone(DEFAULT_DB);
   }
 }
 
-let db=loadDB();
+let db = loadDB();
 
+/* SAVE PERSISTED DATA AUTOMATICALLY ACROSS LOCAL STORAGE AND OTHER OPEN TABS */
 function saveDB(){
-  localStorage.setItem(
-    DB_KEY,
-    JSON.stringify(db)
-  );
+  localStorage.setItem(DB_KEY, JSON.stringify(db));
 }
 
-function uid(prefix="id"){
-  return prefix+"_"+Math.random()
-    .toString(36)
-    .slice(2,10)+
-    Date.now().toString(36);
-}
+window.addEventListener('storage', (e) => {
+  if (e.key === DB_KEY) {
+    db = loadDB();
+    updateNav();
+    const currentPage = document.querySelector(".page.active")?.id;
+    if(currentPage) go(currentPage);
+  }
+});
+
+function uid(p="id"){ return p+"_"+Math.random().toString(36).slice(2,8)+Date.now().toString(36); }
 
 function hashPassword(password){
-
   let h=0;
-
-  for(let i=0;i<password.length;i++){
-
-    h=((h<<5)-h)+
-      password.charCodeAt(i);
-
-    h|=0;
-  }
-
-  return "h"+Math.abs(h).toString(36);
+  for(let i=0;i<password.length;i++){ h=((h<<5)-h)+password.charCodeAt(i); h|=0; }
+  return "h"+Math.abs(h).toString(36); 
 }
 
 function currentUser(){
-
-  const id=sessionStorage.getItem(
-    SESSION_KEY
-  );
-
-  if(!id)return null;
-
-  return db.users.find(
-    u=>u.id===id
-  )||null;
+  const id = sessionStorage.getItem(SESSION_KEY);
+  return db.users.find(u => u.id === id) || null;
 }
 
-function log(action,details=""){
-
-  db.logs.unshift({
-
-    id:uid("log"),
-
-    action,
-
-    details,
-
-    date:new Date().toISOString(),
-
-    user:
-      currentUser()?.username||
-      "system"
-
-  });
-
+function logAction(action, user="SYSTEM"){
+  if(!db.logs) db.logs = [];
+  db.logs.unshift({ id: uid("log"), action, user, timestamp: new Date().toISOString() });
   saveDB();
 }
 
-function toast(message,type="success"){
-
-  const el=document.createElement("div");
-
-  el.className=
-    "toast "+
-    (type==="error"?"error":"success");
-
-  el.textContent=message;
-
-  document.getElementById(
-    "toasts"
-  ).appendChild(el);
-
-  setTimeout(
-    ()=>el.remove(),
-    3500
-  );
+function toast(msg, type="success"){
+  const el = document.createElement("div");
+  el.className = "toast " + (type==="error"?"error":"success");
+  el.textContent = msg;
+  document.getElementById("toasts").appendChild(el);
+  setTimeout(() => el.remove(), 3500);
 }
 
-/* OWNER */
-
+/* GUARANTEE PERMANENT OWNER ACCOUNT */
 function ensureOwner(){
-
-  let owner=db.users.find(
-    u=>u.username.toLowerCase()==="invyx"
-  );
-
+  let owner = db.users.find(u => u.username.toLowerCase() === "invyx");
   if(!owner){
-
     db.users.push({
-
-      id:uid("usr"),
-
-      username:"INVYX",
-
-      email:"owner@invyx.local",
-
-      passwordHash:
-        hashPassword("2705"),
-
-      gender:"Prefer not to say",
-
-      role:"OWNER",
-
-      points:5000,
-
-      banned:false,
-
-      joined:new Date().toISOString()
-
+      id: uid("usr"),
+      username: "INVYX",
+      email: "owner@invyx.local",
+      passwordHash: hashPassword("2705"),
+      gender: "Prefer not to say",
+      role: "OWNER",
+      points: 5000,
+      banned: false,
+      joined: new Date().toISOString()
     });
-
     saveDB();
   }
 }
-
 ensureOwner();
 
 /* ROUTING */
-
 function go(page){
-
-  document
-    .querySelectorAll(".page")
-    .forEach(
-      p=>p.classList.remove("active")
-    );
-
-  const target=
-    document.getElementById(page);
-
-  if(!target){
-
-    document
-      .getElementById("home")
-      .classList.add("active");
-
-    return;
-  }
-
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  const target = document.getElementById(page);
+  if(!target){ document.getElementById("home").classList.add("active"); return; }
   target.classList.add("active");
+  window.history.pushState({page}, "", "#"+page);
 
-  window.history.pushState(
-    {page},
-    "",
-    "#"+page
-  );
-
-  if(page==="guides")
-    renderGuides();
-
-  if(page==="reviews")
-    renderReviews();
-
-  if(page==="dashboard")
-    renderDashboard();
-
-  if(page==="admin")
-    renderAdmin();
-
-  if(page==="owner")
-    renderOwner();
-
+  if(page==="guides") renderGuides();
+  if(page==="reviews") renderReviews();
+  if(page==="chat") renderChat();
+  if(page==="dashboard") renderDashboard();
+  if(page==="admin") renderAdmin();
+  if(page==="owner") renderOwner();
   updateNav();
-
-  window.scrollTo({
-    top:0,
-    behavior:"smooth"
-  });
+  window.scrollTo({top:0, behavior:"smooth"});
 }
 
-window.addEventListener(
-  "popstate",
-  ()=>{
-
-    const page=
-      location.hash.replace("#","")||
-      "home";
-
-    document
-      .querySelectorAll(".page")
-      .forEach(
-        p=>p.classList.remove("active")
-      );
-
-    document
-      .getElementById(page)
-      ?.classList.add("active");
-
-    if(page==="guides")
-      renderGuides();
-
-    if(page==="reviews")
-      renderReviews();
-
-    if(page==="dashboard")
-      renderDashboard();
-
-    if(page==="admin")
-      renderAdmin();
-
-    if(page==="owner")
-      renderOwner();
-
-    updateNav();
-  }
-);
-
-function toggleMenu(){
-
-  document
-    .getElementById("navLinks")
-    .classList.toggle("open");
-}
-
-/* NAV */
+function toggleMenu(){ document.getElementById("navLinks").classList.toggle("open"); }
 
 function updateNav(){
+  const u = currentUser();
+  document.getElementById("adminNav").style.display = u && (u.role==="ADMIN"||u.role==="OWNER") ? "block":"none";
+  document.getElementById("ownerNav").style.display = u?.role==="OWNER" ? "block":"none";
+  document.getElementById("addGuideBtn").style.display = u && (u.role==="ADMIN"||u.role==="OWNER") ? "block":"none";
 
-  const user=currentUser();
-
-  document.getElementById(
-    "adminNav"
-  ).style.display=
-    user &&
-    (
-      user.role==="ADMIN"||
-      user.role==="OWNER"
-    )
-    ?"block"
-    :"none";
-
-  document.getElementById(
-    "ownerNav"
-  ).style.display=
-    user?.role==="OWNER"
-    ?"block"
-    :"none";
-
-  document.getElementById(
-    "addGuideBtn"
-  ).style.display=
-    user &&
-    (
-      user.role==="ADMIN"||
-      user.role==="OWNER"
-    )
-    ?"block"
-    :"none";
-
-  if(user){
-
-    document.getElementById(
-      "navPoints"
-    ).textContent=
-      `${user.points||0} XP`;
-
-    document.getElementById(
-      "navAvatar"
-    ).textContent=
-      user.username
-        .charAt(0)
-        .toUpperCase();
-
-    document.getElementById(
-      "authBtn"
-    ).textContent="Logout";
-
-    document.getElementById(
-      "authBtn"
-    ).onclick=logout;
-
+  if(u){
+    document.getElementById("navPoints").textContent = `${u.points||0} XP`;
+    document.getElementById("navAvatar").textContent = u.username.charAt(0).toUpperCase();
+    document.getElementById("authBtn").textContent = "Logout";
+    document.getElementById("authBtn").onclick = logout;
   }else{
-
-    document.getElementById(
-      "navPoints"
-    ).textContent="0 XP";
-
-    document.getElementById(
-      "navAvatar"
-    ).textContent="?";
-
-    document.getElementById(
-      "authBtn"
-    ).textContent="Login";
-
-    document.getElementById(
-      "authBtn"
-    ).onclick=
-      ()=>go("login");
+    document.getElementById("navPoints").textContent = "0 XP";
+    document.getElementById("navAvatar").textContent = "?";
+    document.getElementById("authBtn").textContent = "Login";
+    document.getElementById("authBtn").onclick = () => go("login");
   }
 }
 
-/* REGISTER */
-
+/* AUTHENTICATION & ROLE REGISTRATION */
 function register(e){
-
   e.preventDefault();
+  const username = document.getElementById("regUsername").value.trim();
+  const email = document.getElementById("regEmail").value.trim().toLowerCase();
+  const password = document.getElementById("regPassword").value;
+  const confirm = document.getElementById("regConfirm").value;
+  const gender = document.getElementById("regGender").value;
+  const keyStr = document.getElementById("regKey").value.trim();
 
-  const username=
-    document.getElementById(
-      "regUsername"
-    ).value.trim();
+  if(password !== confirm){ toast("Passwords do not match", "error"); return; }
+  if(db.users.some(u => u.username.toLowerCase() === username.toLowerCase())){ toast("Username already exists", "error"); return; }
 
-  const email=
-    document.getElementById(
-      "regEmail"
-    ).value.trim().toLowerCase();
+  let assignedRole = "USER";
 
-  const password=
-    document.getElementById(
-      "regPassword"
-    ).value;
-
-  const confirm=
-    document.getElementById(
-      "regConfirm"
-    ).value;
-
-  const gender=
-    document.getElementById(
-      "regGender"
-    ).value;
-
-  const key=
-    document.getElementById(
-      "regKey"
-    ).value.trim();
-
-  if(password!==confirm){
-
-    toast(
-      "Passwords do not match",
-      "error"
-    );
-
-    return;
+  if(keyStr){
+    const now = new Date();
+    const ak = db.adminKeys.find(k => k.key === keyStr && !k.redeemed);
+    if(ak){
+      if(ak.expiresAt && new Date(ak.expiresAt) < now){ toast("Admin Key has expired!", "error"); return; }
+      assignedRole = "ADMIN"; 
+      ak.redeemed = true; 
+      ak.redeemedBy = username;
+    } else {
+      const ok = db.ownerKeys.find(k => k.key === keyStr && !k.redeemed);
+      if(ok){
+        if(ok.expiresAt && new Date(ok.expiresAt) < now){ toast("Owner Key has expired!", "error"); return; }
+        assignedRole = "OWNER"; 
+        ok.redeemed = true; 
+        ok.redeemedBy = username;
+      } else {
+        toast("Invalid or redeemed key!", "error"); return;
+      }
+    }
   }
 
-  if(
-    db.users.some(
-      u=>
-        u.username.toLowerCase()===
-        username.toLowerCase()
-    )
-  ){
-
-    toast(
-      "Username already exists",
-      "error"
-    );
-
-    return;
-  }
-
-  if(
-    db.users.some(
-      u=>u.email===email
-    )
-  ){
-
-    toast(
-      "Email already exists",
-      "error"
-    );
-
-    return;
-  }
-
-  const user={
-
-    id:uid("usr"),
-
-    username,
-
-    email,
-
-    passwordHash:
-      hashPassword(password),
-
-    gender,
-
-    role:"USER",
-
-    points:100,
-
-    banned:false,
-
-    joined:new Date().toISOString()
-
+  const u = { 
+    id: uid("usr"), 
+    username, 
+    email, 
+    passwordHash: hashPassword(password), 
+    gender, 
+    role: assignedRole, 
+    points: 100, 
+    banned: false, 
+    joined: new Date().toISOString() 
   };
 
-  db.users.push(user);
-
-  if(key){
-
-    const adminKey=
-      db.adminKeys.find(
-        k=>
-          k.key===key &&
-          k.active &&
-          !k.redeemed
-      );
-
-    if(adminKey){
-
-      user.role="ADMIN";
-
-      adminKey.redeemed=true;
-
-      adminKey.redeemedBy=
-        user.id;
-
-      adminKey.redeemedAt=
-        new Date().toISOString();
-
-      toast(
-        "Admin key redeemed."
-      );
-
-    }else{
-
-      toast(
-        "Account created, but the key was invalid.",
-        "error"
-      );
-    }
-
-  }else{
-
-    toast(
-      "Account created successfully."
-    );
-  }
-
+  db.users.push(u);
+  logAction(`User account registered as ${assignedRole}`, username);
   saveDB();
 
-  sessionStorage.setItem(
-    SESSION_KEY,
-    user.id
-  );
-
-  log(
-    "ACCOUNT_CREATED",
-    username
-  );
-
-  updateNav();
-
+  sessionStorage.setItem(SESSION_KEY, u.id);
+  toast(`Account created as ${assignedRole}!`);
+  updateNav(); 
   go("dashboard");
 }
 
-/* LOGIN */
-
 function login(e){
-
   e.preventDefault();
+  const id = document.getElementById("loginIdentity").value.trim().toLowerCase();
+  const pass = hashPassword(document.getElementById("loginPassword").value);
+  const u = db.users.find(x => (x.username.toLowerCase() === id || x.email === id) && x.passwordHash === pass);
 
-  const identity=
-    document.getElementById(
-      "loginIdentity"
-    ).value
-      .trim()
-      .toLowerCase();
+  if(!u){ toast("Invalid credentials", "error"); return; }
+  if(u.banned){ toast("Account is banned.", "error"); return; }
 
-  const password=
-    document.getElementById(
-      "loginPassword"
-    ).value;
-
-  const user=
-    db.users.find(
-      u=>
-        u.username.toLowerCase()===
-          identity||
-        u.email.toLowerCase()===
-          identity
-    );
-
-  if(
-    !user||
-    user.passwordHash!==
-      hashPassword(password)
-  ){
-
-    toast(
-      "Invalid credentials",
-      "error"
-    );
-
-    return;
-  }
-
-  if(user.banned){
-
-    toast(
-      "This account is banned.",
-      "error"
-    );
-
-    return;
-  }
-
-  sessionStorage.setItem(
-    SESSION_KEY,
-    user.id
-  );
-
-  log(
-    "LOGIN",
-    user.username
-  );
-
-  toast(
-    "Welcome back, "+
-    user.username
-  );
-
-  updateNav();
-
+  sessionStorage.setItem(SESSION_KEY, u.id);
+  logAction("User logged in", u.username);
+  saveDB();
+  toast("Logged in successfully");
+  updateNav(); 
   go("dashboard");
 }
 
 function logout(){
-
-  const user=currentUser();
-
-  if(user)
-    log(
-      "LOGOUT",
-      user.username
-    );
-
-  sessionStorage.removeItem(
-    SESSION_KEY
-  );
-
-  updateNav();
-
-  toast("Logged out.");
-
+  const u = currentUser();
+  if(u) logAction("User logged out", u.username);
+  sessionStorage.removeItem(SESSION_KEY);
+  toast("Logged out");
+  updateNav(); 
   go("home");
 }
 
-/* GUIDES */
+/* TRANSACTION SYSTEM */
+function openBuyModal(){ openModal('buyPointsModal'); }
 
-function renderGuides(){
-
-  const search=
-    (
-      document.getElementById(
-        "guideSearch"
-      )?.value||""
-    ).toLowerCase();
-
-  const filter=
-    document.getElementById(
-      "guideFilter"
-    )?.value||
-    "all";
-
-  const sort=
-    document.getElementById(
-      "guideSort"
-    )?.value||
-    "new";
-
-  let guides=[...db.guides];
-
-  guides=
-    guides.filter(g=>{
-
-      const match=
-        g.title
-          .toLowerCase()
-          .includes(search)||
-        g.description
-          .toLowerCase()
-          .includes(search)||
-        g.category
-          .toLowerCase()
-          .includes(search);
-
-      const filterMatch=
-        filter==="all"||
-        (
-          filter==="free"&&
-          g.access==="free"
-        )||
-        (
-          filter==="points"&&
-          g.access==="points"
-        );
-
-      return match&&filterMatch;
-    });
-
-  if(sort==="new"){
-
-    guides.sort(
-      (a,b)=>
-        new Date(b.created)-
-        new Date(a.created)
-    );
-  }
-
-  if(sort==="price"){
-
-    guides.sort(
-      (a,b)=>
-        (a.price||0)-
-        (b.price||0)
-    );
-  }
-
-  document.getElementById(
-    "guidesGrid"
-  ).innerHTML=
-    guides.map(
-      guideCard
-    ).join("")||
-    `
-      <div
-        class="card"
-        style="
-          grid-column:1/-1;
-          text-align:center;
-          padding:60px">
-
-        <h3>No guides found</h3>
-
-        <p>
-          Try another search.
-        </p>
-
-      </div>
-    `;
-
-  document.getElementById(
-    "featuredGuides"
-  ).innerHTML=
-    db.guides
-      .slice(0,3)
-      .map(guideCard)
-      .join("");
-}
-
-function guideCard(g){
-
-  const user=currentUser();
-
-  const owned=
-    user&&
-    db.purchases.some(
-      p=>
-        p.userId===user.id&&
-        p.guideId===g.id
-    );
-
-  let action="";
-
-  if(
-    g.access==="free"||
-    owned
-  ){
-
-    action=`
-      <button
-        class="btn btn-success btn-small"
-        onclick="
-          openGuide('${g.id}')
-        ">
-        ${owned?"Open":"Access"}
-      </button>
-    `;
-
-  }else{
-
-    action=`
-      <button
-        class="btn btn-primary btn-small"
-        onclick="
-          buyGuide('${g.id}')
-        ">
-        ${g.price} XP
-      </button>
-    `;
-  }
-
-  return`
-
-    <div class="card">
-
-      <div class="guide-image"></div>
-
-      <span class="badge">
-        ${escapeHTML(g.category)}
-      </span>
-
-      <h3>
-        ${escapeHTML(g.title)}
-      </h3>
-
-      <p>
-        ${escapeHTML(g.description)}
-      </p>
-
-      <div class="card-footer">
-
-        <strong>
-          ${
-            g.access==="free"
-            ?"FREE"
-            :
-            `${g.price} XP`
-          }
-        </strong>
-
-        ${action}
-
-      </div>
-
-    </div>
-
-  `;
-}
-
-function openGuide(id){
-
-  const guide=
-    db.guides.find(
-      g=>g.id===id
-    );
-
-  if(!guide)return;
-
-  if(guide.access!=="free"){
-
-    const user=currentUser();
-
-    const owned=
-      user&&
-      db.purchases.some(
-        p=>
-          p.userId===user.id&&
-          p.guideId===id
-      );
-
-    if(!owned){
-
-      toast(
-        "Purchase this guide first.",
-        "error"
-      );
-
-      return;
-    }
-  }
-
-  openGenericModal(
-    guide.title,
-    `
-      <span class="badge">
-        ${escapeHTML(guide.category)}
-      </span>
-
-      <h2 style="margin:15px 0">
-        ${escapeHTML(guide.title)}
-      </h2>
-
-      <p
-        style="
-          line-height:1.8;
-          color:#999">
-        ${escapeHTML(guide.content)}
-      </p>
-    `
-  );
-}
-
-function buyGuide(id){
-
-  const user=currentUser();
-
-  if(!user){
-
-    toast(
-      "Login first.",
-      "error"
-    );
-
-    go("login");
-
-    return;
-  }
-
-  const guide=
-    db.guides.find(
-      g=>g.id===id
-    );
-
-  if(!guide)return;
-
-  if(
-    user.points<
-    guide.price
-  ){
-
-    toast(
-      "Not enough points.",
-      "error"
-    );
-
-    return;
-  }
-
-  if(
-    db.purchases.some(
-      p=>
-        p.userId===user.id&&
-        p.guideId===id
-    )
-  ){
-
-    toast(
-      "You already own this guide."
-    );
-
-    return;
-  }
-
-  user.points-=guide.price;
-
-  db.purchases.push({
-
-    id:uid("purchase"),
-
-    userId:user.id,
-
-    guideId:id,
-
-    price:guide.price,
-
-    date:new Date().toISOString()
-
-  });
-
-  db.transactions.unshift({
-
-    id:uid("tx"),
-
-    userId:user.id,
-
-    amount:-guide.price,
-
-    type:"Guide purchase",
-
-    description:guide.title,
-
-    date:new Date().toISOString(),
-
-    balance:user.points
-
-  });
-
-  saveDB();
-
-  log(
-    "GUIDE_PURCHASE",
-    guide.title
-  );
-
-  updateNav();
-
-  toast(
-    "Guide purchased."
-  );
-
-  renderGuides();
-}
-
-/* REVIEWS */
-
-function renderReviews(){
-
-  document.getElementById(
-    "reviewsGrid"
-  ).innerHTML=
-    db.reviews.map(
-      r=>`
-
-        <div class="card">
-
-          <div
-            style="
-              color:#f59e0b;
-              font-size:20px">
-
-            ${"★".repeat(r.rating)}
-
-            <span
-              style="color:#292936">
-              ${"★".repeat(5-r.rating)}
-            </span>
-
-          </div>
-
-          <p style="margin-top:14px">
-            "${escapeHTML(r.text)}"
-          </p>
-
-          <div
-            style="
-              margin-top:18px;
-              font-weight:850">
-
-            ${escapeHTML(r.username)}
-
-          </div>
-
-          <small
-            style="color:#666678">
-
-            ${new Date(
-              r.date
-            ).toLocaleDateString()}
-
-          </small>
-
-        </div>
-
-      `
-    ).join("");
-}
-
-function openReviewModal(){
-
-  if(!currentUser()){
-
-    toast(
-      "Login to write a review.",
-      "error"
-    );
-
-    go("login");
-
-    return;
-  }
-
-  document
-    .getElementById(
-      "reviewModal"
-    )
-    .classList.add("show");
-}
-
-function createReview(e){
-
+function submitBuyRequest(e){
   e.preventDefault();
-
-  const user=currentUser();
-
-  if(!user)return;
-
-  db.reviews.unshift({
-
-    id:uid("review"),
-
-    username:user.username,
-
-    rating:Number(
-      document.getElementById(
-        "reviewRating"
-      ).value
-    ),
-
-    text:
-      document.getElementById(
-        "reviewText"
-      ).value,
-
-    date:new Date().toISOString()
-
-  });
-
-  saveDB();
-
-  closeModal(
-    "reviewModal"
-  );
-
-  document.getElementById(
-    "reviewText"
-  ).value="";
-
-  log(
-    "REVIEW_CREATED",
-    user.username
-  );
-
-  toast(
-    "Review published."
-  );
-
-  renderReviews();
-}
-
-/* DASHBOARD */
-
-function renderDashboard(){
-
-  const user=currentUser();
-
-  if(!user){
-
-    document.getElementById(
-      "dashboardContent"
-    ).innerHTML=`
-
-      <div
-        class="card"
-        style="
-          text-align:center;
-          padding:70px">
-
-        <h2>
-          Login required
-        </h2>
-
-        <p
-          style="
-            margin:10px 0 20px;
-            color:#888">
-
-          Log in to access
-          your dashboard.
-
-        </p>
-
-        <button
-          class="btn btn-primary"
-          onclick="go('login')">
-
-          Login
-
-        </button>
-
-      </div>
-
-    `;
-
-    return;
-  }
-
-  const purchases=
-    db.purchases.filter(
-      p=>p.userId===user.id
-    );
-
-  const transactions=
-    db.transactions.filter(
-      t=>t.userId===user.id
-    );
-
-  document.getElementById(
-    "dashboardContent"
-  ).innerHTML=`
-
-    <div class="dashboard-head">
-
-      <h1>
-        Welcome back,
-        ${escapeHTML(user.username)}.
-      </h1>
-
-      <p>
-        Track your INVYX progress
-        and resources.
-      </p>
-
-    </div>
-
-    <div class="stat-grid">
-
-      <div class="stat">
-        <small>Points</small>
-        <strong>${user.points}</strong>
-      </div>
-
-      <div class="stat">
-        <small>Guides</small>
-        <strong>${purchases.length}</strong>
-      </div>
-
-      <div class="stat">
-        <small>Reviews</small>
-        <strong>
-          ${
-            db.reviews.filter(
-              r=>
-                r.username===
-                user.username
-            ).length
-          }
-        </strong>
-      </div>
-
-      <div class="stat">
-        <small>Role</small>
-        <strong
-          style="
-            font-size:19px">
-
-          ${user.role}
-
-        </strong>
-      </div>
-
-    </div>
-
-    <div class="card">
-
-      <h2>
-        Recent transactions
-      </h2>
-
-      <div
-        class="table-wrap"
-        style="margin-top:15px">
-
-        <table>
-
-          <thead>
-
-            <tr>
-              <th>Type</th>
-              <th>Description</th>
-              <th>Amount</th>
-              <th>Date</th>
-            </tr>
-
-          </thead>
-
-          <tbody>
-
-            ${
-              transactions
-                .slice(0,8)
-                .map(
-                  t=>`
-
-                    <tr>
-
-                      <td>
-                        ${escapeHTML(t.type)}
-                      </td>
-
-                      <td>
-                        ${escapeHTML(t.description)}
-                      </td>
-
-                      <td>
-                        ${
-                          t.amount>0
-                          ?"+"
-                          :""
-                        }${t.amount}
-                      </td>
-
-                      <td>
-                        ${new Date(
-                          t.date
-                        ).toLocaleDateString()}
-                      </td>
-
-                    </tr>
-
-                  `
-                ).join("")
-                ||
-                `
-                  <tr>
-                    <td colspan="4">
-                      No transactions yet.
-                    </td>
-                  </tr>
-                `
-            }
-
-          </tbody>
-
-        </table>
-
-      </div>
-
-    </div>
-
-  `;
-}
-
-/* ACCESS */
-
-function hasAdminAccess(){
-
-  const user=currentUser();
-
-  return user&&
-    (
-      user.role==="ADMIN"||
-      user.role==="OWNER"
-    );
-}
-
-function isOwner(){
-
-  return currentUser()?.role==="OWNER";
-}
-
-/* ADMIN */
-
-function renderAdmin(){
-
-  if(!hasAdminAccess()){
-
-    toast(
-      "Admin access required.",
-      "error"
-    );
-
-    go("home");
-
-    return;
-  }
-
-  adminSection("overview");
-}
-
-function adminSection(
-  section,
-  button
-){
-
-  if(!hasAdminAccess())return;
-
-  if(button){
-
-    document
-      .querySelectorAll(
-        ".sidebar button"
-      )
-      .forEach(
-        b=>b.classList.remove(
-          "active"
-        )
-      );
-
-    button.classList.add("active");
-  }
-
-  const box=
-    document.getElementById(
-      "adminContent"
-    );
-
-  if(section==="overview"){
-
-    box.innerHTML=`
-
-      <div class="stat-grid">
-
-        <div class="stat">
-          <small>Total users</small>
-          <strong>
-            ${db.users.length}
-          </strong>
-        </div>
-
-        <div class="stat">
-          <small>Guides</small>
-          <strong>
-            ${db.guides.length}
-          </strong>
-        </div>
-
-        <div class="stat">
-          <small>Reviews</small>
-          <strong>
-            ${db.reviews.length}
-          </strong>
-        </div>
-
-        <div class="stat">
-          <small>Transactions</small>
-          <strong>
-            ${db.transactions.length}
-          </strong>
-        </div>
-
-      </div>
-
-    `;
-  }
-
-  if(section==="users"){
-
-    box.innerHTML=`
-
-      <div class="card">
-
-        <h2>
-          Users
-        </h2>
-
-        <div
-          class="table-wrap"
-          style="margin-top:15px">
-
-          <table>
-
-            <thead>
-
-              <tr>
-                <th>Username</th>
-                <th>Role</th>
-                <th>Points</th>
-                <th>Status</th>
-              </tr>
-
-            </thead>
-
-            <tbody>
-
-              ${
-                db.users.map(
-                  u=>`
-
-                    <tr>
-
-                      <td>
-                        ${escapeHTML(
-                          u.username
-                        )}
-                      </td>
-
-                      <td>
-                        ${u.role}
-                      </td>
-
-                      <td>
-                        ${u.points}
-                      </td>
-
-                      <td>
-                        ${
-                          u.banned
-                          ?"Banned"
-                          :"Active"
-                        }
-                      </td>
-
-                    </tr>
-
-                  `
-                ).join("")
-              }
-
-            </tbody>
-
-          </table>
-
-        </div>
-
-      </div>
-
-    `;
-  }
-
-  if(section==="guides"){
-
-    box.innerHTML=`
-
-      <div class="card">
-
-        <div class="section-title">
-
-          <h2>
-            Guide management
-          </h2>
-
-          <button
-            class="btn btn-primary"
-            onclick="openGuideModal()">
-
-            + Add guide
-
-          </button>
-
-        </div>
-
-        ${
-          db.guides.map(
-            g=>`
-
-              <div
-                style="
-                  padding:15px 0;
-                  border-bottom:1px solid var(--border);
-                  display:flex;
-                  justify-content:space-between;
-                  align-items:center;
-                  gap:10px">
-
-                <div>
-
-                  <strong>
-                    ${escapeHTML(g.title)}
-                  </strong>
-
-                  <small
-                    style="
-                      display:block;
-                      color:#777">
-
-                    ${g.access}
-                    ·
-                    ${g.price} XP
-
-                  </small>
-
-                </div>
-
-                <button
-                  class="btn btn-danger btn-small"
-                  onclick="
-                    deleteGuide('${g.id}')
-                  ">
-
-                  Delete
-
-                </button>
-
-              </div>
-
-            `
-          ).join("")
-        }
-
-      </div>
-
-    `;
-  }
-
-  if(section==="reviews"){
-
-    box.innerHTML=`
-
-      <div class="card">
-
-        <h2>
-          Review moderation
-        </h2>
-
-        ${
-          db.reviews.map(
-            r=>`
-
-              <div
-                style="
-                  padding:15px 0;
-                  border-bottom:1px solid var(--border)">
-
-                <strong>
-                  ${escapeHTML(r.username)}
-                </strong>
-
-                <div
-                  style="
-                    color:#f59e0b;
-                    margin:4px 0">
-
-                  ${"★".repeat(r.rating)}
-
-                </div>
-
-                <p>
-                  ${escapeHTML(r.text)}
-                </p>
-
-                <button
-                  class="btn btn-danger btn-small"
-                  style="margin-top:9px"
-                  onclick="
-                    deleteReview('${r.id}')
-                  ">
-
-                  Remove
-
-                </button>
-
-              </div>
-
-            `
-          ).join("")
-        }
-
-      </div>
-
-    `;
-  }
-
-  if(section==="transactions"){
-
-    box.innerHTML=`
-
-      <div class="card">
-
-        <h2>
-          Point transactions
-        </h2>
-
-        <div
-          class="table-wrap"
-          style="margin-top:15px">
-
-          <table>
-
-            <thead>
-
-              <tr>
-                <th>User</th>
-                <th>Type</th>
-                <th>Amount</th>
-                <th>Date</th>
-              </tr>
-
-            </thead>
-
-            <tbody>
-
-              ${
-                db.transactions.map(
-                  t=>{
-
-                    const u=
-                      db.users.find(
-                        x=>
-                          x.id===
-                          t.userId
-                      );
-
-                    return`
-
-                      <tr>
-
-                        <td>
-                          ${escapeHTML(
-                            u?.username||
-                            "Unknown"
-                          )}
-                        </td>
-
-                        <td>
-                          ${escapeHTML(
-                            t.type
-                          )}
-                        </td>
-
-                        <td>
-                          ${t.amount}
-                        </td>
-
-                        <td>
-                          ${new Date(
-                            t.date
-                          ).toLocaleString()}
-                        </td>
-
-                      </tr>
-
-                    `;
-                  }
-                ).join("")
-              }
-
-            </tbody>
-
-          </table>
-
-        </div>
-
-      </div>
-
-    `;
-  }
-}
-
-/* OWNER */
-
-function renderOwner(){
-
-  if(!isOwner()){
-
-    toast(
-      "Owner access required.",
-      "error"
-    );
-
-    go("home");
-
-    return;
-  }
-
-  ownerSection("overview");
-}
-
-function ownerSection(
-  section,
-  button
-){
-
-  if(!isOwner())return;
-
-  if(button){
-
-    document
-      .querySelectorAll(
-        ".sidebar button"
-      )
-      .forEach(
-        b=>b.classList.remove(
-          "active"
-        )
-      );
-
-    button.classList.add("active");
-  }
-
-  const box=
-    document.getElementById(
-      "ownerContent"
-    );
-
-  if(section==="overview"){
-
-    box.innerHTML=`
-
-      <div class="stat-grid">
-
-        <div class="stat">
-          <small>Total users</small>
-          <strong>
-            ${db.users.length}
-          </strong>
-        </div>
-
-        <div class="stat">
-          <small>Active users</small>
-          <strong>
-            ${
-              db.users.filter(
-                u=>!u.banned
-              ).length
-            }
-          </strong>
-        </div>
-
-        <div class="stat">
-          <small>Banned</small>
-          <strong>
-            ${
-              db.users.filter(
-                u=>u.banned
-              ).length
-            }
-          </strong>
-        </div>
-
-        <div class="stat">
-          <small>Admins</small>
-          <strong>
-            ${
-              db.users.filter(
-                u=>u.role==="ADMIN"
-              ).length
-            }
-          </strong>
-        </div>
-
-      </div>
-
-      <div class="grid">
-
-        <div class="card">
-          <h3>Guides</h3>
-          <strong
-            style="font-size:35px">
-            ${db.guides.length}
-          </strong>
-        </div>
-
-        <div class="card">
-          <h3>Transactions</h3>
-          <strong
-            style="font-size:35px">
-            ${db.transactions.length}
-          </strong>
-        </div>
-
-        <div class="card">
-          <h3>Audit logs</h3>
-          <strong
-            style="font-size:35px">
-            ${db.logs.length}
-          </strong>
-        </div>
-
-      </div>
-
-    `;
-  }
-
-  if(section==="users"){
-
-    box.innerHTML=`
-
-      <div class="card">
-
-        <h2>
-          User management
-        </h2>
-
-        <div class="table-wrap">
-
-          <table>
-
-            <thead>
-
-              <tr>
-                <th>User</th>
-                <th>Role</th>
-                <th>Points</th>
-                <th>Status</th>
-                <th>Actions</th>
-              </tr>
-
-            </thead>
-
-            <tbody>
-
-              ${
-                db.users.map(
-                  u=>`
-
-                    <tr>
-
-                      <td>
-                        ${escapeHTML(
-                          u.username
-                        )}
-                      </td>
-
-                      <td>
-                        ${u.role}
-                      </td>
-
-                      <td>
-                        ${u.points}
-                      </td>
-
-                      <td>
-                        ${
-                          u.banned
-                          ?"BANNED"
-                          :"ACTIVE"
-                        }
-                      </td>
-
-                      <td>
-
-                        ${
-                          u.role!=="OWNER"
-
-                          ?
-
-                          `
-                            <button
-                              class="
-                                btn
-                                ${
-                                  u.banned
-                                  ?"btn-success"
-                                  :"btn-danger"
-                                }
-                                btn-small
-                              "
-                              onclick="
-                                toggleBan('${u.id}')
-                              ">
-
-                              ${
-                                u.banned
-                                ?"Unban"
-                                :"Ban"
-                              }
-
-                            </button>
-                          `
-
-                          :
-
-                          `
-                            <span
-                              style="
-                                color:#666">
-
-                              Protected
-
-                            </span>
-                          `
-                        }
-
-                      </td>
-
-                    </tr>
-
-                  `
-                ).join("")
-              }
-
-            </tbody>
-
-          </table>
-
-        </div>
-
-      </div>
-
-    `;
-  }
-
-  if(section==="admins"){
-
-    const admins=
-      db.users.filter(
-        u=>u.role==="ADMIN"
-      );
-
-    box.innerHTML=`
-
-      <div class="card">
-
-        <div class="section-title">
-
-          <div>
-            <h2>
-              Admin management
-            </h2>
-
-            <p>
-              Manage administrator privileges.
-            </p>
-          </div>
-
-          <button
-            class="btn btn-primary"
-            onclick="createAdminDirect()">
-
-            + Add admin
-
-          </button>
-
-        </div>
-
-        ${
-          admins.map(
-            a=>`
-
-              <div
-                style="
-                  padding:15px 0;
-                  border-bottom:1px solid var(--border);
-                  display:flex;
-                  justify-content:space-between;
-                  gap:10px">
-
-                <div>
-
-                  <strong>
-                    ${escapeHTML(a.username)}
-                  </strong>
-
-                  <small
-                    style="
-                      display:block;
-                      color:#777">
-
-                    ${escapeHTML(a.email)}
-
-                  </small>
-
-                </div>
-
-                <button
-                  class="btn btn-danger btn-small"
-                  onclick="
-                    removeAdmin('${a.id}')
-                  ">
-
-                  Remove admin
-
-                </button>
-
-              </div>
-
-            `
-          ).join("")
-          ||
-          "<p>No admins yet.</p>"
-        }
-
-      </div>
-
-    `;
-  }
-
-  if(section==="keys"){
-
-    box.innerHTML=`
-
-      <div class="card">
-
-        <div class="section-title">
-
-          <div>
-
-            <h2>
-              Admin key generator
-            </h2>
-
-            <p>
-              Create activation keys.
-            </p>
-
-          </div>
-
-          <button
-            class="btn btn-primary"
-            onclick="generateAdminKey()">
-
-            Generate key
-
-          </button>
-
-        </div>
-
-        ${
-          db.adminKeys.map(
-            k=>`
-
-              <div
-                style="
-                  padding:15px 0;
-                  border-bottom:1px solid var(--border)">
-
-                <strong>
-                  ${escapeHTML(k.key)}
-                </strong>
-
-                <small
-                  style="
-                    display:block;
-                    color:#777">
-
-                  ${
-                    k.redeemed
-                    ?"Redeemed"
-                    :"Active"
-                  }
-
-                  ·
-
-                  ${new Date(
-                    k.created
-                  ).toLocaleString()}
-
-                </small>
-
-              </div>
-
-            `
-          ).join("")
-          ||
-          "<p>No keys generated.</p>"
-        }
-
-      </div>
-
-    `;
-  }
-
-  if(section==="ownerkeys"){
-
-    box.innerHTML=`
-
-      <div class="card">
-
-        <div class="section-title">
-
-          <div>
-
-            <h2>
-              Owner keys
-            </h2>
-
-            <p>
-              High-privilege keys.
-            </p>
-
-          </div>
-
-          <button
-            class="btn btn-primary"
-            onclick="generateOwnerKey()">
-
-            Generate owner key
-
-          </button>
-
-        </div>
-
-        ${
-          db.ownerKeys.map(
-            k=>`
-
-              <div
-                style="
-                  padding:15px 0;
-                  border-bottom:1px solid var(--border)">
-
-                <strong>
-                  ${escapeHTML(k.key)}
-                </strong>
-
-                <small
-                  style="
-                    display:block;
-                    color:#777">
-
-                  ${
-                    k.active
-                    ?"Active"
-                    :"Revoked"
-                  }
-
-                </small>
-
-              </div>
-
-            `
-          ).join("")
-          ||
-          "<p>No owner keys.</p>"
-        }
-
-      </div>
-
-    `;
-  }
-
-  if(section==="guides"){
-
-    box.innerHTML=`
-
-      <div class="card">
-
-        <div class="section-title">
-
-          <div>
-
-            <h2>
-              All guides
-            </h2>
-
-            <p>
-              Manage marketplace content.
-            </p>
-
-          </div>
-
-          <button
-            class="btn btn-primary"
-            onclick="openGuideModal()">
-
-            + Add guide
-
-          </button>
-
-        </div>
-
-        ${
-          db.guides.map(
-            g=>`
-
-              <div
-                style="
-                  display:flex;
-                  justify-content:space-between;
-                  align-items:center;
-                  gap:10px;
-                  padding:15px 0;
-                  border-bottom:1px solid var(--border)">
-
-                <div>
-
-                  <strong>
-                    ${escapeHTML(g.title)}
-                  </strong>
-
-                  <small
-                    style="
-                      display:block;
-                      color:#777">
-
-                    ${escapeHTML(g.category)}
-                    ·
-                    ${escapeHTML(g.access)}
-
-                  </small>
-
-                </div>
-
-                <button
-                  class="btn btn-danger btn-small"
-                  onclick="
-                    deleteGuide('${g.id}')
-                  ">
-
-                  Delete
-
-                </button>
-
-              </div>
-
-            `
-          ).join("")
-        }
-
-      </div>
-
-    `;
-  }
-
-  if(section==="points"){
-
-    box.innerHTML=`
-
-      <div class="card">
-
-        <h2>
-          Point distribution
-        </h2>
-
-        <p
-          style="
-            color:#777;
-            margin:7px 0 20px">
-
-          Award points to a user.
-
-        </p>
-
-        <div class="field">
-
-          <label>
-            Username
-          </label>
-
-          <input id="pointUser">
-
-        </div>
-
-        <div class="field">
-
-          <label>
-            Amount
-          </label>
-
-          <input
-            id="pointAmount"
-            type="number"
-            min="1">
-
-        </div>
-
-        <button
-          class="btn btn-primary"
-          onclick="awardPoints()">
-
-          Award points
-
-        </button>
-
-      </div>
-
-    `;
-  }
-
-  if(section==="giveaways"){
-
-    box.innerHTML=`
-
-      <div class="card">
-
-        <div class="section-title">
-
-          <div>
-
-            <h2>
-              Giveaways
-            </h2>
-
-            <p>
-              Create point giveaways.
-            </p>
-
-          </div>
-
-          <button
-            class="btn btn-primary"
-            onclick="createGiveaway()">
-
-            + Create giveaway
-
-          </button>
-
-        </div>
-
-        ${
-          db.giveaways.map(
-            g=>`
-
-              <div
-                style="
-                  padding:15px 0;
-                  border-bottom:1px solid var(--border)">
-
-                <strong>
-                  ${escapeHTML(g.name)}
-                </strong>
-
-                <small
-                  style="
-                    display:block;
-                    color:#777">
-
-                  ${g.winners}
-                  winners
-                  ·
-                  ${g.points} XP each
-                  ·
-                  ${
-                    g.completed
-                    ?"Completed"
-                    :"Active"
-                  }
-
-                </small>
-
-                ${
-                  !g.completed
-
-                  ?
-
-                  `
-                    <button
-                      class="btn btn-success btn-small"
-                      style="margin-top:8px"
-                      onclick="
-                        finishGiveaway('${g.id}')
-                      ">
-
-                      Finish giveaway
-
-                    </button>
-                  `
-
-                  :""
-                }
-
-              </div>
-
-            `
-          ).join("")
-          ||
-          "<p>No giveaways.</p>"
-        }
-
-      </div>
-
-    `;
-  }
-
-  if(section==="logs"){
-
-    box.innerHTML=`
-
-      <div class="card">
-
-        <h2>
-          Security & audit logs
-        </h2>
-
-        <div
-          class="table-wrap"
-          style="margin-top:15px">
-
-          <table>
-
-            <thead>
-
-              <tr>
-                <th>Action</th>
-                <th>User</th>
-                <th>Details</th>
-                <th>Date</th>
-              </tr>
-
-            </thead>
-
-            <tbody>
-
-              ${
-                db.logs.map(
-                  l=>`
-
-                    <tr>
-
-                      <td>
-                        ${escapeHTML(l.action)}
-                      </td>
-
-                      <td>
-                        ${escapeHTML(l.user)}
-                      </td>
-
-                      <td>
-                        ${escapeHTML(l.details)}
-                      </td>
-
-                      <td>
-                        ${new Date(
-                          l.date
-                        ).toLocaleString()}
-                      </td>
-
-                    </tr>
-
-                  `
-                ).join("")
-              }
-
-            </tbody>
-
-          </table>
-
-        </div>
-
-      </div>
-
-    `;
-  }
-}
-
-/* ADMIN KEYS */
-
-function randomBlock(){
-
-  return Math.random()
-    .toString(36)
-    .substring(2,6)
-    .toUpperCase();
-}
-
-function generateAdminKey(){
-
-  if(!isOwner())return;
-
-  const key=
-    "ADMIN-"+
-    randomBlock()+"-"+
-    randomBlock()+"-"+
-    randomBlock();
-
-  db.adminKeys.push({
-
-    id:uid("key"),
-
-    key,
-
-    created:
-      new Date().toISOString(),
-
-    creator:
-      currentUser().id,
-
-    active:true,
-
-    redeemed:false,
-
-    expires:null
-
-  });
-
-  saveDB();
-
-  log(
-    "ADMIN_KEY_GENERATED",
-    key
-  );
-
-  toast(
-    "Admin key generated: "+key
-  );
-
-  ownerSection("keys");
-}
-
-/* OWNER KEYS */
-
-function generateOwnerKey(){
-
-  if(!isOwner())return;
-
-  const key=
-    "OWNER-"+
-    randomBlock()+"-"+
-    randomBlock()+"-"+
-    randomBlock()+"-"+
-    randomBlock();
-
-  db.ownerKeys.push({
-
-    id:uid("okey"),
-
-    key,
-
-    created:
-      new Date().toISOString(),
-
-    active:true
-
-  });
-
-  saveDB();
-
-  log(
-    "OWNER_KEY_GENERATED",
-    key
-  );
-
-  toast(
-    "Owner key generated: "+key
-  );
-
-  ownerSection("ownerkeys");
-}
-
-/* USER MANAGEMENT */
-
-function toggleBan(id){
-
-  if(!isOwner())return;
-
-  const user=
-    db.users.find(
-      u=>u.id===id
-    );
-
-  if(
-    !user||
-    user.role==="OWNER"
-  )return;
-
-  user.banned=
-    !user.banned;
-
-  saveDB();
-
-  log(
-    user.banned
-      ?"USER_BANNED"
-      :"USER_UNBANNED",
-    user.username
-  );
-
-  toast(
-    user.banned
-      ?"User banned"
-      :"User unbanned"
-  );
-
-  ownerSection("users");
-}
-
-function removeAdmin(id){
-
-  if(!isOwner())return;
-
-  const user=
-    db.users.find(
-      u=>u.id===id
-    );
-
-  if(
-    !user||
-    user.role!=="ADMIN"
-  )return;
-
-  user.role="USER";
-
-  saveDB();
-
-  log(
-    "ADMIN_REMOVED",
-    user.username
-  );
-
-  toast(
-    "Admin privileges removed."
-  );
-
-  ownerSection("admins");
-}
-
-function createAdminDirect(){
-
-  if(!isOwner())return;
-
-  const username=
-    prompt(
-      "Username to promote:"
-    );
-
-  if(!username)return;
-
-  const user=
-    db.users.find(
-      u=>
-        u.username.toLowerCase()===
-        username.toLowerCase()
-    );
-
-  if(!user){
-
-    toast(
-      "User not found.",
-      "error"
-    );
-
-    return;
-  }
-
-  if(user.role==="OWNER"){
-
-    toast(
-      "Owner cannot be modified.",
-      "error"
-    );
-
-    return;
-  }
-
-  user.role="ADMIN";
-
-  saveDB();
-
-  log(
-    "ADMIN_CREATED",
-    username
-  );
-
-  toast(
-    "User promoted to admin."
-  );
-
-  ownerSection("admins");
-}
-
-/* POINTS */
-
-function awardPoints(){
-
-  if(!isOwner())return;
-
-  const username=
-    document.getElementById(
-      "pointUser"
-    ).value.trim();
-
-  const amount=
-    Number(
-      document.getElementById(
-        "pointAmount"
-      ).value
-    );
-
-  const user=
-    db.users.find(
-      u=>
-        u.username.toLowerCase()===
-        username.toLowerCase()
-    );
-
-  if(
-    !user||
-    !amount||
-    amount<1
-  ){
-
-    toast(
-      "Invalid user or amount.",
-      "error"
-    );
-
-    return;
-  }
-
-  user.points+=amount;
-
-  db.transactions.unshift({
-
-    id:uid("tx"),
-
-    userId:user.id,
-
+  const u = currentUser();
+  if(!u) return;
+
+  const amount = parseInt(document.getElementById("buyAmount").value);
+  const note = document.getElementById("buyNote").value.trim();
+
+  const req = {
+    id: uid("req"),
+    userId: u.id,
+    username: u.username,
     amount,
-
-    type:"Admin adjustment",
-
-    description:
-      "Owner point award",
-
-    date:
-      new Date().toISOString(),
-
-    balance:user.points
-
-  });
-
-  saveDB();
-
-  log(
-    "POINTS_AWARDED",
-    `${amount} → ${user.username}`
-  );
-
-  toast(
-    `Awarded ${amount} XP to ${user.username}.`
-  );
-
-  ownerSection("points");
-}
-
-/* GIVEAWAYS */
-
-function createGiveaway(){
-
-  if(!isOwner())return;
-
-  const name=
-    prompt(
-      "Giveaway name:"
-    );
-
-  if(!name)return;
-
-  const winners=
-    Number(
-      prompt(
-        "Number of winners:",
-        "10"
-      )
-    );
-
-  const points=
-    Number(
-      prompt(
-        "Points per winner:",
-        "500"
-      )
-    );
-
-  if(
-    !winners||
-    !points
-  )return;
-
-  db.giveaways.unshift({
-
-    id:uid("giveaway"),
-
-    name,
-
-    winners,
-
-    points,
-
-    participants:[],
-
-    completed:false,
-
-    created:
-      new Date().toISOString()
-
-  });
-
-  saveDB();
-
-  log(
-    "GIVEAWAY_CREATED",
-    name
-  );
-
-  toast(
-    "Giveaway created."
-  );
-
-  ownerSection(
-    "giveaways"
-  );
-}
-
-function finishGiveaway(id){
-
-  if(!isOwner())return;
-
-  const giveaway=
-    db.giveaways.find(
-      g=>g.id===id
-    );
-
-  if(
-    !giveaway||
-    giveaway.completed
-  )return;
-
-  const eligible=
-    db.users.filter(
-      u=>!u.banned
-    );
-
-  const shuffled=
-    [...eligible].sort(
-      ()=>Math.random()-.5
-    );
-
-  const winners=
-    shuffled.slice(
-      0,
-      Math.min(
-        giveaway.winners,
-        eligible.length
-      )
-    );
-
-  winners.forEach(
-    user=>{
-
-      user.points+=
-        giveaway.points;
-
-      db.transactions.unshift({
-
-        id:uid("tx"),
-
-        userId:user.id,
-
-        amount:
-          giveaway.points,
-
-        type:"Giveaway",
-
-        description:
-          giveaway.name,
-
-        date:
-          new Date().toISOString(),
-
-        balance:
-          user.points
-
-      });
-
-    }
-  );
-
-  giveaway.completed=true;
-
-  giveaway.winnerIds=
-    winners.map(
-      w=>w.id
-    );
-
-  saveDB();
-
-  log(
-    "GIVEAWAY_COMPLETED",
-    `${giveaway.name}: ${
-      winners
-        .map(w=>w.username)
-        .join(", ")
-    }`
-  );
-
-  toast(
-    "Giveaway completed."
-  );
-
-  ownerSection(
-    "giveaways"
-  );
-}
-
-/* GUIDE MANAGEMENT */
-
-function openGuideModal(){
-
-  if(!hasAdminAccess())return;
-
-  document
-    .getElementById(
-      "guideModal"
-    )
-    .classList.add("show");
-}
-
-function createGuide(e){
-
-  e.preventDefault();
-
-  if(!hasAdminAccess())return;
-
-  const guide={
-
-    id:uid("guide"),
-
-    title:
-      document.getElementById(
-        "guideTitle"
-      ).value,
-
-    description:
-      document.getElementById(
-        "guideDescription"
-      ).value,
-
-    category:
-      document.getElementById(
-        "guideCategory"
-      ).value,
-
-    access:
-      document.getElementById(
-        "guideAccess"
-      ).value,
-
-    price:
-      Number(
-        document.getElementById(
-          "guidePrice"
-        ).value
-      ),
-
-    content:
-      document.getElementById(
-        "guideContent"
-      ).value,
-
-    created:
-      new Date().toISOString()
-
+    note,
+    status: "PENDING",
+    date: new Date().toISOString()
   };
 
-  db.guides.unshift(
-    guide
-  );
+  db.pointRequests.unshift(req);
 
+  const adminsAndOwner = db.users.filter(x => x.role === "ADMIN" || x.role === "OWNER");
+  adminsAndOwner.forEach(admin => {
+    db.messages.push({
+      id: uid("msg"),
+      senderId: u.id,
+      receiverId: admin.id,
+      text: `💳 BUY POINTS REQUEST: ${u.username} requested ${amount} XP. Note: "${note}". (Pending Approval)`,
+      timestamp: new Date().toISOString()
+    });
+  });
+
+  logAction(`Submitted transaction request for ${amount} XP`, u.username);
   saveDB();
-
-  log(
-    "GUIDE_CREATED",
-    guide.title
-  );
-
-  closeModal(
-    "guideModal"
-  );
-
-  toast(
-    "Guide created."
-  );
-
-  renderGuides();
-
-  if(isOwner())
-    ownerSection(
-      "guides"
-    );
+  toast("Request submitted! Pending Admin/Owner approval.");
+  closeModal('buyPointsModal');
+  renderDashboard();
 }
 
-function deleteGuide(id){
+function approveRequest(reqId){
+  const req = db.pointRequests.find(r => r.id === reqId);
+  if(!req || req.status !== "PENDING") return;
 
-  if(!hasAdminAccess())return;
+  const targetUser = db.users.find(u => u.id === req.userId);
+  if(targetUser){
+    targetUser.points = (targetUser.points || 0) + req.amount;
+    req.status = "APPROVED";
 
-  if(
-    !confirm(
-      "Delete this guide?"
-    )
-  )return;
+    db.messages.push({
+      id: uid("msg"),
+      senderId: currentUser().id,
+      receiverId: targetUser.id,
+      text: `✅ Your request to buy ${req.amount} XP has been APPROVED! Points added to your balance.`,
+      timestamp: new Date().toISOString()
+    });
 
-  const guide=
-    db.guides.find(
-      g=>g.id===id
-    );
+    logAction(`Approved transaction of ${req.amount} XP for ${targetUser.username}`, currentUser().username);
+    saveDB();
+    toast(`Approved ${req.amount} XP for ${targetUser.username}!`);
+    updateNav();
+    if(currentUser().role === "OWNER") ownerSection('requests'); else adminSection('requests');
+  }
+}
 
-  db.guides=
-    db.guides.filter(
-      g=>g.id!==id
-    );
+function rejectRequest(reqId){
+  const req = db.pointRequests.find(r => r.id === reqId);
+  if(!req || req.status !== "PENDING") return;
+
+  req.status = "REJECTED";
+  db.messages.push({
+    id: uid("msg"),
+    senderId: currentUser().id,
+    receiverId: req.userId,
+    text: `❌ Your request to buy ${req.amount} XP was rejected.`,
+    timestamp: new Date().toISOString()
+  });
+
+  logAction(`Rejected transaction of ${req.amount} XP for ${req.username}`, currentUser().username);
+  saveDB();
+  toast("Request rejected.");
+  if(currentUser().role === "OWNER") ownerSection('requests'); else adminSection('requests');
+}
+
+/* INSTAGRAM DIRECT CHAT */
+let activeFriendId = null;
+
+function renderChat(){
+  const u = currentUser();
+  if(!u){ go('login'); toast("Please login to access chat", "error"); return; }
+
+  const friendListEl = document.getElementById("friendList");
+  friendListEl.innerHTML = "";
+
+  const userFriends = db.friends.filter(f => f.user1 === u.id || f.user2 === u.id);
+
+  if(userFriends.length === 0){
+    friendListEl.innerHTML = `<div style="padding:20px; text-align:center; color:var(--muted); font-size:13px">No friends added yet. Click "+ Add Friend" above.</div>`;
+    return;
+  }
+
+  userFriends.forEach(f => {
+    const friendId = f.user1 === u.id ? f.user2 : f.user1;
+    const friendUser = db.users.find(x => x.id === friendId);
+    if(!friendUser) return;
+
+    const div = document.createElement("div");
+    div.className = `friend-item ${activeFriendId === friendUser.id ? 'active' : ''}`;
+    div.onclick = () => selectChatFriend(friendUser);
+    div.innerHTML = `
+      <div class="friend-avatar">${friendUser.username.charAt(0).toUpperCase()}</div>
+      <div class="friend-info">
+        <strong>${friendUser.username}</strong>
+        <small>${friendUser.role}</small>
+      </div>
+    `;
+    friendListEl.appendChild(div);
+  });
+
+  if(activeFriendId) loadMessages();
+}
+
+function selectChatFriend(friendUser){
+  activeFriendId = friendUser.id;
+  document.getElementById("activeChatAvatar").textContent = friendUser.username.charAt(0).toUpperCase();
+  document.getElementById("activeChatName").textContent = friendUser.username;
+  document.getElementById("activeChatStatus").textContent = "Active Direct Message";
+  renderChat();
+}
+
+function loadMessages(){
+  const u = currentUser();
+  const chatMsgs = document.getElementById("chatMessages");
+  chatMsgs.innerHTML = "";
+
+  if(!activeFriendId) return;
+
+  const msgs = db.messages.filter(m => (m.senderId === u.id && m.receiverId === activeFriendId) || (m.senderId === activeFriendId && m.receiverId === u.id));
+
+  msgs.forEach(m => {
+    const isSent = m.senderId === u.id;
+    const div = document.createElement("div");
+    div.className = `msg-bubble ${isSent ? 'sent' : 'received'}`;
+    div.textContent = m.text;
+    chatMsgs.appendChild(div);
+  });
+
+  chatMsgs.scrollTop = chatMsgs.scrollHeight;
+}
+
+function sendMessage(){
+  const u = currentUser();
+  const input = document.getElementById("chatInput");
+  const text = input.value.trim();
+  if(!text || !activeFriendId || !u) return;
+
+  db.messages.push({
+    id: uid("msg"),
+    senderId: u.id,
+    receiverId: activeFriendId,
+    text,
+    timestamp: new Date().toISOString()
+  });
 
   saveDB();
+  input.value = "";
+  loadMessages();
+}
 
-  log(
-    "GUIDE_DELETED",
-    guide?.title||id
-  );
+function openAddFriendModal(){ openModal('addFriendModal'); }
 
-  toast(
-    "Guide deleted."
-  );
+function addFriend(e){
+  e.preventDefault();
+  const u = currentUser();
+  const fname = document.getElementById("friendUsername").value.trim().toLowerCase();
+  const target = db.users.find(x => x.username.toLowerCase() === fname);
 
+  if(!target){ toast("User not found", "error"); return; }
+  if(target.id === u.id){ toast("You cannot add yourself", "error"); return; }
+
+  const exists = db.friends.some(f => (f.user1 === u.id && f.user2 === target.id) || (f.user1 === target.id && f.user2 === u.id));
+  if(exists){ toast("Friend already added", "error"); return; }
+
+  db.friends.push({ id: uid("fr"), user1: u.id, user2: target.id, status: "accepted" });
+  logAction(`Added friend ${target.username}`, u.username);
+  saveDB();
+  toast("Friend added!");
+  closeModal('addFriendModal');
+  renderChat();
+}
+
+/* GUIDES */
+function renderGuides(){
+  const grid = document.getElementById("guidesGrid");
+  const feat = document.getElementById("featuredGuides");
+  if(!grid) return;
+
+  grid.innerHTML = ""; if(feat) feat.innerHTML = "";
+
+  db.guides.forEach(g => {
+    let attachmentHtml = "";
+    if(g.attachmentType === "picture" && g.attachmentUrl){
+      attachmentHtml = `<img src="${g.attachmentUrl}" style="width:100%; height:160px; object-fit:cover; border-radius:12px; margin-bottom:12px;">`;
+    }else if(g.attachmentType === "video" && g.attachmentUrl){
+      attachmentHtml = `<div style="margin-bottom:12px"><a href="${g.attachmentUrl}" target="_blank" class="btn btn-light btn-small" style="display:block; text-align:center">🎬 Watch Video Guide</a></div>`;
+    }else if(g.attachmentType === "zip" && g.attachmentUrl){
+      attachmentHtml = `<div style="margin-bottom:12px"><a href="${g.attachmentUrl}" target="_blank" class="btn btn-success btn-small" style="display:block; text-align:center">📦 Download ZIP File</a></div>`;
+    }else if(g.attachmentType === "link" && g.attachmentUrl){
+      attachmentHtml = `<div style="margin-bottom:12px"><a href="${g.attachmentUrl}" target="_blank" class="btn btn-light btn-small" style="display:block; text-align:center">🔗 Resource Link</a></div>`;
+    }
+
+    const card = `
+      <div class="card">
+        ${attachmentHtml}
+        <span class="badge">${g.category}</span>
+        <h3>${g.title}</h3>
+        <p>${g.description}</p>
+        <div style="margin-top:12px; font-size:13px; color:#aaa; white-space:pre-wrap;">${g.content}</div>
+        ${currentUser() && (currentUser().role === 'ADMIN' || currentUser().role === 'OWNER') ? `<button class="btn btn-danger btn-small" style="margin-top:10px" onclick="deleteGuide('${g.id}')">Delete Guide</button>` : ''}
+      </div>
+    `;
+    grid.innerHTML += card;
+    if(feat) feat.innerHTML += card;
+  });
+}
+
+function openGuideModal(){ openModal('guideModal'); }
+
+function createGuide(e){
+  e.preventDefault();
+  const title = document.getElementById("guideTitle").value;
+  const description = document.getElementById("guideDescription").value;
+  const category = document.getElementById("guideCategory").value;
+  const attachmentType = document.getElementById("guideAttachmentType").value;
+  const attachmentUrl = document.getElementById("guideAttachmentUrl").value;
+  const access = document.getElementById("guideAccess").value;
+  const price = parseInt(document.getElementById("guidePrice").value) || 0;
+  const content = document.getElementById("guideContent").value;
+
+  db.guides.push({ 
+    id: uid("g"), 
+    title, 
+    description, 
+    category, 
+    attachmentType, 
+    attachmentUrl, 
+    access, 
+    price, 
+    content, 
+    created: new Date().toISOString() 
+  });
+
+  logAction(`Created persistent guide: ${title}`, currentUser().username);
+  saveDB();
+  toast("Guide created and saved!");
+  closeModal('guideModal');
   renderGuides();
+}
 
-  if(isOwner())
-    ownerSection(
-      "guides"
-    );
+function deleteGuide(guideId){
+  db.guides = db.guides.filter(g => g.id !== guideId);
+  logAction(`Deleted guide ID ${guideId}`, currentUser().username);
+  saveDB();
+  toast("Guide deleted");
+  renderGuides();
+}
+
+/* ADMIN DASHBOARD */
+function renderAdmin(){
+  adminSection('overview');
+}
+
+function adminSection(sec, btn){
+  document.querySelectorAll("#admin .sidebar button").forEach(b => b.classList.remove("active"));
+  if(btn) btn.classList.add("active");
+
+  const content = document.getElementById("adminContent");
+
+  if(sec === 'overview'){
+    content.innerHTML = `
+      <h2>Admin Overview</h2>
+      <div class="dash-stats" style="margin-top:20px">
+        <div class="stat-card"><small>Total Users</small><h2>${db.users.length}</h2><span>Active Community</span></div>
+        <div class="stat-card"><small>Total Guides</small><h2>${db.guides.length}</h2><span>Published</span></div>
+        <div class="stat-card"><small>Buy Requests</small><h2>${db.pointRequests.length}</h2><span>Submitted</span></div>
+        <div class="stat-card"><small>Reviews</small><h2>${db.reviews.length}</h2><span>Feedback</span></div>
+      </div>
+    `;
+  }
+  else if(sec === 'requests'){ renderRequestsView(content); }
+  else if(sec === 'users'){ renderUsersView(content); }
+  else if(sec === 'guides'){ renderGuidesAdminView(content); }
+  else if(sec === 'reviews'){ renderReviewsAdminView(content); }
+}
+
+/* OWNER DASHBOARD */
+function renderOwner(){
+  ownerSection('overview');
+}
+
+function ownerSection(sec, btn){
+  document.querySelectorAll("#owner .sidebar button").forEach(b => b.classList.remove("active"));
+  if(btn) btn.classList.add("active");
+
+  const content = document.getElementById("ownerContent");
+
+  if(sec === 'overview'){
+    content.innerHTML = `
+      <h2>Owner Platform Overview</h2>
+      <div class="dash-stats" style="margin-top:20px">
+        <div class="stat-card"><small>Total Users</small><h2>${db.users.length}</h2><span>Full Platform</span></div>
+        <div class="stat-card"><small>Admins</small><h2>${db.users.filter(u => u.role === "ADMIN").length}</h2><span>Moderators</span></div>
+        <div class="stat-card"><small>Pending Requests</small><h2>${db.pointRequests.filter(r => r.status === "PENDING").length}</h2><span>Needs Action</span></div>
+        <div class="stat-card"><small>Security Logs</small><h2>${(db.logs||[]).length}</h2><span>Recorded</span></div>
+      </div>
+    `;
+  }
+  else if(sec === 'requests'){ renderRequestsView(content); }
+  else if(sec === 'users'){ renderUsersView(content); }
+  else if(sec === 'guides'){ renderGuidesAdminView(content); }
+  else if(sec === 'logs'){
+    let logRows = (db.logs || []).map(l => `
+      <tr>
+        <td><strong>${l.user}</strong></td>
+        <td>${l.action}</td>
+        <td>${new Date(l.timestamp).toLocaleString()}</td>
+      </tr>
+    `).join('');
+
+    content.innerHTML = `
+      <h2>Security Logs</h2>
+      <div class="table-wrap" style="margin-top:15px">
+        <table>
+          <thead><tr><th>User</th><th>Action</th><th>Timestamp</th></tr></thead>
+          <tbody>${logRows || '<tr><td colspan="3">No security logs recorded.</td></tr>'}</tbody>
+        </table>
+      </div>
+    `;
+  }
+  else if(sec === 'admins'){
+    const admins = db.users.filter(u => u.role === "ADMIN");
+    let rows = admins.map(a => `<tr><td>${a.username}</td><td>${a.email}</td><td><button class="btn btn-danger btn-small" onclick="demoteAdmin('${a.id}')">Demote</button></td></tr>`).join('');
+    content.innerHTML = `
+      <h2>Admin List</h2>
+      <div class="table-wrap" style="margin-top:15px">
+        <table><thead><tr><th>Username</th><th>Email</th><th>Action</th></tr></thead>
+        <tbody>${rows || '<tr><td colspan="3">No admins found</td></tr>'}</tbody></table>
+      </div>
+    `;
+  }
+  else if(sec === 'adminKeys'){
+    let keysRows = db.adminKeys.map(k => `
+      <tr>
+        <td><strong>${k.key}</strong></td>
+        <td>${k.expiresAt ? new Date(k.expiresAt).toLocaleString() : 'Never'}</td>
+        <td>${k.redeemed ? `<span style="color:red">Redeemed by ${k.redeemedBy}</span>` : '<span style="color:green">Active</span>'}</td>
+      </tr>
+    `).join('');
+
+    content.innerHTML = `
+      <h2>Admin Keys Generator</h2>
+      <form onsubmit="generateAdminKey(event)" style="margin-top:15px; margin-bottom:20px; display:grid; gap:10px; max-width:400px">
+        <div class="field"><label>Expiry Date & Time</label><input type="datetime-local" id="keyExpiryDate" required></div>
+        <button class="btn btn-primary">Generate Admin Key</button>
+      </form>
+      <div class="table-wrap">
+        <table><thead><tr><th>Key</th><th>Expiration</th><th>Status</th></tr></thead>
+        <tbody>${keysRows || '<tr><td colspan="3">No keys generated</td></tr>'}</tbody></table>
+      </div>
+    `;
+  }
+  else if(sec === 'ownerKeys'){
+    let keysRows = db.ownerKeys.map(k => `
+      <tr>
+        <td><strong>${k.key}</strong></td>
+        <td>${k.expiresAt ? new Date(k.expiresAt).toLocaleString() : 'Never'}</td>
+        <td>${k.redeemed ? `<span style="color:red">Redeemed by ${k.redeemedBy}</span>` : '<span style="color:green">Active</span>'}</td>
+      </tr>
+    `).join('');
+
+    content.innerHTML = `
+      <h2>Owner Keys Generator</h2>
+      <form onsubmit="generateOwnerKey(event)" style="margin-top:15px; margin-bottom:20px; display:grid; gap:10px; max-width:400px">
+        <div class="field"><label>Expiry Date & Time</label><input type="datetime-local" id="ownerKeyExpiryDate" required></div>
+        <button class="btn btn-primary">Generate Owner Key</button>
+      </form>
+      <div class="table-wrap">
+        <table><thead><tr><th>Key</th><th>Expiration</th><th>Status</th></tr></thead>
+        <tbody>${keysRows || '<tr><td colspan="3">No keys generated</td></tr>'}</tbody></table>
+      </div>
+    `;
+  }
+}
+
+/* SHARED MANAGEMENT VIEWS */
+function renderRequestsView(container){
+  const reqs = db.pointRequests;
+  if(reqs.length === 0){
+    container.innerHTML = `<h2>Points Purchase Requests</h2><p style="margin-top:10px; color:var(--muted)">No buy requests submitted yet.</p>`;
+    return;
+  }
+
+  let html = `<h2>Points Purchase Requests</h2><div style="margin-top:15px">`;
+  reqs.forEach(r => {
+    html += `
+      <div class="req-card">
+        <div>
+          <strong style="font-size:16px; color:#fff">${r.username}</strong> requested <span style="color:var(--cyan); font-weight:800">${r.amount} XP</span>
+          <p style="font-size:12px; color:var(--muted); margin-top:4px">Note: ${r.note}</p>
+          <small style="font-size:10px; color:#666">${new Date(r.date).toLocaleString()}</small>
+        </div>
+        <div>
+          ${r.status === 'PENDING' ? `
+            <button class="btn btn-success btn-small" onclick="approveRequest('${r.id}')">Approve</button>
+            <button class="btn btn-danger btn-small" onclick="rejectRequest('${r.id}')">Reject</button>
+          ` : `<span class="badge" style="background:${r.status==='APPROVED'?'rgba(34,197,94,.2)':'rgba(239,68,68,.2)'}">${r.status}</span>`}
+        </div>
+      </div>
+    `;
+  });
+  html += `</div>`;
+  container.innerHTML = html;
+}
+
+function renderUsersView(container){
+  let rows = db.users.map(u => `
+    <tr>
+      <td><strong>${u.username}</strong></td>
+      <td>${u.email}</td>
+      <td><span class="badge">${u.role}</span></td>
+      <td>${u.points} XP</td>
+      <td>
+        ${u.role !== 'OWNER' ? `<button class="btn btn-danger btn-small" onclick="toggleBanUser('${u.id}')">${u.banned?'Unban':'Ban'}</button>` : 'None'}
+      </td>
+    </tr>
+  `).join('');
+
+  container.innerHTML = `
+    <h2>User Management</h2>
+    <div class="table-wrap" style="margin-top:15px">
+      <table>
+        <thead><tr><th>Username</th><th>Email</th><th>Role</th><th>Points</th><th>Action</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>
+  `;
+}
+
+function renderGuidesAdminView(container){
+  container.innerHTML = `
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px">
+      <h2>Guide Management</h2>
+      <button class="btn btn-primary btn-small" onclick="openGuideModal()">+ Add New Guide</button>
+    </div>
+    <div class="grid">
+      ${db.guides.map(g => `
+        <div class="card">
+          <span class="badge">${g.category}</span>
+          <h3>${g.title}</h3>
+          <p>${g.description}</p>
+          <button class="btn btn-danger btn-small" style="margin-top:15px" onclick="deleteGuide('${g.id}')">Delete Guide</button>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+function renderReviewsAdminView(container){
+  container.innerHTML = `
+    <h2>Reviews Management</h2>
+    <div style="margin-top:15px">
+      ${db.reviews.length === 0 ? '<p style="color:var(--muted)">No reviews submitted yet.</p>' : ''}
+      ${db.reviews.map(r => `
+        <div class="req-card">
+          <div>
+            <strong>${r.username}</strong> (${'★'.repeat(r.rating)})
+            <p style="font-size:12px; color:var(--muted); margin-top:4px">${r.text}</p>
+          </div>
+          <button class="btn btn-danger btn-small" onclick="deleteReview('${r.id}')">Delete</button>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+function toggleBanUser(id){
+  const u = db.users.find(x => x.id === id);
+  if(u){
+    u.banned = !u.banned;
+    logAction(`${u.banned ? 'Banned' : 'Unbanned'} user ${u.username}`, currentUser().username);
+    saveDB();
+    toast(`User ${u.banned ? 'banned' : 'unbanned'}`);
+    if(currentUser().role === 'OWNER') ownerSection('users'); else adminSection('users');
+  }
+}
+
+function generateAdminKey(e){
+  e.preventDefault();
+  const exp = document.getElementById("keyExpiryDate").value;
+  const newKey = "ADMIN-" + Math.random().toString(36).substring(2,10).toUpperCase();
+  db.adminKeys.push({ id: uid("ak"), key: newKey, expiresAt: exp, redeemed: false, redeemedBy: "" });
+  logAction(`Generated Admin Key ${newKey}`, currentUser().username);
+  saveDB();
+  toast("Admin Key Generated!");
+  ownerSection('adminKeys');
+}
+
+function generateOwnerKey(e){
+  e.preventDefault();
+  const exp = document.getElementById("ownerKeyExpiryDate").value;
+  const newKey = "OWNER-" + Math.random().toString(36).substring(2,10).toUpperCase();
+  db.ownerKeys.push({ id: uid("ok"), key: newKey, expiresAt: exp, redeemed: false, redeemedBy: "" });
+  logAction(`Generated Owner Key ${newKey}`, currentUser().username);
+  saveDB();
+  toast("Owner Key Generated!");
+  ownerSection('ownerKeys');
+}
+
+function demoteAdmin(id){
+  const u = db.users.find(x => x.id === id);
+  if(u){
+    u.role = "USER";
+    logAction(`Demoted admin ${u.username}`, currentUser().username);
+    saveDB();
+    toast("Demoted to User");
+    ownerSection('admins');
+  }
+}
+
+/* USER DASHBOARD */
+function renderDashboard(){
+  const u = currentUser();
+  const content = document.getElementById("dashboardContent");
+  if(!u){ go('login'); return; }
+
+  const userReqs = db.pointRequests.filter(r => r.userId === u.id);
+
+  content.innerHTML = `
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:25px; flex-wrap:wrap; gap:15px">
+      <div>
+        <span class="badge" style="margin-bottom:8px">${u.role} ACCOUNT</span>
+        <h1>Welcome back, <span class="gradient-text">${u.username}</span>!</h1>
+        <p style="color:var(--muted); margin-top:5px">Track your points, purchase requests, and system status.</p>
+      </div>
+      <button class="btn btn-primary" onclick="openBuyModal()">💳 Buy Points / XP</button>
+    </div>
+
+    <div class="dash-stats">
+      <div class="stat-card">
+        <small>XP Balance</small>
+        <h2>${u.points} XP</h2>
+        <span>Available to spend</span>
+      </div>
+      <div class="stat-card">
+        <small>Buy Requests</small>
+        <h2>${userReqs.length}</h2>
+        <span>Total Submitted</span>
+      </div>
+      <div class="stat-card">
+        <small>Approved Requests</small>
+        <h2>${userReqs.filter(r => r.status === "APPROVED").length}</h2>
+        <span>Completed</span>
+      </div>
+      <div class="stat-card">
+        <small>Account Status</small>
+        <h2>Active</h2>
+        <span style="color:var(--success)">Good Standing</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px">
+        <h3>Your Point Purchase Requests</h3>
+        <button class="btn btn-light btn-small" onclick="openBuyModal()">+ New Request</button>
+      </div>
+      ${userReqs.length === 0 ? '<p style="font-size:13px; color:var(--muted)">No pending or past buy requests submitted yet.</p>' : ''}
+      <div>
+        ${userReqs.map(r => `
+          <div class="req-card">
+            <div>
+              <strong style="color:#fff; font-size:15px">${r.amount} XP Package</strong>
+              <p style="font-size:12px; color:var(--muted); margin-top:3px">${r.note}</p>
+              <small style="font-size:10px; color:#666">${new Date(r.date).toLocaleString()}</small>
+            </div>
+            <span class="badge" style="background:${r.status==='APPROVED'?'rgba(34,197,94,.2)':r.status==='PENDING'?'rgba(245,158,11,.2)':'rgba(239,68,68,.2)'}">${r.status}</span>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
+}
+
+function openModal(id){ document.getElementById(id).classList.add("show"); }
+function closeModal(id){ document.getElementById(id).classList.remove("show"); }
+function openReviewModal(){ openModal('reviewModal'); }
+
+function createReview(e){
+  e.preventDefault();
+  const u = currentUser();
+  if(!u){ toast("Please login to write a review", "error"); return; }
+
+  const rating = parseInt(document.getElementById("reviewRating").value);
+  const text = document.getElementById("reviewText").value;
+
+  db.reviews.push({ id: uid("rev"), username: u.username, rating, text, date: new Date().toISOString() });
+  logAction(`Published review (${rating} stars)`, u.username);
+  saveDB();
+  toast("Review published!");
+  closeModal('reviewModal');
+  renderReviews();
 }
 
 function deleteReview(id){
-
-  if(!hasAdminAccess())return;
-
-  db.reviews=
-    db.reviews.filter(
-      r=>r.id!==id
-    );
-
+  db.reviews = db.reviews.filter(r => r.id !== id);
+  logAction(`Deleted review ID ${id}`, currentUser()?.username || "ADMIN");
   saveDB();
-
-  log(
-    "REVIEW_MODERATED",
-    id
-  );
-
-  toast(
-    "Review removed."
-  );
-
-  renderReviews();
-
-  adminSection(
-    "reviews"
-  );
+  toast("Review deleted");
+  if(currentUser()?.role === 'ADMIN') adminSection('reviews'); else renderReviews();
 }
 
-/* MODALS */
+function renderReviews(){
+  const grid = document.getElementById("reviewsGrid");
+  if(!grid) return;
+  grid.innerHTML = "";
 
-function closeModal(id){
+  if(db.reviews.length === 0){
+    grid.innerHTML = `<p style="color:var(--muted)">No reviews published yet. Be the first!</p>`;
+    return;
+  }
 
-  document
-    .getElementById(id)
-    ?.classList.remove(
-      "show"
-    );
-}
-
-function openGenericModal(
-  title,
-  content
-){
-
-  const modal=
-    document.createElement(
-      "div"
-    );
-
-  modal.className=
-    "modal show";
-
-  modal.innerHTML=`
-
-    <div class="modal-box">
-
-      <div class="modal-head">
-
-        <h2>
-          ${escapeHTML(title)}
-        </h2>
-
-        <button
-          class="close">
-          ×
-        </button>
-
+  db.reviews.forEach(r => {
+    grid.innerHTML += `
+      <div class="card">
+        <div style="color:var(--warning); font-size:16px">${'★'.repeat(r.rating)}</div>
+        <h3 style="margin:8px 0 4px">${r.username}</h3>
+        <p>${r.text}</p>
       </div>
-
-      ${content}
-
-    </div>
-
-  `;
-
-  modal
-    .querySelector(
-      ".close"
-    )
-    .onclick=
-      ()=>modal.remove();
-
-  document
-    .body
-    .appendChild(modal);
-}
-
-/* SUPPORT */
-
-function supportSubmitted(e){
-
-  e.preventDefault();
-
-  const form=e.target;
-
-  fetch(
-    form.action,
-    {
-      method:"POST",
-      body:new FormData(form),
-      headers:{
-        Accept:
-          "application/json"
-      }
-    }
-  )
-  .then(()=>{
-
-    toast(
-      "Support message sent."
-    );
-
-    form.reset();
-
-  })
-  .catch(()=>{
-
-    toast(
-      "Unable to send support message.",
-      "error"
-    );
-
+    `;
   });
 }
 
-/* ESCAPE */
-
-function escapeHTML(value){
-
-  return String(
-    value??""
-  )
-  .replaceAll(
-    "&",
-    "&amp;"
-  )
-  .replaceAll(
-    "<",
-    "&lt;"
-  )
-  .replaceAll(
-    ">",
-    "&gt;"
-  )
-  .replaceAll(
-    '"',
-    "&quot;"
-  )
-  .replaceAll(
-    "'",
-    "&#039;"
-  );
+function supportSubmitted(e){
+  e.preventDefault();
+  logAction("Submitted support form", currentUser()?.username || "GUEST");
+  saveDB();
+  toast("Support message sent!");
+  e.target.reset();
 }
 
-/* INITIALIZE */
-
+/* INITIAL APP INIT */
+updateNav();
 renderGuides();
 renderReviews();
-updateNav();
-
-const initialPage=
-  location.hash.replace(
-    "#",
-    ""
-  );
-
-if(initialPage){
-
-  document
-    .querySelectorAll(
-      ".page"
-    )
-    .forEach(
-      p=>p.classList.remove(
-        "active"
-      )
-    );
-
-  document
-    .getElementById(
-      initialPage
-    )
-    ?.classList.add(
-      "active"
-    );
-}
-
-/* MODAL CLICK OUTSIDE */
-
-document
-  .querySelectorAll(
-    ".modal"
-  )
-  .forEach(
-    modal=>{
-
-      modal.addEventListener(
-        "click",
-        e=>{
-
-          if(
-            e.target===
-            modal
-          ){
-
-            modal.classList.remove(
-              "show"
-            );
-          }
-
-        }
-      );
-
-    }
-  );
 </script>
-
 </body>
 </html>
-
