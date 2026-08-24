@@ -1350,6 +1350,8 @@ td{ color:#c4c4cf; }
       <button class="active" onclick="ownerSection('overview',this)">Overview</button>
       <button onclick="ownerSection('requests',this)">Buy Requests 💳</button>
       <button onclick="ownerSection('admins',this)">Admins List</button>
+      <button onclick="ownerSection('roles',this)">Roles Control 👑</button>
+      <button onclick="ownerSection('customRoles',this)">Create Roles & Permissions 🛡️</button>
       <button onclick="ownerSection('adminKeys',this)">Admin Keys Generator</button>
       <button onclick="ownerSection('ownerKeys',this)">Owner Keys Generator</button>
       <button onclick="ownerSection('users',this)">Users & Points Control 💎</button>
@@ -1616,6 +1618,7 @@ const DEFAULT_DB = {
   ownedGuides: [],
   adminKeys: [],
   ownerKeys: [],
+  customRoles: [],
   settings: {
     coverPrice: 1000,
     profileThemes: DEFAULT_PROFILE_THEMES,
@@ -1654,6 +1657,7 @@ function loadDB(){
       ownedGuides: parsed.ownedGuides || [],
       adminKeys: parsed.adminKeys || [],
       ownerKeys: parsed.ownerKeys || [],
+      customRoles: Array.isArray(parsed.customRoles) ? parsed.customRoles : [],
       settings: parsed.settings || {
         coverPrice: 1000,
         profileThemes: DEFAULT_PROFILE_THEMES,
@@ -1677,6 +1681,8 @@ function loadDB(){
 let db = loadDB();
 
 function ensureThemeData(){
+  db.customRoles = Array.isArray(db.customRoles) ? db.customRoles : [];
+  db.customRoles.forEach(r => { if(!r.id) r.id = uid("role"); if(!Array.isArray(r.permissions)) r.permissions=[]; });
   db.settings = db.settings || {};
   db.settings.coverPrice = Number.isFinite(Number(db.settings.coverPrice)) ? Number(db.settings.coverPrice) : 1000;
   db.settings.pointPackages = Array.isArray(db.settings.pointPackages) && db.settings.pointPackages.length
@@ -1730,6 +1736,22 @@ function ensureThemeData(){
   });
 }
 
+function getCustomRole(roleId){
+  return (db.customRoles||[]).find(r => r.id === roleId) || null;
+}
+function roleLabel(role){
+  if(role === 'OWNER') return 'OWNER';
+  if(role === 'ADMIN') return 'ADMIN';
+  if(!role) return 'USER';
+  return getCustomRole(role)?.name || role;
+}
+function hasPermission(permission){
+  const u=currentUser();
+  if(!u) return false;
+  if(u.role === 'OWNER') return true;
+  if(u.role === 'ADMIN') return ['viewAdminPanel','manageUsers','managePoints','manageThemes','manageGuides','manageReviews','manageRequests'].includes(permission);
+  return !!getCustomRole(u.role)?.permissions?.includes(permission);
+}
 function isOwner(){ return currentUser()?.role === 'OWNER'; }
 function getFriendDisplayName(viewer, friend){
   if(!friend) return '';
@@ -1773,6 +1795,8 @@ function hashPassword(password){
 }
 
 function currentUser(){
+  // Enforce expired role keys before returning the session user.
+  expireRoleKeysAndRoles(false);
   const id = localStorage.getItem(SESSION_KEY);
   return db.users.find(u => u.id === id) || null;
 }
@@ -1954,6 +1978,30 @@ function logAction(action, user="SYSTEM"){
   saveDB();
 }
 
+async function resetLogsHistory(){
+  const u = currentUser();
+  if(!u || u.role !== 'OWNER'){
+    toast('Only the Owner can reset security logs.', 'error');
+    return;
+  }
+  // Timestamp the reset. This prevents an older cloud snapshot from restoring
+  // the logs after the Owner has cleared them.
+  db.logs = [];
+  db.logsResetAt = new Date().toISOString();
+  db.logsResetBy = u.id || u.username;
+
+  // Clear the UI and local backup immediately.
+  try { localStorage.setItem(DB_KEY, JSON.stringify(db)); } catch(e) {}
+  ownerSection('logs');
+  toast('Security log history reset.');
+
+  // Persist the cleared state to Supabase without blocking the UI.
+  if(window.__INVYX_CLOUD_READY && typeof cloudSaveDB === 'function'){
+    try { await cloudSaveDB(); }
+    catch(e) { console.error('Log reset cloud save failed:', e); }
+  }
+}
+
 function toast(msg, type="success"){
   const el = document.createElement("div");
   el.className = "toast " + (type==="error"?"error":"success");
@@ -2013,9 +2061,9 @@ function toggleMenu(){ document.getElementById("navLinks").classList.toggle("ope
 
 function updateNav(){
   const u = currentUser();
-  document.getElementById("adminNav").style.display = u && (u.role==="ADMIN"||u.role==="OWNER") ? "block":"none";
+  document.getElementById("adminNav").style.display = u && (u.role==="ADMIN"||u.role==="OWNER" || hasPermission("viewAdminPanel")) ? "block":"none";
   document.getElementById("ownerNav").style.display = u?.role==="OWNER" ? "block":"none";
-  document.getElementById("addGuideBtn").style.display = u && (u.role==="ADMIN"||u.role==="OWNER") ? "block":"none";
+  document.getElementById("addGuideBtn").style.display = u && (u.role==="ADMIN"||u.role==="OWNER" || hasPermission("manageGuides")) ? "block":"none";
   const createAccountBtn = document.getElementById("createAccountBtn");
   if(createAccountBtn) createAccountBtn.style.display = u ? "none" : "inline-flex";
   const wheelLauncher=document.getElementById("dailyWheelLauncher");
@@ -2057,11 +2105,11 @@ function redeemRoleKey(e){
   if(!keyStr){ toast("Enter a key", "error"); return; }
 
   const now = new Date();
-  let keyRecord = db.adminKeys.find(k => k.key === keyStr && !k.redeemed);
+  let keyRecord = db.adminKeys.find(k => k.key === keyStr && !k.redeemed && !k.revoked);
   let newRole = "ADMIN";
 
   if(!keyRecord){
-    keyRecord = db.ownerKeys.find(k => k.key === keyStr && !k.redeemed);
+    keyRecord = db.ownerKeys.find(k => k.key === keyStr && !k.redeemed && !k.revoked);
     newRole = "OWNER";
   }
 
@@ -2070,7 +2118,7 @@ function redeemRoleKey(e){
     return;
   }
 
-  if(keyRecord.expiresAt && new Date(keyRecord.expiresAt) < now){
+  if(keyRecord.revoked || (keyRecord.expiresAt && new Date(keyRecord.expiresAt).getTime() <= now.getTime())){
     toast(`${newRole === "OWNER" ? "Owner" : "Admin"} Key has expired!`, "error");
     return;
   }
@@ -2086,7 +2134,14 @@ function redeemRoleKey(e){
     return;
   }
 
+  // Remember the role the account had before the temporary key was redeemed.
+  // When the key expires, that role is restored automatically.
+  keyRecord.previousRole = u.role || "USER";
+  keyRecord.redeemedRole = newRole;
   u.role = newRole;
+  u.roleGrantKeyId = keyRecord.id;
+  u.roleGrantKeyType = newRole === "OWNER" ? "owner" : "admin";
+  u.roleGrantExpiresAt = keyRecord.expiresAt || null;
   keyRecord.redeemed = true;
   keyRecord.redeemedBy = u.username;
   keyRecord.redeemedByUserId = u.id;
@@ -2118,19 +2173,23 @@ function register(e){
 
   if(keyStr){
     const now = new Date();
-    const ak = db.adminKeys.find(k => k.key === keyStr && !k.redeemed);
+    const ak = db.adminKeys.find(k => k.key === keyStr && !k.redeemed && !k.revoked);
     if(ak){
-      if(ak.expiresAt && new Date(ak.expiresAt) < now){ toast("Admin Key has expired!", "error"); return; }
-      assignedRole = "ADMIN"; 
-      ak.redeemed = true; 
-      ak.redeemedBy = username;
+      if(ak.revoked || (ak.expiresAt && new Date(ak.expiresAt).getTime() <= now.getTime())){ toast("Admin Key has expired!", "error"); return; }
+      assignedRole = "ADMIN";
+      ak.previousRole = "USER";
+      ak.redeemedRole = "ADMIN";
+      ak.redeemed = true;
+      ak.redeemedBy = username; ak.redeemedAt = new Date().toISOString();
     } else {
-      const ok = db.ownerKeys.find(k => k.key === keyStr && !k.redeemed);
+      const ok = db.ownerKeys.find(k => k.key === keyStr && !k.redeemed && !k.revoked);
       if(ok){
-        if(ok.expiresAt && new Date(ok.expiresAt) < now){ toast("Owner Key has expired!", "error"); return; }
-        assignedRole = "OWNER"; 
-        ok.redeemed = true; 
-        ok.redeemedBy = username;
+        if(ok.revoked || (ok.expiresAt && new Date(ok.expiresAt).getTime() <= now.getTime())){ toast("Owner Key has expired!", "error"); return; }
+        assignedRole = "OWNER";
+        ok.previousRole = "USER";
+        ok.redeemedRole = "OWNER";
+        ok.redeemed = true;
+        ok.redeemedBy = username; ok.redeemedAt = new Date().toISOString();
       } else {
         toast("Invalid or redeemed key!", "error"); return; }
     }
@@ -2142,7 +2201,10 @@ function register(e){
     email, 
     passwordHash: hashPassword(password), 
     gender, 
-    role: assignedRole, 
+    role: assignedRole,
+    roleGrantKeyId: keyStr ? (db.adminKeys.find(k=>k.key===keyStr)?.id || db.ownerKeys.find(k=>k.key===keyStr)?.id || null) : null,
+    roleGrantKeyType: keyStr ? (assignedRole === "OWNER" ? "owner" : "admin") : null,
+    roleGrantExpiresAt: keyStr ? (db.adminKeys.find(k=>k.key===keyStr)?.expiresAt || db.ownerKeys.find(k=>k.key===keyStr)?.expiresAt || null) : null,
     points: 100,
     rank: null,
     ownedGuides: [],
@@ -3061,7 +3123,13 @@ function ownerSection(sec, btn){
     `).join('');
 
     content.innerHTML = `
-      <h2>Security Logs</h2>
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+        <div>
+          <h2>Security Logs</h2>
+          <p style="color:var(--muted);font-size:13px;margin:6px 0 0">Review security activity or clear the entire history.</p>
+        </div>
+        <button class="btn btn-danger btn-small" onclick="resetLogsHistory()">🗑 Reset Logs History</button>
+      </div>
       <div class="table-wrap" style="margin-top:15px">
         <table>
           <thead><tr><th>User</th><th>Action</th><th>Timestamp</th></tr></thead>
@@ -3069,6 +3137,12 @@ function ownerSection(sec, btn){
         </table>
       </div>
     `;
+  }
+  else if(sec === 'customRoles'){
+    renderCustomRoleManagement(content);
+  }
+  else if(sec === 'roles'){
+    renderOwnerRoleManagement(content);
   }
   else if(sec === 'admins'){
     const admins = db.users.filter(u => u.role === "ADMIN");
@@ -3082,46 +3156,32 @@ function ownerSection(sec, btn){
     `;
   }
   else if(sec === 'adminKeys'){
-    let keysRows = db.adminKeys.map(k => `
-      <tr>
-        <td><strong>${k.key}</strong></td>
-        <td>${k.expiresAt ? new Date(k.expiresAt).toLocaleString() : 'Never'}</td>
-        <td>${k.redeemed ? `<span style="color:red">Redeemed by ${k.redeemedBy}</span>` : '<span style="color:green">Active</span>'}</td>
-      </tr>
-    `).join('');
-
+    cleanupExpiredKeys();
+    let keysRows = db.adminKeys.map(k => keyRowHtml(k, 'admin')).join('');
     content.innerHTML = `
       <h2>Admin Keys Generator</h2>
-      <form onsubmit="generateAdminKey(event)" style="margin-top:15px; margin-bottom:20px; display:grid; gap:10px; max-width:400px">
+      <p style="color:var(--muted);font-size:13px">Keys expire automatically at the exact date/time you choose. You can also stop any key instantly.</p>
+      <form onsubmit="generateAdminKey(event)" style="margin-top:15px; margin-bottom:20px; display:grid; gap:10px; max-width:520px">
         <div class="field"><label>Expiry Date & Time</label><input type="datetime-local" id="keyExpiryDate" required></div>
-        <button class="btn btn-primary">Generate Admin Key</button>
+        <button type="submit" class="btn btn-primary" onclick="return generateAdminKey(event)">Generate Admin Key</button>
       </form>
-      <div class="table-wrap">
-        <table><thead><tr><th>Key</th><th>Expiration</th><th>Status</th></tr></thead>
-        <tbody>${keysRows || '<tr><td colspan="3">No keys generated</td></tr>'}</tbody></table>
-      </div>
-    `;
+      <div class="table-wrap"><table><thead><tr><th>Key</th><th>Generated</th><th>Expires</th><th>Used</th><th>Status</th><th>Action</th></tr></thead>
+      <tbody>${keysRows || '<tr><td colspan="6">No keys generated</td></tr>'}</tbody></table></div>`;
+    startKeyExpiryTicker();
   }
   else if(sec === 'ownerKeys'){
-    let keysRows = db.ownerKeys.map(k => `
-      <tr>
-        <td><strong>${k.key}</strong></td>
-        <td>${k.expiresAt ? new Date(k.expiresAt).toLocaleString() : 'Never'}</td>
-        <td>${k.redeemed ? `<span style="color:red">Redeemed by ${k.redeemedBy}</span>` : '<span style="color:green">Active</span>'}</td>
-      </tr>
-    `).join('');
-
+    cleanupExpiredKeys();
+    let keysRows = db.ownerKeys.map(k => keyRowHtml(k, 'owner')).join('');
     content.innerHTML = `
       <h2>Owner Keys Generator</h2>
-      <form onsubmit="generateOwnerKey(event)" style="margin-top:15px; margin-bottom:20px; display:grid; gap:10px; max-width:400px">
+      <p style="color:var(--muted);font-size:13px">Keys expire automatically at the exact date/time you choose. You can stop or extend an unused key with one click.</p>
+      <form onsubmit="generateOwnerKey(event)" style="margin-top:15px; margin-bottom:20px; display:grid; gap:10px; max-width:520px">
         <div class="field"><label>Expiry Date & Time</label><input type="datetime-local" id="ownerKeyExpiryDate" required></div>
-        <button class="btn btn-primary">Generate Owner Key</button>
+        <button type="submit" class="btn btn-primary" onclick="return generateOwnerKey(event)">Generate Owner Key</button>
       </form>
-      <div class="table-wrap">
-        <table><thead><tr><th>Key</th><th>Expiration</th><th>Status</th></tr></thead>
-        <tbody>${keysRows || '<tr><td colspan="3">No keys generated</td></tr>'}</tbody></table>
-      </div>
-    `;
+      <div class="table-wrap"><table><thead><tr><th>Key</th><th>Generated</th><th>Expires</th><th>Used</th><th>Status</th><th>Action</th></tr></thead>
+      <tbody>${keysRows || '<tr><td colspan="6">No keys generated</td></tr>'}</tbody></table></div>`;
+    startKeyExpiryTicker();
   }
 }
 
@@ -3419,12 +3479,71 @@ function renderWheelVisual(){
 }
 function openDailyWheel(){const u=currentUser();if(!u)return go("login");const dock=document.getElementById('dailyWheelDock'),launcher=document.getElementById('dailyWheelLauncher');if(dock)dock.classList.add('show');if(launcher)launcher.classList.remove('show');renderWheelVisual();updateWheelState();}
 function closeDailyWheel(){const dock=document.getElementById('dailyWheelDock'),launcher=document.getElementById('dailyWheelLauncher');if(dock)dock.classList.remove('show');if(launcher && currentUser())launcher.classList.add('show');}
-function wheelRemainingMs(){const u=currentUser(),w=getWheelSettings();const last=Math.max(Number(u?.lastWheelAt||0),Number(w.resetAt||0));return Math.max(0,(w.cooldownHours*3600000)-(Date.now()-last))}
+function wheelRemainingMs(){
+  const u=currentUser(), w=getWheelSettings();
+  if(!u) return 0;
+  const lastSpin=Number(u.lastWheelAt||0);
+  const resetAt=Number(w.resetAt||0);
+  // An owner reset invalidates any spin that happened before the reset.
+  const effectiveLast=lastSpin>resetAt ? lastSpin : 0;
+  return effectiveLast ? Math.max(0,(w.cooldownHours*3600000)-(Date.now()-effectiveLast)) : 0;
+}
 function updateWheelState(){const u=currentUser();if(!u)return;const w=getWheelSettings();const btn=document.getElementById("spinWheelBtn"),cd=document.getElementById("wheelCooldown"),ms=wheelRemainingMs(),affordable=Number(u.points||0)>=w.cost;if(!btn||!cd)return;if(ms>0){btn.disabled=true;btn.textContent="⏳ Wheel cooling down";cd.textContent=`Available again in ${formatDuration(ms)}.`}else if(!affordable){btn.disabled=true;btn.textContent=`Need ${w.cost} XP to spin`;cd.textContent=`Your balance: ${u.points||0} XP`}else{btn.disabled=false;btn.textContent=`🎡 Spin for ${w.cost} XP`;cd.textContent=`Ready · ${w.cost} XP per spin`}}
 function formatDuration(ms){const h=Math.floor(ms/3600000),m=Math.floor(ms%3600000/60000),sec=Math.floor(ms%60000/1000);return `${h}h ${m}m ${sec}s`}
-function spinDailyWheel(){const u=currentUser();if(!u)return;const w=getWheelSettings();if(wheelRemainingMs()>0)return toast("Your wheel is still on cooldown.","error");if(Number(u.points||0)<w.cost)return toast(`You need ${w.cost} XP to spin.`,"error");const idx=Math.floor(Math.random()*w.prizes.length),reward=w.prizes[idx];u.points-=w.cost;u.points+=reward;u.lastWheelAt=Date.now();const wheel=document.getElementById("dailyWheel");if(wheel){wheel.style.transition="none";wheel.style.transform="rotate(0deg)";void wheel.offsetWidth;wheel.style.transition="transform 4.2s cubic-bezier(.12,.78,.16,1)";const target=1440-(idx*45+22.5);wheel.style.transform=`rotate(${target}deg)`;}const btn=document.getElementById("spinWheelBtn");if(btn)btn.disabled=true;logAction(`Daily wheel spin: paid ${w.cost} XP, won ${reward} XP`,u.username);saveDB();updateNav();setTimeout(()=>{toast(`🎉 You won ${reward} XP!`);updateWheelState();renderDashboard()},4300)}
+let wheelCountdownTimer=null;
+function startWheelCountdown(){
+  if(wheelCountdownTimer) return;
+  wheelCountdownTimer=setInterval(()=>{
+    const dock=document.getElementById("dailyWheelDock");
+    if(dock && dock.classList.contains("show")) updateWheelState();
+  },1000);
+}
+startWheelCountdown();
+function spinDailyWheel(){
+  const u=currentUser();
+  if(!u) return;
+  const w=getWheelSettings();
+  const remaining=wheelRemainingMs();
+  if(remaining>0) return toast("Your wheel is still on cooldown.","error");
+  if(Number(u.points||0)<w.cost) return toast(`You need ${w.cost} XP to spin.`,"error");
+  const idx=Math.floor(Math.random()*w.prizes.length), reward=w.prizes[idx];
+  u.points-=w.cost;
+  u.points+=reward;
+  u.lastWheelAt=Date.now();
+  const wheel=document.getElementById("dailyWheel");
+  if(wheel){
+    wheel.style.transition="none";
+    wheel.style.transform="rotate(0deg)";
+    void wheel.offsetWidth;
+    wheel.style.transition="transform 4.2s cubic-bezier(.12,.78,.16,1)";
+    const target=1440-(idx*45+22.5);
+    wheel.style.transform=`rotate(${target}deg)`;
+  }
+  updateWheelState();
+  logAction(`Daily wheel spin: paid ${w.cost} XP, won ${reward} XP`,u.username);
+  saveDB();
+  updateNav();
+  const end=Date.now()+4200;
+  const timer=setInterval(()=>{
+    updateWheelState();
+    if(Date.now()>=end) clearInterval(timer);
+  },250);
+  setTimeout(()=>{toast(`🎉 You won ${reward} XP!`);updateWheelState();renderDashboard()},4300);
+}
 function saveWheelSettings(e){e.preventDefault();if(!isOwner())return toast("Owner access required.","error");const prizes=Array.from({length:8},(_,i)=>Math.max(0,Math.floor(Number(document.getElementById("wheelPrize"+i)?.value)||0)));const cost=Math.max(0,Math.floor(Number(document.getElementById("wheelCostInput")?.value)||0));const cooldownHours=Math.max(1,Math.floor(Number(document.getElementById("wheelCooldownInput")?.value)||24));const resetAt=getWheelSettings().resetAt;db.settings.wheel={cost,cooldownHours,resetAt,prizes};logAction(`Owner updated Daily Wheel: cost ${cost} XP, cooldown ${cooldownHours}h, rewards ${prizes.join(", ")}`,currentUser().username);saveDB();toast("Daily Wheel settings saved.");ownerSection("wheel");renderWheelVisual();updateWheelState();}
-function resetAllWheelTimes(){if(!isOwner())return toast("Owner access required.","error");db.settings.wheel=db.settings.wheel||{};db.settings.wheel.resetAt=Date.now();db.users.forEach(u=>{u.lastWheelAt=0});logAction("Owner reset the Daily Wheel cooldown for every user",currentUser().username);saveDB();toast("🎡 All users can spin the wheel again.");ownerSection("wheel");updateWheelState();}
+function resetAllWheelTimes(){
+  if(!isOwner()) return toast("Owner access required.","error");
+  db.settings.wheel=db.settings.wheel||{};
+  db.settings.wheel.resetAt=Date.now();
+  // Clear the per-user timestamps too so the reset is immediate everywhere.
+  db.users.forEach(u=>{u.lastWheelAt=0});
+  logAction("Owner reset the Daily Wheel cooldown for every user",currentUser().username);
+  saveDB();
+  toast("🎡 All users can spin the wheel again.");
+  ownerSection("wheel");
+  renderWheelVisual();
+  updateWheelState();
+}
 
 function renderThemeManagement(container, ownerMode=false){
   const profile = db.settings?.profileThemes || [];
@@ -3678,26 +3797,322 @@ function toggleBanUser(id){
   }
 }
 
+function parseKeyExpiryInput(value){
+  if(!value) return null;
+  const d=new Date(value);
+  return Number.isFinite(d.getTime()) ? d.toISOString() : null;
+}
 function generateAdminKey(e){
-  e.preventDefault();
-  const exp = document.getElementById("keyExpiryDate").value;
-  const newKey = "ADMIN-" + Math.random().toString(36).substring(2,10).toUpperCase();
-  db.adminKeys.push({ id: uid("ak"), key: newKey, expiresAt: exp, redeemed: false, redeemedBy: "" });
-  logAction(`Generated Admin Key ${newKey}`, currentUser().username);
-  saveDB();
-  toast("Admin Key Generated!");
-  ownerSection('adminKeys');
+  e?.preventDefault();
+  if(!isOwner()) return toast("Only the Owner can generate Admin keys.","error");
+  const expiresAt=parseKeyExpiryInput(document.getElementById("keyExpiryDate")?.value);
+  if(!expiresAt || Date.parse(expiresAt)<=Date.now()) return toast("Choose a future expiration date and time.","error");
+  if(!Array.isArray(db.adminKeys)) db.adminKeys=[];
+  const key="ADMIN-"+Math.random().toString(36).slice(2,10).toUpperCase()+"-"+Date.now().toString(36).slice(-5).toUpperCase();
+  db.adminKeys.unshift({id:uid("akey"),key,generatedAt:new Date().toISOString(),expiresAt,redeemed:false,revoked:false,redeemedBy:null,redeemedByUserId:null,redeemedAt:null,redeemedRole:"ADMIN"});
+  saveDB(); ownerSection("adminKeys"); toast("Admin key generated successfully.");
+}
+function generateOwnerKey(e){
+  e?.preventDefault();
+  if(!isOwner()) return toast("Only the Owner can generate Owner keys.","error");
+  const expiresAt=parseKeyExpiryInput(document.getElementById("ownerKeyExpiryDate")?.value);
+  if(!expiresAt || Date.parse(expiresAt)<=Date.now()) return toast("Choose a future expiration date and time.","error");
+  if(!Array.isArray(db.ownerKeys)) db.ownerKeys=[];
+  const key="OWNER-"+Math.random().toString(36).slice(2,10).toUpperCase()+"-"+Date.now().toString(36).slice(-5).toUpperCase();
+  db.ownerKeys.unshift({id:uid("okey"),key,generatedAt:new Date().toISOString(),expiresAt,redeemed:false,revoked:false,redeemedBy:null,redeemedByUserId:null,redeemedAt:null,redeemedRole:"OWNER"});
+  saveDB(); ownerSection("ownerKeys"); toast("Owner key generated successfully.");
+}
+function cleanupExpiredKeys(){
+  const now=Date.now();
+  let changed=false;
+  const expireCollection=(keys, roleName)=>{
+    if(!Array.isArray(keys)) return;
+    keys.forEach(k=>{
+      if(!k || !k.expiresAt || k.redeemed !== true || k.expiredHandled) return;
+      const t=Date.parse(k.expiresAt);
+      if(!Number.isFinite(t) || t>now) return;
+      k.expiredHandled=true;
+      changed=true;
+      const target=db.users.find(u =>
+        (k.redeemedByUserId && u.id===k.redeemedByUserId) ||
+        (!k.redeemedByUserId && k.redeemedBy && String(u.username).toLowerCase()===String(k.redeemedBy).toLowerCase())
+      );
+      if(target && target.role===roleName && target.roleGrantKeyId===k.id){
+        target.role=target.previousRoleBeforeKey || 'USER';
+        delete target.roleGrantKeyId;
+        delete target.roleGrantExpiresAt;
+        delete target.previousRoleBeforeKey;
+        changed=true;
+      }
+    });
+  };
+  expireCollection(db.adminKeys,'ADMIN');
+  expireCollection(db.ownerKeys,'OWNER');
+  if(changed) saveDB();
+  return changed;
 }
 
-function generateOwnerKey(e){
+function keyIsExpired(k){
+  return !!(k.expiresAt && new Date(k.expiresAt).getTime() <= Date.now());
+}
+
+function keyRowHtml(k, type){
+  const expired = keyIsExpired(k);
+  const stopped = !!k.revoked;
+  const status = stopped ? '<span style="color:#f87171">⏹ Stopped</span>' : (expired ? '<span style="color:#f59e0b">⌛ Expired</span>' : (k.redeemed ? `<span style="color:#ef4444">🔴 Used by ${k.redeemedBy || 'user'}</span>` : '<span style="color:#22c55e">🟢 Active</span>'));
+  const used = k.redeemed ? `${new Date(k.redeemedAt || k.generatedAt || Date.now()).toLocaleString()}<br><small>${k.redeemedBy || ''}</small>` : 'Not used';
+  const remaining = k.expiresAt && !expired ? `<span class="key-countdown" data-key-expiry="${k.expiresAt}">calculating…</span>` : (expired ? '<span style="color:#f59e0b">Expired</span>' : 'Never');
+  const action = (!k.redeemed && !expired && !stopped) ? `<button class="btn btn-danger btn-small" onclick="stopKey('${type}','${k.id}')">⏹ Stop Now</button>` : (stopped ? `<button class="btn btn-light btn-small" onclick="activateKey('${type}','${k.id}')">▶ Activate</button>` : '—');
+  return `<tr><td><strong>${k.key}</strong></td><td>${k.generatedAt ? new Date(k.generatedAt).toLocaleString() : 'Unknown'}</td><td>${k.expiresAt ? new Date(k.expiresAt).toLocaleString() : 'Never'}<br><small>${remaining}</small></td><td>${used}</td><td>${status}</td><td>${action}</td></tr>`;
+}
+
+let keyExpiryTicker = null;
+let roleExpiryTicker = null;
+function updateKeyCountdowns(){
+  document.querySelectorAll('.key-countdown').forEach(el=>{
+    const ms = new Date(el.dataset.keyExpiry).getTime() - Date.now();
+    if(ms <= 0){ el.textContent = 'Expired'; el.style.color = '#f59e0b'; }
+    else {
+      const total = Math.floor(ms/1000);
+      const d = Math.floor(total/86400), h = Math.floor(total%86400/3600), m = Math.floor(total%3600/60), sec = total%60;
+      el.textContent = `${d}d ${String(h).padStart(2,'0')}h ${String(m).padStart(2,'0')}m ${String(sec).padStart(2,'0')}s remaining`;
+    }
+  });
+}
+function startKeyExpiryTicker(){
+  if(keyExpiryTicker) clearInterval(keyExpiryTicker);
+  if(roleExpiryTicker) clearInterval(roleExpiryTicker);
+  updateKeyCountdowns();
+  // Check every second so a role is removed at the exact expiry boundary.
+  roleExpiryTicker = setInterval(() => {
+    const changed = expireRoleKeysAndRoles(true);
+    if(changed){
+      updateNav();
+      const active = document.querySelector(".page.active")?.id;
+      if(active === "owner" && currentUser()?.role === "OWNER") renderOwner();
+      if(active === "dashboard") renderDashboard();
+    }
+    updateKeyCountdowns();
+  }, 1000);
+  keyExpiryTicker = setInterval(updateKeyCountdowns, 1000);
+}
+
+function expireRoleKeysAndRoles(persist = true){
+  const now = Date.now();
+  let changed = false;
+  const allKeys = [
+    ...(Array.isArray(db.adminKeys) ? db.adminKeys : []).map(k => ({...k, __type:"admin"})),
+    ...(Array.isArray(db.ownerKeys) ? db.ownerKeys : []).map(k => ({...k, __type:"owner"}))
+  ];
+
+  allKeys.forEach(k => {
+    const expiry = k.expiresAt ? new Date(k.expiresAt).getTime() : NaN;
+    if(!Number.isFinite(expiry) || expiry > now) return;
+
+    const realList = k.__type === "owner" ? db.ownerKeys : db.adminKeys;
+    const realKey = realList.find(x => x.id === k.id);
+    if(!realKey || !realKey.redeemed) return;
+
+    if(!realKey.expired){
+      realKey.expired = true;
+      changed = true;
+    }
+
+    const grantedRole = String(realKey.redeemedRole || (k.__type === "owner" ? "OWNER" : "ADMIN")).toUpperCase();
+    const targetUsers = db.users.filter(u => {
+      const byId = realKey.redeemedByUserId && u.id === realKey.redeemedByUserId;
+      const byName = realKey.redeemedBy && String(u.username).toLowerCase() === String(realKey.redeemedBy).toLowerCase();
+      const byGrant = u.roleGrantKeyId === realKey.id;
+      const byExpiryGrant = u.roleGrantExpiresAt &&
+        new Date(u.roleGrantExpiresAt).getTime() <= now &&
+        String(u.roleGrantKeyType || '').toLowerCase() === k.__type;
+      return byId || byName || byGrant || byExpiryGrant;
+    });
+
+    targetUsers.forEach(u => {
+      // Only remove the role if this key actually granted it or the account
+      // still carries this key's temporary-grant metadata. This preserves
+      // legitimate manual role changes made by the Owner.
+      const ownsGrant = u.roleGrantKeyId === realKey.id ||
+        (realKey.redeemedByUserId && u.id === realKey.redeemedByUserId) ||
+        (realKey.redeemedBy && String(u.username).toLowerCase() === String(realKey.redeemedBy).toLowerCase());
+
+      if(!ownsGrant) return;
+
+      const restoredRole = String(realKey.previousRole || "USER").toUpperCase();
+      const safeRestore = ["OWNER","ADMIN","USER"].includes(restoredRole) ? restoredRole : "USER";
+
+      // If this key granted Admin/Owner, expiration always ends that temporary role.
+      // Do not leave the user as Admin/Owner simply because an old cloud snapshot
+      // omitted the grant metadata.
+      if(String(u.role).toUpperCase() === grantedRole || u.roleGrantKeyId === realKey.id){
+        u.role = safeRestore === grantedRole ? "USER" : safeRestore;
+        changed = true;
+        logAction(`Expired ${k.__type === "owner" ? "Owner" : "Admin"} Key ${realKey.key}; removed temporary ${grantedRole} role from ${u.username} and restored ${u.role}`, u.username);
+      }
+
+      if(u.roleGrantKeyId === realKey.id || u.roleGrantExpiresAt || u.roleGrantKeyType){
+        u.roleGrantKeyId = null;
+        u.roleGrantKeyType = null;
+        u.roleGrantExpiresAt = null;
+        changed = true;
+      }
+    });
+  });
+
+  if(changed){
+    try { localStorage.setItem(DB_KEY, JSON.stringify(db)); } catch(e) {}
+    if(persist) saveDB();
+  }
+  return changed;
+}
+
+function stopKey(type, id){
+  if(currentUser()?.role !== 'OWNER') return;
+  const list = type === 'owner' ? db.ownerKeys : db.adminKeys;
+  const k = list.find(x => x.id === id);
+  if(!k || k.redeemed) return;
+  k.revoked = true; k.revokedAt = new Date().toISOString();
+  logAction(`Stopped ${type} key ${k.key}`, currentUser().username); saveDB();
+  ownerSection(type === 'owner' ? 'ownerKeys' : 'adminKeys'); toast('Key stopped immediately.');
+}
+
+function activateKey(type, id){
+  if(currentUser()?.role !== 'OWNER') return;
+  const list = type === 'owner' ? db.ownerKeys : db.adminKeys;
+  const k = list.find(x => x.id === id);
+  if(!k || k.redeemed || keyIsExpired(k)) return;
+  k.revoked = false; k.revokedAt = '';
+  saveDB(); ownerSection(type === 'owner' ? 'ownerKeys' : 'adminKeys'); toast('Key activated.');
+}
+
+const ROLE_PERMISSIONS = [
+  ['viewAdminPanel','View admin panel'],
+  ['manageUsers','Manage users / bans'],
+  ['managePoints','Manage points'],
+  ['manageThemes','Manage themes'],
+  ['manageGuides','Manage guides'],
+  ['manageReviews','Manage reviews'],
+  ['manageRequests','Manage point requests'],
+  ['manageWheel','Manage daily wheel'],
+  ['manageAds','Manage site ads'],
+  ['manageRanks','Manage ranks'],
+  ['manageKeys','Manage Admin/Owner keys'],
+  ['manageRoles','Assign roles'],
+  ['manageLogs','View/reset security logs'],
+  ['managePricing','Manage pricing']
+];
+
+function renderCustomRoleManagement(container){
+  if(!isOwner()){ toast('Owner access required.','error'); return; }
+  const roles=db.customRoles||[];
+  const roleCards=roles.map(r=>`<div class="card" style="margin-bottom:14px">
+    <div style="display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap">
+      <div><h3 style="margin:0">${escapeHtml(r.name)}</h3><small style="color:var(--muted)">${r.permissions.length} permissions · ID ${escapeHtml(r.id)}</small></div>
+      <div><button class="btn btn-danger btn-small" onclick="deleteCustomRole('${r.id}')">Delete Role</button></div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">${r.permissions.map(p=>`<span class="badge">${escapeHtml(ROLE_PERMISSIONS.find(x=>x[0]===p)?.[1]||p)}</span>`).join('')||'<span style="color:var(--muted)">No permissions</span>'}</div>
+  </div>`).join('');
+  const checks=ROLE_PERMISSIONS.map(([id,label])=>`<label style="display:flex;align-items:center;gap:9px;padding:9px 10px;border:1px solid var(--border);border-radius:10px"><input type="checkbox" name="rolePerm" value="${id}" style="width:auto"> ${label}</label>`).join('');
+  const assignments=db.users.map(u=>`<tr><td>${escapeHtml(u.username)}</td><td><span class="badge">${escapeHtml(roleLabel(u.role))}</span></td><td><select id="assignRole_${u.id}" class="select"><option value="USER">USER</option><option value="ADMIN">ADMIN</option><option value="OWNER">OWNER</option>${roles.map(r=>`<option value="${r.id}" ${u.role===r.id?'selected':''}>${escapeHtml(r.name)}</option>`).join('')}</select></td><td><button class="btn btn-primary btn-small" onclick="assignCustomRole('${u.id}')">Assign</button></td></tr>`).join('');
+  container.innerHTML=`<h2>Create Roles & Permissions 🛡️</h2>
+  <p style="color:var(--muted);font-size:13px;margin:6px 0 18px">Create your own roles, choose exactly what they can do, then assign them to users. OWNER remains the only unrestricted built-in role.</p>
+  <form onsubmit="createCustomRole(event)" style="display:grid;gap:14px;max-width:850px">
+    <div class="field"><label>Role name</label><input id="customRoleName" maxlength="32" placeholder="e.g. Moderator" required></div>
+    <div><label style="font-weight:800">Permissions</label><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:8px;margin-top:9px">${checks}</div></div>
+    <button class="btn btn-primary">Create Role</button>
+  </form>
+  <h3 style="margin-top:28px">Existing Custom Roles</h3>${roleCards||'<p style="color:var(--muted)">No custom roles created yet.</p>'}
+  <h3 style="margin-top:28px">Assign a Role</h3>
+  <div class="table-wrap"><table><thead><tr><th>User</th><th>Current</th><th>New Role</th><th>Action</th></tr></thead><tbody>${assignments}</tbody></table></div>`;
+}
+
+function createCustomRole(e){
   e.preventDefault();
-  const exp = document.getElementById("ownerKeyExpiryDate").value;
-  const newKey = "OWNER-" + Math.random().toString(36).substring(2,10).toUpperCase();
-  db.ownerKeys.push({ id: uid("ok"), key: newKey, expiresAt: exp, redeemed: false, redeemedBy: "" });
-  logAction(`Generated Owner Key ${newKey}`, currentUser().username);
+  if(!isOwner()) return toast('Owner access required.','error');
+  const name=document.getElementById('customRoleName').value.trim();
+  const permissions=[...document.querySelectorAll('input[name="rolePerm"]:checked')].map(x=>x.value);
+  if(!name) return toast('Enter a role name.','error');
+  if((db.customRoles||[]).some(r=>r.name.toLowerCase()===name.toLowerCase())) return toast('A role with that name already exists.','error');
+  const id='CUSTOM_'+name.toUpperCase().replace(/[^A-Z0-9]+/g,'_').replace(/^_|_$/g,'')+'_'+Math.random().toString(36).slice(2,7).toUpperCase();
+  db.customRoles.push({id,name,permissions,createdAt:new Date().toISOString()});
+  logAction(`Created custom role ${name} with ${permissions.length} permissions`,currentUser().username);
+  saveDB(); ownerSection('customRoles'); toast(`Role ${name} created.`);
+}
+
+function deleteCustomRole(id){
+  if(!isOwner()) return toast('Owner access required.','error');
+  const role=getCustomRole(id); if(!role) return;
+  if(!confirm(`Delete the role "${role.name}"? Users assigned to it will become USER.`)) return;
+  db.users.forEach(u=>{ if(u.role===id){ u.role='USER'; u.roleGrantManual=false; } });
+  db.customRoles=db.customRoles.filter(r=>r.id!==id);
+  logAction(`Deleted custom role ${role.name}`,currentUser().username);
+  saveDB(); ownerSection('customRoles'); updateNav(); toast('Role deleted.');
+}
+
+function assignCustomRole(userId){
+  if(!isOwner()) return toast('Owner access required.','error');
+  const me=currentUser(); if(me?.id===userId) return toast('You cannot change your own role here.','error');
+  const u=db.users.find(x=>x.id===userId); if(!u) return toast('User not found.','error');
+  const sel=document.getElementById('assignRole_'+userId); const role=sel?.value||'USER';
+  const valid=['USER','ADMIN','OWNER'].concat((db.customRoles||[]).map(r=>r.id));
+  if(!valid.includes(role)) return toast('Invalid role.','error');
+  u.role=role; u.roleGrantKeyId=null; u.roleGrantKeyType=null; u.roleGrantExpiresAt=null; u.roleGrantManual=true;
+  logAction(`Owner assigned ${roleLabel(role)} role to ${u.username}`,me.username);
+  saveDB(); ownerSection('customRoles'); updateNav(); toast(`${u.username} is now ${roleLabel(role)}.`);
+}
+
+function renderOwnerRoleManagement(container){
+  if(!isOwner()){ toast("Owner access required.","error"); return; }
+  const me=currentUser();
+  const rows=db.users.map(u=>{
+    const role=String(u.role||"USER").toUpperCase();
+    const isMe=me && u.id===me.id;
+    const temporary=u.roleGrantKeyId ? `Temporary until ${u.roleGrantExpiresAt ? new Date(u.roleGrantExpiresAt).toLocaleString() : "key expiry"}` : "Manual / permanent role";
+    return `<tr>
+      <td><strong>${escapeHtml(u.username)}</strong><div style="font-size:10px;color:var(--muted)">${escapeHtml(u.email||"")}</div></td>
+      <td><span class="badge">${role}</span></td>
+      <td style="font-size:12px;color:var(--muted)">${temporary}</td>
+      <td><select id="role_${u.id}" class="select" ${isMe?'disabled':''}>
+        ${["USER","ADMIN","OWNER"].concat((db.customRoles||[]).map(r=>r.id)).map(r=>`<option value="${r}" ${r===role?'selected':''}>${escapeHtml(roleLabel(r))}</option>`).join("")}
+      </select></td>
+      <td><button type="button" class="btn btn-primary btn-small" ${isMe?'disabled title="You cannot change your own Owner role here"':''} onclick="setOwnerUserRole('${u.id}')">Save Role</button></td>
+    </tr>`;
+  }).join("");
+  container.innerHTML=`<h2>Roles Control 👑</h2>
+    <p style="color:var(--muted);margin:6px 0 18px">Owner-only role management. Choose USER, ADMIN, or OWNER for any other account. Manual changes clear any temporary key-based role grant so the selected role stays active.</p>
+    <div class="table-wrap"><table><thead><tr><th>User</th><th>Current Role</th><th>Grant Status</th><th>New Role</th><th>Action</th></tr></thead><tbody>${rows||'<tr><td colspan="5">No users found.</td></tr>'}</tbody></table></div>`;
+}
+
+async function setOwnerUserRole(userId){
+  if(!isOwner()){ toast("Owner access required.","error"); return; }
+  const me=currentUser();
+  if(me && me.id===userId){ toast("You cannot change your own Owner role here.","error"); return; }
+  const u=db.users.find(x=>x.id===userId);
+  if(!u){ toast("User not found.","error"); return; }
+  const sel=document.getElementById("role_"+userId);
+  const role=String(sel?.value||"USER").toUpperCase();
+  const validRoles=["USER","ADMIN","OWNER"].concat((db.customRoles||[]).map(r=>r.id));
+  if(!validRoles.includes(role)){ toast("Invalid role.","error"); return; }
+
+  // Manual Owner role changes take precedence over temporary key grants.
+  u.role=role;
+  u.roleGrantKeyId=null;
+  u.roleGrantKeyType=null;
+  u.roleGrantExpiresAt=null;
+  u.roleGrantManual=true;
+
+  // If this account has an unused key that was intended for it, do not consume it;
+  // the manual role simply replaces the temporary grant on the account.
+  logAction(`Owner manually changed ${u.username}'s role to ${role}`, me.username);
+  localStorage.setItem(DB_KEY, JSON.stringify(db));
   saveDB();
-  toast("Owner Key Generated!");
-  ownerSection('ownerKeys');
+  if(window.__INVYX_CLOUD_READY && typeof cloudSaveDB === "function"){
+    try { await cloudSaveDB(); } catch(err) { console.warn("Role cloud save failed; local save retained.",err); }
+  }
+  toast(`${u.username} is now ${role}.`);
+  ownerSection("roles");
+  updateNav();
 }
 
 function demoteAdmin(id){
@@ -4039,7 +4454,17 @@ renderReviews();
     const cloudDB = await cloudLoadDB();
 
     if(cloudDB && Array.isArray(cloudDB.users)){
+      // A newer local reset must win over an older cloud snapshot.
+      const localResetAt = db.logsResetAt || '';
+      const cloudResetAt = cloudDB.logsResetAt || '';
+      const keepLocalReset = localResetAt && (!cloudResetAt || Date.parse(localResetAt) > Date.parse(cloudResetAt));
+      const localResetBy = db.logsResetBy;
       db = cloudDB;
+      if(keepLocalReset){
+        db.logs = [];
+        db.logsResetAt = localResetAt;
+        db.logsResetBy = localResetBy;
+      }
       db.deletedMessageIds = Array.isArray(db.deletedMessageIds) ? db.deletedMessageIds : [];
       if(db.deletedMessageIds.length){ db.messages = (db.messages || []).filter(m => !db.deletedMessageIds.includes(m.id)); }
     }else{
@@ -4086,8 +4511,15 @@ renderReviews();
     });
 
     ensureOwner();
+
+    // Expire temporary Admin/Owner roles immediately after the cloud snapshot
+    // is loaded, before the UI is rendered. This prevents stale cloud roles
+    // from surviving past the key expiration time.
+    expireRoleKeysAndRoles(false);
+
     window.__INVYX_CLOUD_READY = true;
     await cloudSaveDB();
+    startKeyExpiryTicker();
     setTimeout(()=>showSiteAd(),50);
 
     updateNav();
@@ -4102,12 +4534,28 @@ renderReviews();
 
     // Keep multiple open tabs reasonably synchronized.
     setInterval(async () => {
+      // First enforce local role expirations before accepting another cloud snapshot.
+      expireRoleKeysAndRoles(true);
       const latest = await cloudLoadDB();
       if(latest && JSON.stringify(latest) !== JSON.stringify(db)){
         const localDeleted = Array.isArray(db.deletedMessageIds) ? db.deletedMessageIds : [];
+        // Keep a newer local log reset from being overwritten by an older cloud snapshot.
+        const localResetAt = db.logsResetAt || '';
+        const cloudResetAt = latest.logsResetAt || '';
+        const keepLocalReset = localResetAt && (!cloudResetAt || Date.parse(localResetAt) > Date.parse(cloudResetAt));
+        const localResetBy = db.logsResetBy;
+        // Enforce key expiry on the incoming snapshot before it can replace the local state.
+        db = latest;
+        if(keepLocalReset){
+          db.logs = [];
+          db.logsResetAt = localResetAt;
+          db.logsResetBy = localResetBy;
+          try { localStorage.setItem(DB_KEY, JSON.stringify(db)); } catch(e) {}
+          cloudSaveDB();
+        }
+        expireRoleKeysAndRoles(false);
         // Always merge local deletion tombstones into incoming cloud state.
         // This prevents deleted messages from reappearing during synchronization.
-        db = latest;
         db.deletedMessageIds = Array.from(new Set([...(Array.isArray(db.deletedMessageIds)?db.deletedMessageIds:[]), ...localDeleted]));
         if(db.deletedMessageIds.length){ db.messages = (db.messages || []).filter(m => !db.deletedMessageIds.includes(m.id)); }
         ensureThemeData();
