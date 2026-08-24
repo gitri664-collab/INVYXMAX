@@ -779,6 +779,17 @@ td{ color:#c4c4cf; }
 }
 
 /* MODALS */
+
+/* PUBLIC PROFILE VIEW */
+.public-profile-card{max-width:760px;margin:auto;position:relative;overflow:hidden}
+.public-profile-head{display:flex;gap:18px;align-items:center;flex-wrap:wrap;padding:22px;border:1px solid var(--border2);border-radius:24px;background:linear-gradient(145deg,rgba(255,255,255,.055),rgba(255,255,255,.015))}
+.public-profile-avatar{width:104px;height:104px;border-radius:28px;display:grid;place-items:center;background:linear-gradient(135deg,#8b5cf6,#22d3ee);font-size:34px;font-weight:950;overflow:hidden;box-shadow:0 0 0 3px rgba(255,255,255,.08),0 18px 55px rgba(139,92,246,.22)}
+.public-profile-avatar img{width:100%;height:100%;object-fit:cover}
+.public-profile-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+.public-profile-stat{padding:13px;border:1px solid var(--border);border-radius:16px;background:rgba(255,255,255,.035)}
+.public-profile-stat strong{display:block;font-size:18px}.public-profile-stat span{font-size:11px;color:var(--muted)}
+.profile-view-btn{margin-left:auto}
+@media(max-width:600px){.public-profile-stats{grid-template-columns:1fr 1fr}.profile-view-btn{margin-left:0;width:100%}}
 .modal{
   position:fixed; inset:0; z-index:500;
   display:none; place-items:center; padding:20px;
@@ -1104,6 +1115,20 @@ td{ color:#c4c4cf; }
 .chat-main.chat-theme-owner .msg-bubble.sent{background:var(--custom-chat-sent,#6d5dfc);}
 .chat-main.chat-theme-owner .msg-bubble.received{background:var(--custom-chat-received,#202530);}
 .chat-main.chat-theme-owner .chat-input-area{background:var(--custom-chat-panel,#151922);}
+
+/* OWNER ANNOUNCEMENT AD */
+.site-ad-overlay{position:fixed;inset:0;z-index:5000;display:none;align-items:center;justify-content:center;padding:22px;background:rgba(3,3,8,.78);backdrop-filter:blur(8px)}
+.site-ad-overlay.show{display:flex}
+.site-ad-card{position:relative;width:min(760px,96vw);max-height:90vh;overflow:auto;border:1px solid rgba(255,255,255,.14);border-radius:28px;background:linear-gradient(145deg,rgba(18,18,28,.98),rgba(10,10,16,.98));box-shadow:0 30px 100px rgba(0,0,0,.65),0 0 60px rgba(139,92,246,.18);padding:16px}
+.site-ad-card.animated{animation:siteAdIn .65s cubic-bezier(.16,1,.3,1) both}
+.site-ad-card.animated .site-ad-media{animation:siteAdFloat 3s ease-in-out infinite}
+.site-ad-close{position:absolute;right:12px;top:12px;width:40px;height:40px;border-radius:50%;border:1px solid rgba(255,255,255,.18);background:rgba(0,0,0,.48);color:#fff;font-size:24px;cursor:pointer;z-index:3}
+.site-ad-media{width:100%;max-height:52vh;object-fit:cover;border-radius:20px;display:block;background:#111;box-shadow:0 16px 50px rgba(0,0,0,.4)}
+.site-ad-copy{padding:18px 10px 8px}.site-ad-copy h2{margin:0 0 8px;font-size:clamp(22px,4vw,36px)}.site-ad-copy p{margin:0;color:var(--muted);line-height:1.7;white-space:pre-wrap}
+.site-ad-placeholder{min-height:240px;display:grid;place-items:center;border:1px dashed rgba(255,255,255,.16);border-radius:20px;color:var(--muted);background:rgba(255,255,255,.025)}
+.ad-preview{margin-top:12px;padding:12px;border:1px solid var(--border);border-radius:18px;background:rgba(255,255,255,.025)}
+@keyframes siteAdIn{from{opacity:0;transform:translateY(28px) scale(.96)}to{opacity:1;transform:none}}
+@keyframes siteAdFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
 </style>
 </head>
 
@@ -1317,6 +1342,7 @@ td{ color:#c4c4cf; }
       <button onclick="ownerSection('profilePermissions',this)">Profile Permissions ✨</button>
       <button onclick="ownerSection('pricing',this)">Pricing & Packages 💰</button>
       <button onclick="ownerSection('wheel',this)">Daily Wheel 🎡</button>
+      <button onclick="ownerSection('ads',this)">Site Ad / Announcement 📢</button>
       <button onclick="ownerSection('themes',this)">Themes & Prices ✨</button><button onclick="ownerSection('ranks',this)">Ranks & Overrides 💎</button>
       <button onclick="ownerSection('guides',this)">Guides</button>
       <button onclick="ownerSection('logs',this)">Security Logs</button>
@@ -1474,9 +1500,17 @@ td{ color:#c4c4cf; }
   <div class="modal-box">
     <div class="modal-head"><h2>Send Friend Request</h2><button class="close" onclick="closeModal('addFriendModal')">×</button></div>
     <form onsubmit="addFriend(event)">
-      <div class="field"><label>Username</label><input id="friendUsername" placeholder="Enter username..." required></div>
-      <button class="btn btn-primary">Send Friend Request</button>
+      <div class="field"><label>Username</label><input id="friendUsername" placeholder="Enter username..." required oninput="previewFriendLookup()"></div>
+      <div id="friendPreviewResult" style="margin:10px 0"></div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap"><button type="button" class="btn btn-light" onclick="previewFriendProfile()">👤 View Profile</button><button class="btn btn-primary" style="flex:1">Send Friend Request</button></div>
     </form>
+  </div>
+</div>
+
+<div class="modal" id="publicProfileModal">
+  <div class="modal-box public-profile-card">
+    <div class="modal-head"><div><span class="badge">PUBLIC PROFILE</span><h2 style="margin-top:8px">Profile</h2></div><button class="close" onclick="closeModal('publicProfileModal')">×</button></div>
+    <div id="publicProfileContent"></div>
   </div>
 </div>
 
@@ -1525,6 +1559,14 @@ td{ color:#c4c4cf; }
   </div>
 </div>
 
+
+<div class="site-ad-overlay" id="siteAdOverlay" aria-modal="true" role="dialog">
+  <div class="site-ad-card" id="siteAdCard">
+    <button class="site-ad-close" onclick="dismissSiteAd()" aria-label="Close advertisement">×</button>
+    <img id="siteAdImage" class="site-ad-media" alt="Announcement">
+    <div id="siteAdCopy" class="site-ad-copy"></div>
+  </div>
+</div>
 <div class="toasts" id="toasts"></div>
 
 <script>
@@ -1564,6 +1606,7 @@ const DEFAULT_DB = {
     profileThemes: DEFAULT_PROFILE_THEMES,
     chatThemes: DEFAULT_CHAT_THEMES,
     wheel: { cost: 20, cooldownHours: 24, resetAt: 0, prizes: [0,10,20,40,60,100,150,250] },
+    siteAd: { id: null, enabled: false, image: "", text: "", animated: true, durationHours: 24, createdAt: 0, expiresAt: 0 },
     pointPackages: [
       { amount: 100, price: 5 },
       { amount: 500, price: 20 },
@@ -1600,6 +1643,7 @@ function loadDB(){
         profileThemes: DEFAULT_PROFILE_THEMES,
         chatThemes: DEFAULT_CHAT_THEMES,
         wheel: { cost: 20, cooldownHours: 24, resetAt: 0, prizes: [0,10,20,40,60,100,150,250] },
+        siteAd: { id: null, enabled: false, image: "", text: "", animated: true, durationHours: 24, createdAt: 0, expiresAt: 0 },
         pointPackages: [
           { amount: 100, price: 5 },
           { amount: 500, price: 20 },
@@ -1628,6 +1672,15 @@ function ensureThemeData(){
   db.settings.wheel.prizes = Array.isArray(db.settings.wheel.prizes) && db.settings.wheel.prizes.length === 8
     ? db.settings.wheel.prizes.map(x => Math.max(0, Math.floor(Number(x) || 0)))
     : [0,10,20,40,60,100,150,250];
+  db.settings.siteAd = db.settings.siteAd && typeof db.settings.siteAd === "object" ? db.settings.siteAd : {};
+  db.settings.siteAd.id = db.settings.siteAd.id || null;
+  db.settings.siteAd.enabled = db.settings.siteAd.enabled === true;
+  db.settings.siteAd.image = typeof db.settings.siteAd.image === "string" ? db.settings.siteAd.image : "";
+  db.settings.siteAd.text = typeof db.settings.siteAd.text === "string" ? db.settings.siteAd.text : "";
+  db.settings.siteAd.animated = db.settings.siteAd.animated !== false;
+  db.settings.siteAd.durationHours = Math.max(1, Number(db.settings.siteAd.durationHours) || 24);
+  db.settings.siteAd.createdAt = Number(db.settings.siteAd.createdAt) || 0;
+  db.settings.siteAd.expiresAt = Number(db.settings.siteAd.expiresAt) || 0;
 
   // One-time migration: remove the old built-in marketplace catalog.
   // From this point forward, only the Owner can create marketplace themes.
@@ -1651,6 +1704,13 @@ function ensureThemeData(){
     if(!u.customChatTheme || typeof u.customChatTheme !== 'object') u.customChatTheme = null;
     if(!u.friendAliases || typeof u.friendAliases !== 'object') u.friendAliases = {};
     if(!Array.isArray(u.blockedUsers)) u.blockedUsers = [];
+    if(typeof u.manualRank !== "string" || !u.manualRank) u.manualRank = null;
+    if(u.manualRank) u.manualRank = String(u.manualRank).toUpperCase();
+    if(typeof u.rankLocked !== "boolean") u.rankLocked = !!u.manualRank;
+    if(typeof u.usageSeconds !== "number") u.usageSeconds = 0;
+    if(typeof u.activityCount !== "number") u.activityCount = 0;
+    if(typeof u.loginCount !== "number") u.loginCount = 0;
+    if(typeof u.lastActiveAt !== "number") u.lastActiveAt = 0;
   });
 }
 
@@ -1904,6 +1964,10 @@ function ensureOwner(){
       extraNameChanges: 999,
       coverUnlocked: true,
       coverEnabled: true,
+      usageSeconds: 0,
+      activityCount: 0,
+      loginCount: 0,
+      lastActiveAt: 0,
       joined: new Date().toISOString()
     });
     saveDB();
@@ -2079,6 +2143,10 @@ function register(e){
     extraNameChanges: 0,
     coverUnlocked: false,
     coverEnabled: false,
+    usageSeconds: 0,
+    activityCount: 0,
+    loginCount: 0,
+    lastActiveAt: 0,
     joined: new Date().toISOString() 
   };
 
@@ -2102,6 +2170,8 @@ function login(e){
   if(u.banned){ toast("Account is banned.", "error"); return; }
 
   localStorage.setItem(SESSION_KEY, u.id);
+  u.loginCount = Number(u.loginCount || 0) + 1;
+  u.lastActiveAt = Date.now();
   logAction("User logged in", u.username);
   saveDB();
   toast("Logged in successfully");
@@ -2236,11 +2306,11 @@ function renderChat(){
     const reqHeader = document.createElement("div"); reqHeader.style.cssText="padding:10px 18px 5px;font-size:11px;font-weight:800;color:var(--purple);text-transform:uppercase;letter-spacing:1px;"; reqHeader.textContent="Friend Requests"; friendListEl.appendChild(reqHeader);
     incomingRequests.forEach(req=>{
       const sender=db.users.find(x=>x.id===req.user1); if(!sender)return;
-      const div=document.createElement("div"); div.className="request-card"; div.innerHTML=`<div style="display:flex;align-items:center;gap:10px">${avatarMarkup(sender,"friend-avatar","width:34px;height:34px;font-size:12px")}<div class="friend-info"><strong>${escapeHtml(getFriendDisplayName(u,sender))}</strong><small>Wants to connect</small></div></div><div class="request-actions"><button class="btn btn-success btn-small" style="flex:1" onclick="acceptFriendRequest('${req.id}')">Accept</button><button class="btn btn-danger btn-small" style="flex:1" onclick="declineFriendRequest('${req.id}')">Decline</button></div>`; friendListEl.appendChild(div);
+      const div=document.createElement("div"); div.className="request-card"; div.innerHTML=`<div style="display:flex;align-items:center;gap:10px;flex:1;cursor:pointer" onclick="openPublicProfile('${sender.id}')">${avatarMarkup(sender,"friend-avatar","width:34px;height:34px;font-size:12px")}<div class="friend-info"><strong>${escapeHtml(getFriendDisplayName(u,sender))}</strong><small>Wants to connect · View profile</small></div></div><div class="request-actions"><button class="btn btn-success btn-small" style="flex:1" onclick="acceptFriendRequest('${req.id}')">Accept</button><button class="btn btn-danger btn-small" style="flex:1" onclick="declineFriendRequest('${req.id}')">Decline</button></div>`; friendListEl.appendChild(div);
     });
   }
   const outgoingRequests=db.friends.filter(f=>f.user1===u.id&&f.status==="PENDING");
-  if(outgoingRequests.length){const h=document.createElement("div");h.style.cssText="padding:10px 18px 5px;font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:1px;";h.textContent="Sent Requests (Pending)";friendListEl.appendChild(h);outgoingRequests.forEach(req=>{const target=db.users.find(x=>x.id===req.user2);if(!target)return;const div=document.createElement("div");div.className="friend-item";div.style.opacity=".6";div.innerHTML=`${avatarMarkup(target,"friend-avatar")}<div class="friend-info"><strong>${escapeHtml(getFriendDisplayName(u,target))}</strong><small>Pending Acceptance...</small></div>`;friendListEl.appendChild(div);});}
+  if(outgoingRequests.length){const h=document.createElement("div");h.style.cssText="padding:10px 18px 5px;font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:1px;";h.textContent="Sent Requests (Pending)";friendListEl.appendChild(h);outgoingRequests.forEach(req=>{const target=db.users.find(x=>x.id===req.user2);if(!target)return;const div=document.createElement("div");div.className="friend-item";div.style.opacity=".6";div.innerHTML=`<div style="display:flex;align-items:center;gap:10px;flex:1;cursor:pointer" onclick="openPublicProfile('${target.id}')">${avatarMarkup(target,"friend-avatar")}<div class="friend-info"><strong>${escapeHtml(getFriendDisplayName(u,target))}</strong><small>Pending Acceptance · View profile</small></div></div>`;friendListEl.appendChild(div);});}
 
   const acceptedFriends=db.friends.filter(f=>(f.user1===u.id||f.user2===u.id)&&f.status==="ACCEPTED");
   const friendsHeader=document.createElement("div");friendsHeader.style.cssText="padding:10px 18px 5px;font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:1px;";friendsHeader.textContent="Friends";friendListEl.appendChild(friendsHeader);
@@ -2248,7 +2318,7 @@ function renderChat(){
   if(!visibleFriends.length){const empty=document.createElement("div");empty.style.cssText="padding:15px 18px;color:var(--muted);font-size:13px";empty.textContent="No visible friends. Send a friend request or unblock someone below.";friendListEl.appendChild(empty);}
   visibleFriends.forEach(f=>{
     const friendId=f.user1===u.id?f.user2:f.user1; const friendUser=db.users.find(x=>x.id===friendId); if(!friendUser)return;
-    const div=document.createElement("div");div.className=`friend-item ${activeFriendId===friendUser.id?'active':''}`;div.onclick=()=>selectChatFriend(friendUser);div.innerHTML=`${avatarMarkup(friendUser,"friend-avatar")}<div class="friend-info"><strong>${escapeHtml(getFriendDisplayName(u,friendUser))}</strong><small>${escapeHtml(friendUser.username)}${u.friendAliases?.[friendUser.id]?' • your name':''}</small></div><div style="display:flex;gap:4px;margin-left:auto"><button class="btn btn-light btn-small" title="Rename in your view" onclick="event.stopPropagation();openRenameFriendModal('${friendUser.id}')">✎</button><button class="btn btn-danger btn-small" title="Block" onclick="event.stopPropagation();blockUser('${friendUser.id}')">⛔</button></div>`;friendListEl.appendChild(div);
+    const div=document.createElement("div");div.className=`friend-item ${activeFriendId===friendUser.id?'active':''}`;div.onclick=()=>selectChatFriend(friendUser);div.innerHTML=`${avatarMarkup(friendUser,"friend-avatar")}<div class="friend-info"><strong>${escapeHtml(getFriendDisplayName(u,friendUser))}</strong><small>${escapeHtml(friendUser.username)}${u.friendAliases?.[friendUser.id]?' • your name':''}</small></div><div style="display:flex;gap:4px;margin-left:auto"><button class="btn btn-light btn-small" title="View profile" onclick="event.stopPropagation();openPublicProfile('${friendUser.id}')">👤</button><button class="btn btn-light btn-small" title="Rename in your view" onclick="event.stopPropagation();openRenameFriendModal('${friendUser.id}')">✎</button><button class="btn btn-danger btn-small" title="Block" onclick="event.stopPropagation();blockUser('${friendUser.id}')">⛔</button></div>`;friendListEl.appendChild(div);
   });
 
   renderBlockedPeopleSection();
@@ -2458,7 +2528,32 @@ function unblockUser(friendId){
   saveDB(); renderChat(); renderBlockedPeopleSection(); toast("User unblocked.");
 }
 
-function openAddFriendModal(){ openModal('addFriendModal'); }
+
+function openPublicProfile(userId){
+  const viewer=currentUser();
+  const person=db.users.find(x=>x.id===userId);
+  if(!person){toast("User not found","error");return;}
+  if(viewer && person.id===viewer.id){renderDashboard();return;}
+  const r=getUserRank(person);
+  const minutes=Math.floor(Number(person.usageSeconds||0)/60);
+  const actions=Number(person.activityCount||0);
+  const sessions=Number(person.loginCount||0);
+  const content=document.getElementById("publicProfileContent");
+  if(!content)return;
+  content.innerHTML=`<div class="public-profile-head">
+    <div class="public-profile-avatar">${person.pfp?`<img src="${escapeHtml(person.pfp)}" alt="">`:escapeHtml((person.username||"?").charAt(0).toUpperCase())}</div>
+    <div style="flex:1;min-width:200px"><span class="badge">${escapeHtml(r.cur.name)}</span><h2 style="margin-top:8px">${escapeHtml(person.username)}</h2><p style="color:var(--muted);margin-top:5px">Public profile · ${escapeHtml(person.gender||"Member")}</p><div style="margin-top:10px">${rankHtml(person)}</div></div>
+  </div>
+  <div class="public-profile-stats"><div class="public-profile-stat"><strong>${minutes.toLocaleString()}</strong><span>Active minutes</span></div><div class="public-profile-stat"><strong>${actions.toLocaleString()}</strong><span>Interactions</span></div><div class="public-profile-stat"><strong>${sessions.toLocaleString()}</strong><span>Sessions</span></div></div>
+  <div class="card" style="margin-top:14px"><h3>Socials</h3><div class="social-links-row">${renderSocialLinks(person)}</div></div>
+  ${viewer && !isBlocked(viewer,person.id) && viewer.id!==person.id ? (()=>{const rel=db.friends.find(f=>(f.user1===viewer.id&&f.user2===person.id)||(f.user1===person.id&&f.user2===viewer.id)); if(rel?.status==="ACCEPTED") return `<div style="display:flex;gap:10px;justify-content:flex-end;margin-top:16px"><button class="btn btn-success" disabled>✓ Friends</button></div>`; if(rel?.status==="PENDING") return `<div style="display:flex;gap:10px;justify-content:flex-end;margin-top:16px"><button class="btn" disabled>⏳ Request Pending</button></div>`; return `<div style="display:flex;gap:10px;justify-content:flex-end;margin-top:16px"><button class="btn btn-primary" onclick="closeModal('publicProfileModal');prepareAddFriend('${escapeHtml(person.username)}')">＋ Add Friend</button></div>`;})() : ""}`;
+  openModal("publicProfileModal");
+}
+function prepareAddFriend(username){openAddFriendModal();const input=document.getElementById("friendUsername");if(input){input.value=username;previewFriendLookup();}}
+function previewFriendProfile(){const name=document.getElementById("friendUsername")?.value.trim().toLowerCase();if(!name){toast("Enter a username first","error");return;}const person=db.users.find(x=>x.username.toLowerCase()===name);if(!person){toast("User not found","error");return;}openPublicProfile(person.id);}
+function previewFriendLookup(){const box=document.getElementById("friendPreviewResult");const name=document.getElementById("friendUsername")?.value.trim().toLowerCase();if(!box||!name){if(box)box.innerHTML="";return;}const person=db.users.find(x=>x.username.toLowerCase()===name);box.innerHTML=person?`<div class="friend-item" style="cursor:pointer" onclick="openPublicProfile('${person.id}')">${avatarMarkup(person,"friend-avatar")}<div class="friend-info"><strong>${escapeHtml(person.username)}</strong><small>Click to view profile</small></div></div>`:`<div style="color:var(--muted);font-size:12px">No user found.</div>`;}
+
+function openAddFriendModal(){ openModal('addFriendModal'); previewFriendLookup(); }
 
 function addFriend(e){
   e.preventDefault();
@@ -2718,6 +2813,31 @@ function ownerSection(sec, btn){
       </table></div>
     `;
   }
+  else if(sec === 'ads'){
+    if(!isOwner()){ toast("Owner access required.","error"); return; }
+    const a = db.settings.siteAd || {};
+    content.innerHTML = `
+      <h2>Site Ad / Announcement 📢</h2>
+      <p style="color:var(--muted);font-size:13px;margin:6px 0 18px">Only the Owner can publish an announcement. It appears once when someone enters the site, and they can close it with X.</p>
+      <form onsubmit="saveSiteAd(event)" style="display:grid;gap:14px;max-width:780px">
+        <div class="field"><label>Picture</label><input id="siteAdImageInput" type="file" accept="image/*" onchange="previewSiteAdImage(this)"><small style="color:var(--muted)">PNG, JPG, WEBP — up to 2 MB.</small></div>
+        <div class="ad-preview" id="siteAdPreview">${a.image ? `<img src="${a.image}" style="width:100%;max-height:260px;object-fit:cover;border-radius:14px">` : '<div class="site-ad-placeholder">No picture selected</div>'}</div>
+        <div class="field"><label>What should people see?</label><textarea id="siteAdText" rows="5" placeholder="Write your announcement here...">${a.text || ''}</textarea></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div class="field"><label>How long should the ad stay active? (hours)</label><input id="siteAdDuration" type="number" min="1" max="8760" step="1" value="${Number(a.durationHours)||24}" required></div>
+          <label style="display:flex;align-items:center;gap:10px;margin-top:30px"><input id="siteAdAnimated" type="checkbox" style="width:auto" ${a.animated !== false ? 'checked' : ''}> Animated announcement</label>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn btn-primary">📢 Publish / Update Ad</button>
+          <button type="button" class="btn btn-light" onclick="previewSiteAdNow()">Preview</button>
+          <button type="button" class="btn btn-danger" onclick="disableSiteAd()">Disable Ad</button>
+        </div>
+        <div class="card" style="margin-top:4px">
+          <strong>${a.enabled && a.expiresAt > Date.now() ? '🟢 Active' : '⚪ Inactive'}</strong>
+          <p style="color:var(--muted);font-size:12px;margin-top:6px">${a.enabled && a.expiresAt ? `Expires ${new Date(a.expiresAt).toLocaleString()}` : 'No active announcement.'}</p>
+        </div>
+      </form>`;
+  }
   else if(sec === 'themes'){ renderThemeManagement(content, true); }
   else if(sec === 'pricing'){
     const packages = Array.isArray(db.settings?.pointPackages) ? db.settings.pointPackages : [];
@@ -2757,6 +2877,9 @@ function ownerSection(sec, btn){
         <p style="color:var(--muted);font-size:12px;margin-top:6px">${Number(w.cost)} XP per spin · ${Number(w.cooldownHours)} hour cooldown · Rewards: ${w.prizes.map(x=>`${Number(x)} XP`).join(' · ')}</p>
       </div>
     `;
+  }
+  else if(sec === 'ranks'){
+    renderOwnerRankManagement(content);
   }
   else if(sec === 'logs'){
     let logRows = (db.logs || []).map(l => `
@@ -2977,8 +3100,118 @@ function setExtraNameChanges(userId){
   ownerSection('profilePermissions');
 }
 
-function renderOwnerRankManagement(container){const rows=db.users.map(u=>{const r=getUserRank(u);const manual=u.manualRank||"";const options=["AUTO",...RANK_LADDER[rankGender(u)].map(x=>x.name)];return `<tr><td><strong>${u.username}</strong><div style="font-size:10px;color:var(--muted)">${u.gender||"Unknown"}</div></td><td>${manual?`<span class="badge">OVERRIDE</span> ${manual}`:r.cur.name}</td><td><select id="rank_${u.id}" class="select">${options.map(x=>`<option value="${x}" ${(!manual&&x==="AUTO")||(manual===x)?"selected":""}>${x}</option>`).join("")}</select></td><td><button class="btn btn-primary btn-small" onclick="saveOwnerRank('${u.id}')">Save</button></td></tr>`}).join("");container.innerHTML=`<h2>Rank Overrides 💎</h2><p style="color:var(--muted);margin:6px 0 18px">Owner-only controls. AUTO uses XP progression; an override sets the displayed rank until changed back to AUTO.</p><div class="table-wrap"><table><thead><tr><th>User</th><th>Current</th><th>Set Rank</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>`}
-function saveOwnerRank(userId){if(!isOwner())return toast("Owner access required.","error");const u=db.users.find(x=>x.id===userId);if(!u)return;const value=document.getElementById("rank_"+userId)?.value||"AUTO";if(value==="AUTO")delete u.manualRank;else u.manualRank=value;logAction(`${value==="AUTO"?"Removed":"Set"} rank override for ${u.username}${value==="AUTO"?"":": "+value}`,currentUser().username);saveDB();toast(value==="AUTO"?"Rank returned to XP progression.":`Rank set to ${value}.`);ownerSection("ranks");updateNav();renderDashboard()}
+function renderOwnerRankManagement(container){
+  if(!isOwner()){ toast("Owner access required.","error"); return; }
+  const rows=db.users.map(u=>{
+    const r=getUserRank(u);
+    const manual=String(u.manualRank||"").toUpperCase();
+    const ladder=RANK_LADDER[rankGender(u)];
+    const options=["AUTO",...ladder.map(x=>x.name)];
+    return `<tr>
+      <td><strong>${u.username}</strong><div style="font-size:10px;color:var(--muted)">${u.gender||"Unknown"} · ${Math.floor(Number(u.usageSeconds||0)/60).toLocaleString()} active min · ${Number(u.activityCount||0).toLocaleString()} uses</div></td>
+      <td>${manual?`<span class="badge">🔒 LOCKED</span> ${manual}`:r.cur.name}</td>
+      <td><select id="rank_${u.id}" class="select">${options.map(x=>`<option value="${x}" ${((!manual&&x==="AUTO")||manual===x)?"selected":""}>${x}</option>`).join("")}</select></td>
+      <td><button type="button" class="btn btn-primary btn-small" onclick="saveOwnerRank('${u.id}')">${manual?"Update / Unlock":"Set Rank"}</button></td>
+    </tr>`;
+  }).join("");
+  container.innerHTML=`<h2>Rank Overrides 💎</h2><p style="color:var(--muted);margin:6px 0 18px">Owner-only. AUTO follows activity. Rank is based on active time + usage, not XP. A selected rank overrides automatic progression until you return the user to AUTO.</p><div class="table-wrap"><table><thead><tr><th>User</th><th>Current</th><th>Choose Rank</th><th>Action</th></tr></thead><tbody>${rows || '<tr><td colspan="4">No users available.</td></tr>'}</tbody></table></div>`;
+}
+async function saveOwnerRank(userId){
+  if(!isOwner()){ toast("Owner access required.","error"); return; }
+  const u=db.users.find(x=>x.id===userId);
+  if(!u){ toast("User not found.","error"); return; }
+  const select=document.getElementById("rank_"+userId);
+  const value=String(select?.value||"AUTO").trim().toUpperCase();
+  const ladder=RANK_LADDER[rankGender(u)] || RANK_LADDER.male;
+  const allowed=ladder.map(x=>x.name);
+  if(value!=="AUTO" && !allowed.includes(value)){ toast("That rank is not valid for this user's rank ladder.","error"); return; }
+
+  // A manual rank is a hard Owner lock: XP cannot move the user away from it.
+  if(value==="AUTO"){
+    u.manualRank=null;
+    u.rankLocked=false;
+  }else{
+    u.manualRank=value;
+    u.rankLocked=true;
+  }
+
+  logAction(`${value==="AUTO"?"Unlocked":"Locked"} ${u.username}'s rank ${value==="AUTO"?"for XP progression":"at "+value}`,currentUser().username);
+  saveDB();
+  // Explicitly wait for the cloud write so the 15-second sync loop cannot
+  // immediately restore the previous rank.
+  if(window.__INVYX_CLOUD_READY && typeof cloudSaveDB === "function"){
+    try { await cloudSaveDB(); } catch(err) { console.warn("Rank cloud save failed; local save retained.", err); }
+  }
+
+  // Re-read the saved user and refresh every rank surface immediately.
+  db = loadDB();
+  const savedUser = db.users.find(x => x.id === userId);
+  if(savedUser){
+    if(value==="AUTO"){
+      savedUser.manualRank = null;
+      savedUser.rankLocked = false;
+    }else{
+      savedUser.manualRank = value;
+      savedUser.rankLocked = true;
+    }
+    saveDB();
+  }
+  toast(value==="AUTO"?`${u.username} is unlocked and now follows activity progression.`:`${u.username}'s rank is locked at ${value}.`);
+  ownerSection("ranks");
+  updateNav();
+}
+
+function handleSiteAdImage(input){
+  const file=input.files&&input.files[0];
+  if(!file) return;
+  if(!file.type.startsWith("image/")){ toast("Please choose an image file.","error"); input.value=""; return; }
+  if(file.size>2*1024*1024){ toast("Ad images must be 2 MB or smaller.","error"); input.value=""; return; }
+  const reader=new FileReader();
+  reader.onload=()=>{ window.__siteAdDraftImage=reader.result; const p=document.getElementById("siteAdPreview"); if(p)p.innerHTML=`<img src="${reader.result}" style="width:100%;max-height:260px;object-fit:cover;border-radius:14px">`; };
+  reader.readAsDataURL(file);
+}
+function previewSiteAdImage(input){ handleSiteAdImage(input); }
+function showSiteAd(force=false){
+  const a=db.settings?.siteAd;
+  if(!a||!a.enabled||!a.text&&!a.image) return;
+  if(!force && window.__INVYX_AD_SHOWN) return;
+  if(a.expiresAt && Date.now()>Number(a.expiresAt)){ a.enabled=false; saveDB(); return; }
+  const overlay=document.getElementById("siteAdOverlay"), card=document.getElementById("siteAdCard"), img=document.getElementById("siteAdImage"), copy=document.getElementById("siteAdCopy");
+  if(!overlay||!card||!copy) return;
+  card.classList.toggle("animated",a.animated!==false);
+  if(a.image){ img.src=a.image; img.style.display="block"; } else { img.removeAttribute("src"); img.style.display="none"; }
+  copy.innerHTML=`${a.text?`<h2>Announcement</h2><p>${escapeHtml(a.text)}</p>`:""}`;
+  overlay.classList.add("show");
+  if(!force) window.__INVYX_AD_SHOWN=true;
+}
+function dismissSiteAd(){ const overlay=document.getElementById("siteAdOverlay"); if(overlay)overlay.classList.remove("show"); }
+function previewSiteAdNow(){
+  if(!isOwner()) return toast("Owner access required.","error");
+  const old=db.settings.siteAd||{};
+  const draft={...old,image:window.__siteAdDraftImage||old.image||"",text:document.getElementById("siteAdText")?.value||old.text||"",animated:!!document.getElementById("siteAdAnimated")?.checked,enabled:true,expiresAt:Date.now()+3600000};
+  const saved=db.settings.siteAd; db.settings.siteAd=draft; showSiteAd(true); db.settings.siteAd=saved;
+}
+function saveSiteAd(e){
+  e.preventDefault();
+  if(!isOwner()) return toast("Owner access required.","error");
+  const old=db.settings.siteAd||{};
+  const duration=Math.max(1,Math.min(8760,Math.floor(Number(document.getElementById("siteAdDuration")?.value)||24)));
+  const text=document.getElementById("siteAdText")?.value.trim()||"";
+  const image=window.__siteAdDraftImage||old.image||"";
+  if(!image && !text){ return toast("Add a picture or announcement text first.","error"); }
+  db.settings.siteAd={id:uid("ad"),enabled:true,image,text,animated:!!document.getElementById("siteAdAnimated")?.checked,durationHours:duration,createdAt:Date.now(),expiresAt:Date.now()+duration*3600000};
+  window.__siteAdDraftImage=null;
+  saveDB();
+  logAction(`Published site announcement for ${duration} hours`,currentUser().username);
+  toast("Site announcement published.");
+  ownerSection("ads");
+}
+function disableSiteAd(){
+  if(!isOwner()) return toast("Owner access required.","error");
+  db.settings.siteAd=db.settings.siteAd||{}; db.settings.siteAd.enabled=false; db.settings.siteAd.expiresAt=Date.now(); saveDB(); dismissSiteAd(); toast("Site announcement disabled."); ownerSection("ads");
+}
+function escapeHtml(value){ const d=document.createElement("div"); d.textContent=String(value??""); return d.innerHTML; }
+
 function getWheelSettings(){
   const w=db.settings?.wheel||{};
   return {
@@ -3309,54 +3542,88 @@ function demoteAdmin(id){
 }
 
 
-/* RANK / GEM PROGRESSION */
+/* RANK / GEM PROGRESSION — based on active time + real usage, not XP */
 const RANK_LADDER = {
   male: [
     {name:"SUB3", min:0, color:["#8b5cf6","#c084fc"]},
-    {name:"SUB5", min:250, color:["#06b6d4","#67e8f9"]},
-    {name:"LTN", min:750, color:["#3b82f6","#60a5fa"]},
-    {name:"MTN", min:1600, color:["#f59e0b","#fde68a"]},
-    {name:"HTN", min:3000, color:["#ef4444","#fb7185"]},
-    {name:"CHAD", min:5000, color:["#22c55e","#86efac"]}
+    {name:"SUB5", min:60, color:["#06b6d4","#67e8f9"]},
+    {name:"LTN", min:180, color:["#3b82f6","#60a5fa"]},
+    {name:"MTN", min:600, color:["#f59e0b","#fde68a"]},
+    {name:"HTN", min:1500, color:["#ef4444","#fb7185"]},
+    {name:"CHAD", min:3000, color:["#22c55e","#86efac"]}
   ],
   female: [
     {name:"SUB3", min:0, color:["#a855f7","#f0abfc"]},
-    {name:"SUB5", min:250, color:["#06b6d4","#a5f3fc"]},
-    {name:"LTB", min:750, color:["#ec4899","#f9a8d4"]},
-    {name:"MTB", min:1600, color:["#f59e0b","#fde68a"]},
-    {name:"HTB", min:3000, color:["#8b5cf6","#c4b5fd"]},
-    {name:"STACY", min:5000, color:["#14b8a6","#99f6e4"]}
+    {name:"SUB5", min:60, color:["#06b6d4","#a5f3fc"]},
+    {name:"LTB", min:180, color:["#ec4899","#f9a8d4"]},
+    {name:"MTB", min:600, color:["#f59e0b","#fde68a"]},
+    {name:"HTB", min:1500, color:["#8b5cf6","#c4b5fd"]},
+    {name:"STACY", min:3000, color:["#14b8a6","#99f6e4"]}
   ]
 };
 function rankGender(u){ return String(u?.gender||'').toLowerCase().includes('female') ? 'female' : 'male'; }
+function getUsageScore(u){
+  const minutes=Math.floor(Math.max(0,Number(u?.usageSeconds||0))/60);
+  const actions=Math.max(0,Number(u?.activityCount||0));
+  const logins=Math.max(0,Number(u?.loginCount||0));
+  return minutes + Math.floor(actions/10) + logins*5;
+}
 function getUserRank(u){
   const ladder=RANK_LADDER[rankGender(u)];
-  if(u?.manualRank){ const mi=ladder.findIndex(r=>r.name===u.manualRank); if(mi>=0){ const mr=ladder[mi]; return {ladder,idx:mi,cur:mr,next:ladder[mi+1]||null,xp:Math.max(0,Number(u?.points||0)),progress:100,manual:true}; } }
-  const xp=Math.max(0,Number(u?.points||0));
+  if(u?.rankLocked && u?.manualRank){
+    const mi=ladder.findIndex(r=>r.name===String(u.manualRank).toUpperCase());
+    if(mi>=0){ const mr=ladder[mi]; return {ladder,idx:mi,cur:mr,next:ladder[mi+1]||null,score:getUsageScore(u),progress:100,manual:true}; }
+  }
+  const score=getUsageScore(u);
   let idx=0;
-  ladder.forEach((r,i)=>{ if(xp>=r.min) idx=i; });
+  ladder.forEach((r,i)=>{ if(score>=r.min) idx=i; });
   const cur=ladder[idx], next=ladder[idx+1]||null;
   const span=next ? next.min-cur.min : Math.max(1,cur.min);
-  const progress=next ? Math.min(100,Math.max(0,((xp-cur.min)/span)*100)) : 100;
-  return {ladder,idx,cur,next,xp,progress};
+  const progress=next ? Math.min(100,Math.max(0,((score-cur.min)/span)*100)) : 100;
+  return {ladder,idx,cur,next,score,progress};
 }
 function rankHtml(u){
-  const r=getUserRank(u);
-  const [a,b]=r.cur.color;
-  const label=r.next ? `${r.xp.toLocaleString()} / ${r.next.min.toLocaleString()} XP` : `${r.xp.toLocaleString()} XP · MAX RANK`;
-  const remaining=r.next ? `${(r.next.min-r.xp).toLocaleString()} XP to ${r.next.name}` : 'Maximum rank reached';
+  const r=getUserRank(u); const [a,b]=r.cur.color;
+  const label=r.next ? `${r.score.toLocaleString()} / ${r.next.min.toLocaleString()} activity score` : `${r.score.toLocaleString()} activity score · MAX RANK`;
+  const remaining=r.next ? `${(r.next.min-r.score).toLocaleString()} activity score to ${r.next.name}` : 'Maximum rank reached';
+  const minutes=Math.floor(Number(u?.usageSeconds||0)/60);
+  const actions=Number(u?.activityCount||0);
   return `<div class="rank-panel" style="--rank-a:${a};--rank-b:${b}">
-    <div class="rank-row">
-      <div style="display:flex;align-items:center;gap:12px">
-        <div class="rank-gem" style="background:linear-gradient(135deg,${a},${b});"><span>◆</span></div>
-        <div><div class="rank-meta">CURRENT RANK</div><div class="rank-name">${r.cur.name}</div><div class="rank-meta">${label}</div></div>
-      </div>
-      <div style="text-align:right"><div class="rank-meta">PROGRESS</div><div class="rank-name" style="font-size:14px">${Math.round(r.progress)}%</div></div>
-    </div>
+    <div class="rank-row"><div style="display:flex;align-items:center;gap:12px"><div class="rank-gem" style="background:linear-gradient(135deg,${a},${b});"><span>◆</span></div><div><div class="rank-meta">CURRENT RANK</div><div class="rank-name">${r.cur.name}</div><div class="rank-meta">${label}</div></div></div><div style="text-align:right"><div class="rank-meta">PROGRESS</div><div class="rank-name" style="font-size:14px">${Math.round(r.progress)}%</div></div></div>
     <div class="rank-progress"><div class="rank-progress-fill" style="width:${r.progress}%"></div></div>
-    <div class="rank-subtle">${remaining} · Rank requirements increase at every level.</div>
+    <div class="rank-subtle">${remaining} · ${minutes.toLocaleString()} active minutes · ${actions.toLocaleString()} interactions. XP does not affect rank.</div>
   </div>`;
 }
+
+/* USAGE / ENGAGEMENT TRACKING */
+let __lastUsageTick = Date.now();
+let __lastActivityCounted = 0;
+function markUserActivity(){
+  const u=currentUser(); if(!u) return;
+  const now=Date.now();
+  u.lastActiveAt=now;
+  if(now-__lastActivityCounted>5000){
+    u.activityCount=Number(u.activityCount||0)+1;
+    __lastActivityCounted=now;
+  }
+}
+function usageHeartbeat(){
+  const u=currentUser(); const now=Date.now();
+  if(!u){ __lastUsageTick=now; return; }
+  const elapsed=Math.min(60000,Math.max(0,now-__lastUsageTick));
+  const recentlyActive=(now-Number(u.lastActiveAt||0))<=120000;
+  if(document.visibilityState==='visible' && recentlyActive && elapsed<=60000){
+    u.usageSeconds=Number(u.usageSeconds||0)+Math.round(elapsed/1000);
+    if(Math.round(elapsed/1000)>0) saveDB();
+    const active=document.querySelector('.page.active')?.id;
+    if(active==='dashboard') renderDashboard();
+  }
+  __lastUsageTick=now;
+}
+document.addEventListener('click',()=>markUserActivity(),{passive:true});
+document.addEventListener('keydown',()=>markUserActivity(),{passive:true});
+document.addEventListener('touchstart',()=>markUserActivity(),{passive:true});
+setInterval(usageHeartbeat,30000);
 
 /* USER DASHBOARD */
 function renderDashboard(){
@@ -3528,6 +3795,7 @@ function removeBrokenResourceCards(){
 ensureThemeData();
 updateNav();
 refreshBuyPackageOptions();
+setTimeout(()=>showSiteAd(),50);
 removeBrokenResourceCards();
 renderGuides();
 renderReviews();
@@ -3617,6 +3885,9 @@ renderReviews();
     db.users.forEach(u => {
       if(typeof u.points !== "number") u.points = Number(u.points || 0);
       if(!u.rank) u.rank = null;
+      if(typeof u.manualRank !== "string" || !u.manualRank) u.manualRank = null;
+      if(u.manualRank) u.manualRank = String(u.manualRank).toUpperCase();
+      if(typeof u.rankLocked !== "boolean") u.rankLocked = !!u.manualRank;
       if(!Array.isArray(u.ownedGuides)) u.ownedGuides = [];
       if(typeof u.pfp !== "string") u.pfp = "";
       if(typeof u.nameChangesUsed !== "number") u.nameChangesUsed = 0;
@@ -3633,6 +3904,7 @@ renderReviews();
     ensureOwner();
     window.__INVYX_CLOUD_READY = true;
     await cloudSaveDB();
+    setTimeout(()=>showSiteAd(),50);
 
     updateNav();
     renderGuides();
