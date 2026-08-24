@@ -1,0 +1,4241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="INVYXMAX - Modern Looksmaxxing Guides">
+<title>INVYXMAX</title>
+
+<style>
+:root{
+    --bg:#070708;
+    --bg2:#0d0d10;
+    --card:#111115;
+    --card2:#17171c;
+    --red:#ff2d2d;
+    --red2:#ff5757;
+    --text:#f7f7f7;
+    --muted:#94949e;
+    --border:rgba(255,255,255,.09);
+    --success:#31d158;
+    --warning:#ffb340;
+    --shadow:0 20px 60px rgba(0,0,0,.45);
+}
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    background:
+        radial-gradient(circle at 20% 0%,rgba(255,45,45,.10),transparent 30%),
+        radial-gradient(circle at 80% 20%,rgba(255,0,0,.05),transparent 25%),
+        var(--bg);
+    color:var(--text);
+    min-height:100vh;
+}
+
+button,
+input,
+textarea,
+select{
+    font:inherit;
+}
+
+button{
+    cursor:pointer;
+}
+
+a{
+    color:inherit;
+    text-decoration:none;
+}
+
+img{
+    max-width:100%;
+    display:block;
+}
+
+/* =========================
+   SCROLLBAR
+========================= */
+
+::-webkit-scrollbar{
+    width:8px;
+}
+
+::-webkit-scrollbar-track{
+    background:#080809;
+}
+
+::-webkit-scrollbar-thumb{
+    background:#2a2a30;
+    border-radius:20px;
+}
+
+::-webkit-scrollbar-thumb:hover{
+    background:var(--red);
+}
+
+/* =========================
+   HEADER
+========================= */
+
+header{
+    position:sticky;
+    top:0;
+    z-index:1000;
+    backdrop-filter:blur(18px);
+    background:rgba(7,7,8,.78);
+    border-bottom:1px solid var(--border);
+}
+
+.nav{
+    max-width:1250px;
+    margin:auto;
+    height:72px;
+    padding:0 24px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:20px;
+}
+
+.logo{
+    font-size:23px;
+    font-weight:950;
+    letter-spacing:-1px;
+    cursor:pointer;
+}
+
+.logo span{
+    color:var(--red);
+}
+
+.nav-links{
+    display:flex;
+    align-items:center;
+    gap:7px;
+}
+
+.nav-links button{
+    border:0;
+    color:#bdbdc5;
+    background:transparent;
+    padding:10px 14px;
+    border-radius:10px;
+    transition:.2s;
+}
+
+.nav-links button:hover,
+.nav-links button.active{
+    color:#fff;
+    background:rgba(255,255,255,.07);
+}
+
+.nav-actions{
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+
+.icon-btn{
+    width:42px;
+    height:42px;
+    border-radius:12px;
+    border:1px solid var(--border);
+    background:rgba(255,255,255,.04);
+    color:white;
+}
+
+.icon-btn:hover{
+    border-color:rgba(255,45,45,.5);
+}
+
+.mobile-menu{
+    display:none;
+}
+
+/* =========================
+   BUTTONS
+========================= */
+
+.btn{
+    border:0;
+    border-radius:12px;
+    padding:12px 18px;
+    font-weight:750;
+    transition:.2s;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+}
+
+.btn:hover{
+    transform:translateY(-2px);
+}
+
+.btn-primary{
+    background:var(--red);
+    color:white;
+    box-shadow:0 8px 30px rgba(255,45,45,.18);
+}
+
+.btn-primary:hover{
+    background:var(--red2);
+}
+
+.btn-secondary{
+    background:rgba(255,255,255,.07);
+    border:1px solid var(--border);
+    color:white;
+}
+
+.btn-danger{
+    background:#5e1111;
+    color:#ff8c8c;
+    border:1px solid rgba(255,45,45,.2);
+}
+
+.btn-small{
+    padding:9px 12px;
+    font-size:13px;
+}
+
+/* =========================
+   LAYOUT
+========================= */
+
+.container{
+    max-width:1250px;
+    margin:auto;
+    padding:0 24px;
+}
+
+.page{
+    display:none;
+    animation:fadeIn .25s ease;
+}
+
+.page.active{
+    display:block;
+}
+
+@keyframes fadeIn{
+    from{
+        opacity:0;
+        transform:translateY(8px);
+    }
+    to{
+        opacity:1;
+        transform:none;
+    }
+}
+
+/* =========================
+   HERO
+========================= */
+
+.hero{
+    min-height:680px;
+    display:grid;
+    grid-template-columns:1.15fr .85fr;
+    align-items:center;
+    gap:60px;
+}
+
+.badge{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    border:1px solid rgba(255,45,45,.25);
+    background:rgba(255,45,45,.07);
+    color:#ff8585;
+    padding:8px 12px;
+    border-radius:999px;
+    font-size:12px;
+    font-weight:800;
+    margin-bottom:22px;
+}
+
+.hero h1{
+    font-size:clamp(48px,7vw,90px);
+    line-height:.91;
+    letter-spacing:-5px;
+    max-width:800px;
+}
+
+.hero h1 span{
+    color:var(--red);
+}
+
+.hero p{
+    margin-top:26px;
+    color:var(--muted);
+    max-width:620px;
+    font-size:18px;
+    line-height:1.7;
+}
+
+.hero-actions{
+    display:flex;
+    flex-wrap:wrap;
+    gap:12px;
+    margin-top:32px;
+}
+
+.hero-card{
+    position:relative;
+    min-height:470px;
+    border:1px solid var(--border);
+    border-radius:28px;
+    overflow:hidden;
+    background:
+        radial-gradient(circle at 50% 30%,rgba(255,45,45,.24),transparent 40%),
+        linear-gradient(145deg,#17171c,#09090b);
+    box-shadow:var(--shadow);
+}
+
+.hero-card-content{
+    position:absolute;
+    inset:0;
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-end;
+    padding:30px;
+    background:linear-gradient(transparent 30%,rgba(0,0,0,.85));
+}
+
+.hero-card h2{
+    font-size:30px;
+}
+
+.hero-card p{
+    font-size:14px;
+    margin-top:8px;
+}
+
+/* =========================
+   SECTIONS
+========================= */
+
+.section{
+    padding:80px 0;
+}
+
+.section-head{
+    display:flex;
+    align-items:end;
+    justify-content:space-between;
+    gap:20px;
+    margin-bottom:28px;
+}
+
+.section-head h2{
+    font-size:36px;
+    letter-spacing:-1.5px;
+}
+
+.section-head p{
+    color:var(--muted);
+    margin-top:7px;
+}
+
+/* =========================
+   STATS
+========================= */
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:15px;
+}
+
+.stat{
+    padding:24px;
+    border:1px solid var(--border);
+    background:var(--card);
+    border-radius:18px;
+}
+
+.stat strong{
+    font-size:32px;
+    display:block;
+}
+
+.stat span{
+    color:var(--muted);
+    font-size:13px;
+}
+
+/* =========================
+   GUIDES
+========================= */
+
+.filters{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-bottom:24px;
+}
+
+.search-box{
+    flex:1;
+    min-width:220px;
+    position:relative;
+}
+
+.search-box input{
+    width:100%;
+    padding:13px 15px;
+    border-radius:12px;
+    border:1px solid var(--border);
+    background:#101014;
+    color:white;
+    outline:none;
+}
+
+.search-box input:focus{
+    border-color:rgba(255,45,45,.5);
+}
+
+.category-btn{
+    border:1px solid var(--border);
+    background:#101014;
+    color:#aaaab2;
+    padding:11px 14px;
+    border-radius:11px;
+}
+
+.category-btn.active,
+.category-btn:hover{
+    background:var(--red);
+    color:white;
+    border-color:var(--red);
+}
+
+.guides-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:18px;
+}
+
+.guide-card{
+    background:linear-gradient(145deg,#131318,#0c0c0f);
+    border:1px solid var(--border);
+    border-radius:20px;
+    overflow:hidden;
+    transition:.25s;
+}
+
+.guide-card:hover{
+    transform:translateY(-5px);
+    border-color:rgba(255,45,45,.3);
+    box-shadow:0 15px 45px rgba(0,0,0,.3);
+}
+
+.guide-image{
+    height:190px;
+    background:
+        linear-gradient(135deg,rgba(255,45,45,.2),transparent),
+        #17171c;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+}
+
+.guide-image img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.guide-placeholder{
+    font-size:50px;
+    opacity:.6;
+}
+
+.guide-body{
+    padding:20px;
+}
+
+.guide-category{
+    color:#ff6767;
+    text-transform:uppercase;
+    font-size:10px;
+    letter-spacing:1.3px;
+    font-weight:900;
+}
+
+.guide-body h3{
+    margin-top:8px;
+    font-size:20px;
+}
+
+.guide-body p{
+    color:var(--muted);
+    line-height:1.55;
+    font-size:13px;
+    margin:10px 0 18px;
+}
+
+.guide-footer{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+}
+
+.guide-meta{
+    color:#777780;
+    font-size:12px;
+}
+
+/* =========================
+   GUIDE READER
+========================= */
+
+.reader{
+    max-width:900px;
+    margin:auto;
+}
+
+.back-row{
+    display:flex;
+    gap:10px;
+    margin-bottom:28px;
+}
+
+.back-btn{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:11px 17px;
+    border:1px solid var(--border);
+    border-radius:12px;
+    background:rgba(255,255,255,.05);
+    color:white;
+    font-weight:700;
+    transition:.2s;
+}
+
+.back-btn:hover{
+    background:var(--red);
+    border-color:var(--red);
+    transform:translateX(-3px);
+}
+
+.reader-card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:25px;
+    overflow:hidden;
+}
+
+.reader-cover{
+    width:100%;
+    max-height:420px;
+    object-fit:cover;
+}
+
+.reader-content{
+    padding:38px;
+}
+
+.reader-content h1{
+    font-size:46px;
+    letter-spacing:-2px;
+}
+
+.reader-content .lead{
+    color:var(--muted);
+    font-size:17px;
+    line-height:1.7;
+    margin:15px 0 30px;
+}
+
+.guide-text{
+    color:#d3d3d8;
+    line-height:1.85;
+    white-space:pre-wrap;
+}
+
+.attachments{
+    margin-top:35px;
+    padding-top:25px;
+    border-top:1px solid var(--border);
+}
+
+.attachments h3{
+    margin-bottom:14px;
+}
+
+.attachment{
+    padding:14px;
+    background:#0c0c0f;
+    border:1px solid var(--border);
+    border-radius:12px;
+    margin-top:9px;
+}
+
+/* =========================
+   AUTH
+========================= */
+
+.auth-wrap{
+    min-height:calc(100vh - 72px);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:60px 20px;
+}
+
+.auth-card{
+    width:100%;
+    max-width:450px;
+    background:linear-gradient(145deg,#151519,#0c0c0f);
+    border:1px solid var(--border);
+    border-radius:24px;
+    padding:34px;
+    box-shadow:var(--shadow);
+}
+
+.auth-card h1{
+    font-size:32px;
+}
+
+.auth-card > p{
+    color:var(--muted);
+    margin:8px 0 25px;
+}
+
+.form-group{
+    margin-bottom:16px;
+}
+
+.form-group label{
+    display:block;
+    color:#bcbcc5;
+    font-size:13px;
+    font-weight:700;
+    margin-bottom:7px;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select{
+    width:100%;
+    padding:13px 14px;
+    border-radius:11px;
+    border:1px solid var(--border);
+    background:#0b0b0e;
+    color:white;
+    outline:none;
+}
+
+.form-group textarea{
+    min-height:130px;
+    resize:vertical;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus{
+    border-color:rgba(255,45,45,.55);
+}
+
+.auth-footer{
+    text-align:center;
+    color:var(--muted);
+    font-size:13px;
+    margin-top:20px;
+}
+
+.auth-footer button{
+    background:none;
+    border:0;
+    color:#ff5555;
+}
+
+/* =========================
+   DASHBOARD
+========================= */
+
+.dashboard-grid{
+    display:grid;
+    grid-template-columns:240px 1fr;
+    gap:20px;
+}
+
+.sidebar{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:18px;
+    padding:15px;
+    height:max-content;
+    position:sticky;
+    top:95px;
+}
+
+.sidebar button{
+    width:100%;
+    text-align:left;
+    background:transparent;
+    border:0;
+    color:#aaaab2;
+    padding:12px;
+    border-radius:10px;
+    margin-bottom:4px;
+}
+
+.sidebar button:hover,
+.sidebar button.active{
+    background:rgba(255,45,45,.1);
+    color:#fff;
+}
+
+.dashboard-content{
+    min-width:0;
+}
+
+.panel{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:18px;
+    padding:25px;
+    margin-bottom:18px;
+}
+
+.panel h2{
+    margin-bottom:7px;
+}
+
+.panel-description{
+    color:var(--muted);
+    font-size:13px;
+    margin-bottom:20px;
+}
+
+/* =========================
+   ADMIN
+========================= */
+
+.admin-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:14px;
+    margin-bottom:20px;
+}
+
+.admin-stat{
+    background:#0c0c0f;
+    border:1px solid var(--border);
+    padding:20px;
+    border-radius:15px;
+}
+
+.admin-stat strong{
+    font-size:27px;
+    display:block;
+}
+
+.admin-stat span{
+    color:var(--muted);
+    font-size:12px;
+}
+
+.admin-guide-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:15px;
+    padding:15px;
+    background:#0c0c0f;
+    border:1px solid var(--border);
+    border-radius:13px;
+    margin-bottom:9px;
+}
+
+.admin-guide-actions{
+    display:flex;
+    gap:7px;
+    flex-wrap:wrap;
+}
+
+/* =========================
+   REVIEWS
+========================= */
+
+.review-form{
+    max-width:700px;
+    margin-bottom:40px;
+}
+
+.review-list{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:15px;
+}
+
+.review{
+    background:var(--card);
+    border:1px solid var(--border);
+    padding:22px;
+    border-radius:17px;
+}
+
+.review-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+}
+
+.review-name{
+    font-weight:800;
+}
+
+.stars{
+    color:#ffb52e;
+    letter-spacing:2px;
+}
+
+.review p{
+    color:#aaaab3;
+    line-height:1.6;
+    margin-top:13px;
+}
+
+.review-date{
+    color:#66666e;
+    font-size:11px;
+    margin-top:15px;
+}
+
+/* =========================
+   SUPPORT
+========================= */
+
+.support-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+}
+
+.support-card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:20px;
+    padding:28px;
+}
+
+.support-card h2{
+    margin-bottom:8px;
+}
+
+.support-card p{
+    color:var(--muted);
+    line-height:1.7;
+}
+
+/* =========================
+   MODAL
+========================= */
+
+.modal{
+    position:fixed;
+    inset:0;
+    z-index:3000;
+    background:rgba(0,0,0,.75);
+    backdrop-filter:blur(10px);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+}
+
+.modal.show{
+    display:flex;
+}
+
+.modal-card{
+    width:100%;
+    max-width:650px;
+    max-height:90vh;
+    overflow:auto;
+    background:#111115;
+    border:1px solid var(--border);
+    border-radius:22px;
+    padding:28px;
+}
+
+.modal-header{
+    display:flex;
+    justify-content:space-between;
+    gap:15px;
+    margin-bottom:20px;
+}
+
+.close{
+    width:38px;
+    height:38px;
+    border:0;
+    border-radius:10px;
+    background:#222228;
+    color:white;
+}
+
+/* =========================
+   TOAST
+========================= */
+
+#toastContainer{
+    position:fixed;
+    right:20px;
+    bottom:20px;
+    z-index:5000;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
+
+.toast{
+    min-width:270px;
+    max-width:380px;
+    padding:15px 17px;
+    background:#17171c;
+    border:1px solid var(--border);
+    border-left:3px solid var(--red);
+    border-radius:12px;
+    box-shadow:var(--shadow);
+    animation:toastIn .25s ease;
+}
+
+.toast.success{
+    border-left-color:var(--success);
+}
+
+.toast.error{
+    border-left-color:var(--red);
+}
+
+@keyframes toastIn{
+    from{
+        opacity:0;
+        transform:translateX(30px);
+    }
+    to{
+        opacity:1;
+        transform:none;
+    }
+}
+
+/* =========================
+   EMPTY
+========================= */
+
+.empty{
+    text-align:center;
+    padding:60px 20px;
+    color:var(--muted);
+    border:1px dashed var(--border);
+    border-radius:18px;
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+footer{
+    border-top:1px solid var(--border);
+    margin-top:80px;
+    padding:45px 0;
+    color:#777780;
+}
+
+.footer-inner{
+    display:flex;
+    justify-content:space-between;
+    gap:20px;
+    flex-wrap:wrap;
+}
+
+.footer-logo{
+    color:white;
+    font-weight:900;
+}
+
+.footer-logo span{
+    color:var(--red);
+}
+
+.footer-links{
+    display:flex;
+    gap:18px;
+}
+
+.footer-links button{
+    border:0;
+    background:none;
+    color:#777780;
+}
+
+.footer-links button:hover{
+    color:white;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:900px){
+
+    .nav-links{
+        display:none;
+        position:absolute;
+        left:15px;
+        right:15px;
+        top:65px;
+        background:#101014;
+        border:1px solid var(--border);
+        border-radius:16px;
+        padding:10px;
+        flex-direction:column;
+        align-items:stretch;
+    }
+
+    .nav-links.open{
+        display:flex;
+    }
+
+    .mobile-menu{
+        display:block;
+    }
+
+    .hero{
+        grid-template-columns:1fr;
+        padding:70px 0;
+    }
+
+    .hero-card{
+        min-height:360px;
+    }
+
+    .stats{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .guides-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .dashboard-grid{
+        grid-template-columns:1fr;
+    }
+
+    .sidebar{
+        position:static;
+    }
+
+    .review-list,
+    .support-grid{
+        grid-template-columns:1fr;
+    }
+}
+
+@media(max-width:600px){
+
+    .nav{
+        padding:0 15px;
+    }
+
+    .nav-actions .desktop-auth{
+        display:none;
+    }
+
+    .container{
+        padding:0 15px;
+    }
+
+    .hero h1{
+        font-size:52px;
+        letter-spacing:-3px;
+    }
+
+    .guides-grid{
+        grid-template-columns:1fr;
+    }
+
+    .stats{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .section{
+        padding:55px 0;
+    }
+
+    .reader-content{
+        padding:22px;
+    }
+
+    .reader-content h1{
+        font-size:34px;
+    }
+
+    .admin-grid{
+        grid-template-columns:1fr;
+    }
+
+    .admin-guide-row{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <nav class="nav">
+
+        <div class="logo" onclick="navigate('home')">
+            INVYX<span>MAX</span>
+        </div>
+
+        <div class="nav-links" id="navLinks">
+            <button data-page="home" onclick="navigate('home')">Home</button>
+            <button data-page="guides" onclick="navigate('guides')">Guides</button>
+            <button data-page="reviews" onclick="navigate('reviews')">Reviews</button>
+            <button data-page="support" onclick="navigate('support')">Support</button>
+            <button id="navDashboard" data-page="dashboard" onclick="navigate('dashboard')" style="display:none;">Dashboard</button>
+            <button id="navAdmin" data-page="admin" onclick="navigate('admin')" style="display:none;">Admin</button>
+        </div>
+
+        <div class="nav-actions">
+
+            <button class="icon-btn mobile-menu" onclick="toggleMobileMenu()">
+                ☰
+            </button>
+
+            <button class="btn btn-secondary btn-small desktop-auth" id="loginNavBtn" onclick="navigate('login')">
+                Login
+            </button>
+
+            <button class="btn btn-primary btn-small desktop-auth" id="registerNavBtn" onclick="navigate('register')">
+                Register
+            </button>
+
+            <button class="btn btn-secondary btn-small desktop-auth" id="logoutNavBtn" onclick="logout()" style="display:none;">
+                Logout
+            </button>
+
+        </div>
+
+    </nav>
+</header>
+
+<main>
+
+<!-- =========================
+     HOME
+========================= -->
+
+<section id="page-home" class="page active">
+
+<div class="container">
+
+    <div class="hero">
+
+        <div>
+
+            <div class="badge">
+                ● THE INVYXMAX COMMUNITY
+            </div>
+
+            <h1>
+                BUILD YOUR<br>
+                <span>BEST VERSION.</span>
+            </h1>
+
+            <p>
+                Explore structured guides covering grooming, skincare,
+                fitness, style, hair, facial aesthetics and personal
+                improvement.
+            </p>
+
+            <div class="hero-actions">
+
+                <button class="btn btn-primary" onclick="navigate('guides')">
+                    Explore Guides →
+                </button>
+
+                <button class="btn btn-secondary" onclick="navigate('reviews')">
+                    Community Reviews
+                </button>
+
+            </div>
+
+        </div>
+
+        <div class="hero-card">
+
+            <div class="hero-card-content">
+
+                <div class="badge">
+                    INVYXMAX
+                </div>
+
+                <h2>Level up.</h2>
+
+                <p>
+                    Knowledge. Consistency. Progress.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="stats">
+
+        <div class="stat">
+            <strong id="homeGuideCount">0</strong>
+            <span>Guides</span>
+        </div>
+
+        <div class="stat">
+            <strong id="homeReviewCount">0</strong>
+            <span>Community Reviews</span>
+        </div>
+
+        <div class="stat">
+            <strong>24/7</strong>
+            <span>Access</span>
+        </div>
+
+        <div class="stat">
+            <strong>100%</strong>
+            <span>Community Focused</span>
+        </div>
+
+    </div>
+
+</div>
+
+<div class="container section">
+
+    <div class="section-head">
+
+        <div>
+            <h2>Featured Guides</h2>
+            <p>Start with some of the latest guides.</p>
+        </div>
+
+        <button class="btn btn-secondary" onclick="navigate('guides')">
+            View All
+        </button>
+
+    </div>
+
+    <div id="featuredGuides" class="guides-grid"></div>
+
+</div>
+
+</section>
+
+
+<!-- =========================
+     GUIDES
+========================= -->
+
+<section id="page-guides" class="page">
+
+<div class="container section">
+
+    <div class="section-head">
+
+        <div>
+            <h2>Guides</h2>
+            <p>Find the information you need.</p>
+        </div>
+
+    </div>
+
+    <div class="filters">
+
+        <div class="search-box">
+            <input
+                id="guideSearch"
+                type="text"
+                placeholder="Search guides..."
+                oninput="renderGuides()"
+            >
+        </div>
+
+        <button class="category-btn active" onclick="setCategory('All',this)">
+            All
+        </button>
+
+        <button class="category-btn" onclick="setCategory('Skincare',this)">
+            Skincare
+        </button>
+
+        <button class="category-btn" onclick="setCategory('Hair',this)">
+            Hair
+        </button>
+
+        <button class="category-btn" onclick="setCategory('Fitness',this)">
+            Fitness
+        </button>
+
+        <button class="category-btn" onclick="setCategory('Style',this)">
+            Style
+        </button>
+
+        <button class="category-btn" onclick="setCategory('Face',this)">
+            Face
+        </button>
+
+    </div>
+
+    <div id="guidesGrid" class="guides-grid"></div>
+
+</div>
+
+</section>
+
+
+<!-- =========================
+     GUIDE READER
+========================= -->
+
+<section id="page-reader" class="page">
+
+<div class="container section">
+
+    <div class="reader">
+
+        <div class="back-row">
+
+            <button class="back-btn" onclick="goBack()">
+                ← Previous Page
+            </button>
+
+            <button class="back-btn" onclick="navigate('guides')">
+                All Guides
+            </button>
+
+        </div>
+
+        <div id="readerContent"></div>
+
+    </div>
+
+</div>
+
+</section>
+
+
+<!-- =========================
+     LOGIN
+========================= -->
+
+<section id="page-login" class="page">
+
+<div class="auth-wrap">
+
+    <div class="auth-card">
+
+        <div class="badge">INVYXMAX ACCOUNT</div>
+
+        <h1>Welcome back.</h1>
+
+        <p>Login to access your account.</p>
+
+        <form onsubmit="login(event)">
+
+            <div class="form-group">
+                <label>Username</label>
+                <input id="loginUsername" required autocomplete="username">
+            </div>
+
+            <div class="form-group">
+                <label>Password</label>
+                <input id="loginPassword" type="password" required autocomplete="current-password">
+            </div>
+
+            <button class="btn btn-primary" style="width:100%;">
+                Login
+            </button>
+
+        </form>
+
+        <div class="auth-footer">
+            Don't have an account?
+            <button onclick="navigate('register')">Create one</button>
+        </div>
+
+    </div>
+
+</div>
+
+</section>
+
+
+<!-- =========================
+     REGISTER
+========================= -->
+
+<section id="page-register" class="page">
+
+<div class="auth-wrap">
+
+    <div class="auth-card">
+
+        <div class="badge">JOIN INVYXMAX</div>
+
+        <h1>Create account.</h1>
+
+        <p>Join the INVYXMAX community.</p>
+
+        <form onsubmit="registerUser(event)">
+
+            <div class="form-group">
+                <label>Username</label>
+                <input id="registerUsername" required minlength="3">
+            </div>
+
+            <div class="form-group">
+                <label>Email</label>
+                <input id="registerEmail" type="email" required>
+            </div>
+
+            <div class="form-group">
+                <label>Password</label>
+                <input id="registerPassword" type="password" required minlength="6">
+            </div>
+
+            <button class="btn btn-primary" style="width:100%;">
+                Create Account
+            </button>
+
+        </form>
+
+        <div class="auth-footer">
+            Already have an account?
+            <button onclick="navigate('login')">Login</button>
+        </div>
+
+    </div>
+
+</div>
+
+</section>
+
+
+<!-- =========================
+     DASHBOARD
+========================= -->
+
+<section id="page-dashboard" class="page">
+
+<div class="container section">
+
+    <div class="section-head">
+
+        <div>
+            <h2>Your Dashboard</h2>
+            <p id="dashboardWelcome">Welcome.</p>
+        </div>
+
+    </div>
+
+    <div class="dashboard-grid">
+
+        <aside class="sidebar">
+
+            <button class="active">
+                Overview
+            </button>
+
+            <button onclick="navigate('guides')">
+                Browse Guides
+            </button>
+
+            <button onclick="navigate('reviews')">
+                Reviews
+            </button>
+
+            <button onclick="navigate('support')">
+                Support
+            </button>
+
+            <button onclick="logout()">
+                Logout
+            </button>
+
+        </aside>
+
+        <div class="dashboard-content">
+
+            <div class="stats">
+
+                <div class="stat">
+                    <strong id="dashBookmarks">0</strong>
+                    <span>Bookmarks</span>
+                </div>
+
+                <div class="stat">
+                    <strong id="dashRecent">0</strong>
+                    <span>Recent Guides</span>
+                </div>
+
+                <div class="stat">
+                    <strong id="dashReviews">0</strong>
+                    <span>Your Reviews</span>
+                </div>
+
+                <div class="stat">
+                    <strong>Active</strong>
+                    <span>Account Status</span>
+                </div>
+
+            </div>
+
+            <div class="panel" style="margin-top:20px;">
+
+                <h2>Recently Viewed</h2>
+
+                <p class="panel-description">
+                    Guides you've recently opened.
+                </p>
+
+                <div id="recentGuides"></div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</section>
+
+
+<!-- =========================
+     REVIEWS
+========================= -->
+
+<section id="page-reviews" class="page">
+
+<div class="container section">
+
+    <div class="section-head">
+
+        <div>
+            <h2>Community Reviews</h2>
+            <p>Share your experience with INVYXMAX.</p>
+        </div>
+
+    </div>
+
+    <div class="panel review-form">
+
+        <h2>Leave a Review</h2>
+
+        <p class="panel-description">
+            You need an account to submit a review.
+        </p>
+
+        <form onsubmit="submitReview(event)">
+
+            <div class="form-group">
+
+                <label>Rating</label>
+
+                <select id="reviewRating" required>
+                    <option value="5">★★★★★ — 5/5</option>
+                    <option value="4">★★★★☆ — 4/5</option>
+                    <option value="3">★★★☆☆ — 3/5</option>
+                    <option value="2">★★☆☆☆ — 2/5</option>
+                    <option value="1">★☆☆☆☆ — 1/5</option>
+                </select>
+
+            </div>
+
+            <div class="form-group">
+
+                <label>Your Review</label>
+
+                <textarea
+                    id="reviewText"
+                    required
+                    maxlength="500"
+                    placeholder="Tell the community what you think..."
+                ></textarea>
+
+            </div>
+
+            <button class="btn btn-primary">
+                Submit Review
+            </button>
+
+        </form>
+
+    </div>
+
+    <div id="reviewsList" class="review-list"></div>
+
+</div>
+
+</section>
+
+
+<!-- =========================
+     SUPPORT
+========================= -->
+
+<section id="page-support" class="page">
+
+<div class="container section">
+
+    <div class="section-head">
+
+        <div>
+            <h2>Support Center</h2>
+            <p>Need help? Contact INVYXMAX.</p>
+        </div>
+
+    </div>
+
+    <div class="support-grid">
+
+        <div class="support-card">
+
+            <div class="badge">SOCIAL</div>
+
+            <h2>Follow INVYX</h2>
+
+            <p>
+                Follow the official INVYX account for updates,
+                content and new guides.
+            </p>
+
+            <br>
+
+            <a
+                href="https://www.tiktok.com/@invyx_"
+                target="_blank"
+                class="btn btn-primary"
+            >
+                TikTok @invyx_
+            </a>
+
+        </div>
+
+        <div class="support-card">
+
+            <div class="badge">CONTACT</div>
+
+            <h2>Send a Message</h2>
+
+            <p>
+                Send a support request directly to the INVYXMAX team.
+            </p>
+
+            <br>
+
+            <form
+                action="https://formspree.io/f/maewegao"
+                method="POST"
+            >
+
+                <div class="form-group">
+
+                    <label>Email</label>
+
+                    <input
+                        type="email"
+                        name="email"
+                        required
+                    >
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>Message</label>
+
+                    <textarea
+                        name="message"
+                        required
+                    ></textarea>
+
+                </div>
+
+                <input
+                    type="hidden"
+                    name="_subject"
+                    value="INVYXMAX Support Request"
+                >
+
+                <button class="btn btn-primary">
+                    Send Message
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+</section>
+
+
+<!-- =========================
+     ADMIN LOGIN
+========================= -->
+
+<section id="page-admin-login" class="page">
+
+<div class="auth-wrap">
+
+    <div class="auth-card">
+
+        <div class="badge">ADMIN AREA</div>
+
+        <h1>Admin Login</h1>
+
+        <p>Authorized access only.</p>
+
+        <form onsubmit="adminLogin(event)">
+
+            <div class="form-group">
+
+                <label>Admin Username</label>
+
+                <input
+                    id="adminUsername"
+                    required
+                >
+
+            </div>
+
+            <div class="form-group">
+
+                <label>Admin Password</label>
+
+                <input
+                    id="adminPassword"
+                    type="password"
+                    required
+                >
+
+            </div>
+
+            <button class="btn btn-primary" style="width:100%;">
+                Enter Admin Panel
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+</section>
+
+
+<!-- =========================
+     ADMIN
+========================= -->
+
+<section id="page-admin" class="page">
+
+<div class="container section">
+
+    <div class="section-head">
+
+        <div>
+
+            <div class="badge">
+                ADMIN CONTROL PANEL
+            </div>
+
+            <h2>INVYXMAX Admin</h2>
+
+            <p>
+                Manage guides and community content.
+            </p>
+
+        </div>
+
+        <button class="btn btn-danger" onclick="adminLogout()">
+            Admin Logout
+        </button>
+
+    </div>
+
+    <div class="admin-grid">
+
+        <div class="admin-stat">
+            <strong id="adminGuideCount">0</strong>
+            <span>Total Guides</span>
+        </div>
+
+        <div class="admin-stat">
+            <strong id="adminUserCount">0</strong>
+            <span>Registered Users</span>
+        </div>
+
+        <div class="admin-stat">
+            <strong id="adminReviewCount">0</strong>
+            <span>Reviews</span>
+        </div>
+
+    </div>
+
+
+    <div class="panel">
+
+        <div class="section-head">
+
+            <div>
+                <h2>Guide Management</h2>
+                <p>Create and manage your guides.</p>
+            </div>
+
+            <button class="btn btn-primary" onclick="openGuideModal()">
+                + Add Guide
+            </button>
+
+        </div>
+
+        <div id="adminGuideList"></div>
+
+    </div>
+
+
+    <div class="panel">
+
+        <h2>Registered Users</h2>
+
+        <p class="panel-description">
+            Accounts currently stored in this browser.
+        </p>
+
+        <div id="adminUserList"></div>
+
+    </div>
+
+</div>
+
+</section>
+
+</main>
+
+
+<!-- =========================
+     GUIDE MODAL
+========================= -->
+
+<div class="modal" id="guideModal">
+
+    <div class="modal-card">
+
+        <div class="modal-header">
+
+            <div>
+                <div class="badge">GUIDE EDITOR</div>
+                <h2 id="guideModalTitle">Add Guide</h2>
+            </div>
+
+            <button class="close" onclick="closeGuideModal()">
+                ×
+            </button>
+
+        </div>
+
+        <form onsubmit="saveGuide(event)">
+
+            <input type="hidden" id="editGuideId">
+
+            <div class="form-group">
+                <label>Guide Title</label>
+                <input id="guideTitle" required>
+            </div>
+
+            <div class="form-group">
+                <label>Category</label>
+
+                <select id="guideCategory" required>
+
+                    <option>Skincare</option>
+                    <option>Hair</option>
+                    <option>Fitness</option>
+                    <option>Style</option>
+                    <option>Face</option>
+
+                </select>
+
+            </div>
+
+            <div class="form-group">
+                <label>Short Description</label>
+
+                <textarea
+                    id="guideDescription"
+                    required
+                    maxlength="300"
+                ></textarea>
+
+            </div>
+
+            <div class="form-group">
+                <label>Guide Content</label>
+
+                <textarea
+                    id="guideContent"
+                    required
+                    style="min-height:220px;"
+                ></textarea>
+
+            </div>
+
+            <div class="form-group">
+
+                <label>Cover Image URL</label>
+
+                <input
+                    id="guideImage"
+                    placeholder="https://example.com/image.jpg"
+                >
+
+            </div>
+
+            <div class="form-group">
+
+                <label>Video URL</label>
+
+                <input
+                    id="guideVideo"
+                    placeholder="https://youtube.com/..."
+                >
+
+            </div>
+
+            <div class="form-group">
+
+                <label>External Guide Link</label>
+
+                <input
+                    id="guideLink"
+                    placeholder="https://example.com"
+                >
+
+            </div>
+
+            <div class="form-group">
+
+                <label>Attachment</label>
+
+                <input
+                    id="guideFile"
+                    type="file"
+                    accept=".zip,.pdf,.png,.jpg,.jpeg,.webp,.mp4,.webm,.txt,.doc,.docx"
+                >
+
+                <small style="color:#777;display:block;margin-top:7px;">
+                    Files are stored locally in this browser for this demo.
+                </small>
+
+            </div>
+
+            <div style="display:flex;gap:10px;justify-content:flex-end;">
+
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    onclick="closeGuideModal()"
+                >
+                    Cancel
+                </button>
+
+                <button class="btn btn-primary">
+                    Save Guide
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     TOASTS
+========================= -->
+
+<div id="toastContainer"></div>
+
+
+<!-- =========================
+     FOOTER
+========================= -->
+
+<footer>
+
+<div class="container">
+
+    <div class="footer-inner">
+
+        <div>
+            <div class="footer-logo">
+                INVYX<span>MAX</span>
+            </div>
+
+            <div style="margin-top:8px;">
+                Build your best version.
+            </div>
+        </div>
+
+        <div class="footer-links">
+
+            <button onclick="navigate('home')">
+                Home
+            </button>
+
+            <button onclick="navigate('guides')">
+                Guides
+            </button>
+
+            <button onclick="navigate('reviews')">
+                Reviews
+            </button>
+
+            <button onclick="navigate('support')">
+                Support
+            </button>
+
+            <button onclick="navigate('admin-login')">
+                Admin
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+</footer>
+
+
+<script>
+
+/* =========================================================
+   INVYXMAX APPLICATION
+========================================================= */
+
+
+/* =========================
+   CONFIG
+========================= */
+
+const ADMIN_USERNAME = "invyx";
+const ADMIN_PASSWORD = "2705";
+
+const FORMSPREE_URL =
+    "https://formspree.io/f/maewegao";
+
+
+/* =========================
+   STATE
+========================= */
+
+let currentPage = "home";
+let currentCategory = "All";
+let currentUser = JSON.parse(
+    localStorage.getItem("invyxmax_current_user") || "null"
+);
+
+let adminLoggedIn =
+    localStorage.getItem("invyxmax_admin") === "true";
+
+
+/* =========================
+   DEFAULT GUIDES
+========================= */
+
+const defaultGuides = [
+
+{
+    id: "guide-1",
+    title: "Beginner Skincare Routine",
+    category: "Skincare",
+    description:
+        "A simple beginner routine for building consistent skincare habits.",
+    content:
+`A good skincare routine does not need to be complicated.
+
+MORNING
+
+1. Cleanse your face with a gentle cleanser.
+2. Apply moisturizer.
+3. Apply sunscreen when appropriate.
+
+EVENING
+
+1. Cleanse your face.
+2. Apply moisturizer.
+
+The most important part is consistency.
+
+Avoid constantly changing products just because you do not see immediate results.
+
+Give a routine enough time before judging it.`,
+    image: "",
+    video: "",
+    link: "",
+    file: null,
+    createdAt: Date.now()
+},
+
+{
+    id: "guide-2",
+    title: "Hair Care Fundamentals",
+    category: "Hair",
+    description:
+        "Learn the basics of keeping your hair clean, healthy and manageable.",
+    content:
+`Hair care starts with understanding your own hair.
+
+Do not automatically use large amounts of shampoo.
+
+Focus shampoo mainly on the scalp and use conditioner mainly through the lengths of the hair.
+
+Avoid excessive heat.
+
+If you use a hair dryer, avoid extremely high temperatures and keep the dryer moving.
+
+Consistency matters more than buying a huge number of products.`,
+    image: "",
+    video: "",
+    link: "",
+    file: null,
+    createdAt: Date.now()
+},
+
+{
+    id: "guide-3",
+    title: "Building a Better Physique",
+    category: "Fitness",
+    description:
+        "Basic principles for improving strength, fitness and overall physique.",
+    content:
+`A better physique comes from consistency.
+
+Focus on:
+
+• Progressive resistance training
+• Adequate protein
+• Sufficient sleep
+• Recovery
+• A sustainable diet
+
+You do not need to destroy yourself in every workout.
+
+Build habits that you can maintain for months and years.`,
+    image: "",
+    video: "",
+    link: "",
+    file: null,
+    createdAt: Date.now()
+},
+
+{
+    id: "guide-4",
+    title: "Style Fundamentals",
+    category: "Style",
+    description:
+        "Improve your appearance by understanding fit, proportions and clothing basics.",
+    content:
+`Clothing does not need to be expensive to look good.
+
+Start with fit.
+
+Pay attention to:
+
+• Shoulder fit
+• Sleeve length
+• Trouser length
+• Proportions
+• Color combinations
+• Clean shoes
+• Clothing condition
+
+A simple outfit that fits correctly can look much better than an expensive outfit with poor proportions.`,
+    image: "",
+    video: "",
+    link: "",
+    file: null,
+    createdAt: Date.now()
+},
+
+{
+    id: "guide-5",
+    title: "Face & Grooming Basics",
+    category: "Face",
+    description:
+        "A practical introduction to facial grooming and presentation.",
+    content:
+`Facial presentation involves more than one feature.
+
+Keep your skin clean.
+
+Keep facial hair intentionally groomed.
+
+Keep your lips moisturized.
+
+Pay attention to your hairstyle and eyebrows without overdoing them.
+
+Good grooming should make you look cleaner and more put together rather than completely changing your natural appearance.`,
+    image: "",
+    video: "",
+    link: "",
+    file: null,
+    createdAt: Date.now()
+}
+
+];
+
+
+/* =========================
+   STORAGE HELPERS
+========================= */
+
+function getGuides(){
+
+    const saved =
+        localStorage.getItem("invyxmax_guides");
+
+    if(!saved){
+
+        localStorage.setItem(
+            "invyxmax_guides",
+            JSON.stringify(defaultGuides)
+        );
+
+        return defaultGuides;
+    }
+
+    try{
+        return JSON.parse(saved);
+    }catch{
+        return defaultGuides;
+    }
+}
+
+function saveGuides(guides){
+
+    /*
+       File objects cannot reliably be stored inside localStorage.
+       Guide metadata is stored here.
+    */
+
+    localStorage.setItem(
+        "invyxmax_guides",
+        JSON.stringify(guides)
+    );
+}
+
+
+function getUsers(){
+
+    return JSON.parse(
+        localStorage.getItem("invyxmax_users") || "[]"
+    );
+
+}
+
+function saveUsers(users){
+
+    localStorage.setItem(
+        "invyxmax_users",
+        JSON.stringify(users)
+    );
+
+}
+
+function getReviews(){
+
+    return JSON.parse(
+        localStorage.getItem("invyxmax_reviews") || "[]"
+    );
+
+}
+
+function saveReviews(reviews){
+
+    localStorage.setItem(
+        "invyxmax_reviews",
+        JSON.stringify(reviews)
+    );
+
+}
+
+function getBookmarks(){
+
+    if(!currentUser) return [];
+
+    return JSON.parse(
+        localStorage.getItem(
+            "invyxmax_bookmarks_" + currentUser.username
+        ) || "[]"
+    );
+
+}
+
+function saveBookmarks(data){
+
+    if(!currentUser) return;
+
+    localStorage.setItem(
+        "invyxmax_bookmarks_" + currentUser.username,
+        JSON.stringify(data)
+    );
+
+}
+
+function getRecent(){
+
+    if(!currentUser) return [];
+
+    return JSON.parse(
+        localStorage.getItem(
+            "invyxmax_recent_" + currentUser.username
+        ) || "[]"
+    );
+
+}
+
+function saveRecent(data){
+
+    if(!currentUser) return;
+
+    localStorage.setItem(
+        "invyxmax_recent_" + currentUser.username,
+        JSON.stringify(data)
+    );
+
+}
+
+
+/* =========================
+   NAVIGATION
+========================= */
+
+function navigate(page, push = true){
+
+    if(page === "dashboard" && !currentUser){
+
+        showToast(
+            "Please login first.",
+            "error"
+        );
+
+        page = "login";
+    }
+
+    if(page === "admin" && !adminLoggedIn){
+
+        page = "admin-login";
+    }
+
+    currentPage = page;
+
+    document
+        .querySelectorAll(".page")
+        .forEach(el => {
+            el.classList.remove("active");
+        });
+
+    const target =
+        document.getElementById("page-" + page);
+
+    if(target){
+        target.classList.add("active");
+    }
+
+    document
+        .querySelectorAll(".nav-links button")
+        .forEach(btn => {
+            btn.classList.toggle(
+                "active",
+                btn.dataset.page === page
+            );
+        });
+
+    window.scrollTo({
+        top:0,
+        behavior:"smooth"
+    });
+
+    closeMobileMenu();
+
+    if(push){
+
+        const url =
+            "#" + page;
+
+        if(location.hash !== url){
+
+            history.pushState(
+                {page},
+                "",
+                url
+            );
+
+        }
+
+    }
+
+    renderEverything();
+}
+
+
+/* =========================
+   BROWSER BACK/FORWARD
+========================= */
+
+window.addEventListener(
+    "popstate",
+    function(event){
+
+        let page =
+            event.state?.page ||
+            location.hash.replace("#","") ||
+            "home";
+
+        if(!document.getElementById("page-" + page)){
+            page = "home";
+        }
+
+        navigate(page,false);
+
+    }
+);
+
+
+window.addEventListener(
+    "DOMContentLoaded",
+    function(){
+
+        let page =
+            location.hash.replace("#","") ||
+            "home";
+
+        if(!document.getElementById("page-" + page)){
+            page = "home";
+        }
+
+        history.replaceState(
+            {page},
+            "",
+            "#" + page
+        );
+
+        navigate(page,false);
+
+    }
+);
+
+
+/* =========================
+   PREVIOUS PAGE
+========================= */
+
+function goBack(){
+
+    if(history.length > 1){
+
+        history.back();
+
+    }else{
+
+        navigate("home");
+
+    }
+
+}
+
+
+/* =========================
+   MOBILE NAV
+========================= */
+
+function toggleMobileMenu(){
+
+    document
+        .getElementById("navLinks")
+        .classList.toggle("open");
+
+}
+
+function closeMobileMenu(){
+
+    document
+        .getElementById("navLinks")
+        .classList.remove("open");
+
+}
+
+
+/* =========================
+   LOGIN
+========================= */
+
+function login(event){
+
+    event.preventDefault();
+
+    const username =
+        document
+            .getElementById("loginUsername")
+            .value
+            .trim();
+
+    const password =
+        document
+            .getElementById("loginPassword")
+            .value;
+
+    /*
+       Admin credentials are checked separately.
+    */
+
+    if(
+        username.toLowerCase() === ADMIN_USERNAME &&
+        password === ADMIN_PASSWORD
+    ){
+
+        adminLoggedIn = true;
+
+        localStorage.setItem(
+            "invyxmax_admin",
+            "true"
+        );
+
+        showToast(
+            "Admin login successful.",
+            "success"
+        );
+
+        navigate("admin");
+
+        return;
+
+    }
+
+
+    const users = getUsers();
+
+    const user =
+        users.find(
+            u =>
+                u.username.toLowerCase() ===
+                username.toLowerCase() &&
+                u.password === password
+        );
+
+
+    if(!user){
+
+        showToast(
+            "Invalid username or password.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    currentUser = {
+        username:user.username,
+        email:user.email
+    };
+
+    localStorage.setItem(
+        "invyxmax_current_user",
+        JSON.stringify(currentUser)
+    );
+
+    showToast(
+        "Welcome back, " + user.username + "!",
+        "success"
+    );
+
+    navigate("dashboard");
+
+}
+
+
+/* =========================
+   REGISTER
+========================= */
+
+function registerUser(event){
+
+    event.preventDefault();
+
+    const username =
+        document
+            .getElementById("registerUsername")
+            .value
+            .trim();
+
+    const email =
+        document
+            .getElementById("registerEmail")
+            .value
+            .trim();
+
+    const password =
+        document
+            .getElementById("registerPassword")
+            .value;
+
+
+    const users = getUsers();
+
+
+    if(
+        username.toLowerCase() ===
+        ADMIN_USERNAME.toLowerCase()
+    ){
+
+        showToast(
+            "That username is reserved.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    if(
+        users.some(
+            u =>
+                u.username.toLowerCase() ===
+                username.toLowerCase()
+        )
+    ){
+
+        showToast(
+            "Username already exists.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    const user = {
+        username,
+        email,
+        password,
+        createdAt:Date.now()
+    };
+
+
+    users.push(user);
+
+    saveUsers(users);
+
+
+    currentUser = {
+        username,
+        email
+    };
+
+
+    localStorage.setItem(
+        "invyxmax_current_user",
+        JSON.stringify(currentUser)
+    );
+
+
+    /*
+       Submit registration information to Formspree.
+
+       The user still gets created locally even if
+       the email submission fails.
+    */
+
+    fetch(FORMSPREE_URL,{
+        method:"POST",
+        headers:{
+            "Content-Type":"application/json",
+            "Accept":"application/json"
+        },
+        body:JSON.stringify({
+            subject:"New INVYXMAX Registration",
+            username:username,
+            email:email
+        })
+    }).catch(()=>{});
+
+
+    showToast(
+        "Account created successfully.",
+        "success"
+    );
+
+    navigate("dashboard");
+
+}
+
+
+/* =========================
+   LOGOUT
+========================= */
+
+function logout(){
+
+    currentUser = null;
+
+    localStorage.removeItem(
+        "invyxmax_current_user"
+    );
+
+    showToast(
+        "You have been logged out.",
+        "success"
+    );
+
+    navigate("home");
+
+}
+
+
+/* =========================
+   ADMIN LOGIN
+========================= */
+
+function adminLogin(event){
+
+    event.preventDefault();
+
+    const username =
+        document
+            .getElementById("adminUsername")
+            .value
+            .trim();
+
+    const password =
+        document
+            .getElementById("adminPassword")
+            .value;
+
+
+    if(
+        username.toLowerCase() ===
+        ADMIN_USERNAME.toLowerCase() &&
+        password === ADMIN_PASSWORD
+    ){
+
+        adminLoggedIn = true;
+
+        localStorage.setItem(
+            "invyxmax_admin",
+            "true"
+        );
+
+        showToast(
+            "Welcome to the admin panel.",
+            "success"
+        );
+
+        navigate("admin");
+
+    }else{
+
+        showToast(
+            "Invalid admin credentials.",
+            "error"
+        );
+
+    }
+
+}
+
+
+function adminLogout(){
+
+    adminLoggedIn = false;
+
+    localStorage.removeItem(
+        "invyxmax_admin"
+    );
+
+    showToast(
+        "Admin session ended.",
+        "success"
+    );
+
+    navigate("home");
+
+}
+
+
+/* =========================
+   GUIDES
+========================= */
+
+function setCategory(category, button){
+
+    currentCategory = category;
+
+    document
+        .querySelectorAll(".category-btn")
+        .forEach(btn =>
+            btn.classList.remove("active")
+        );
+
+    button.classList.add("active");
+
+    renderGuides();
+
+}
+
+
+function renderGuides(){
+
+    const grid =
+        document.getElementById("guidesGrid");
+
+    if(!grid) return;
+
+    const search =
+        (
+            document
+                .getElementById("guideSearch")
+                ?.value || ""
+        )
+        .toLowerCase()
+        .trim();
+
+
+    let guides = getGuides();
+
+
+    guides = guides.filter(guide => {
+
+        const matchesCategory =
+            currentCategory === "All" ||
+            guide.category === currentCategory;
+
+        const matchesSearch =
+            !search ||
+            guide.title.toLowerCase().includes(search) ||
+            guide.description.toLowerCase().includes(search) ||
+            guide.category.toLowerCase().includes(search);
+
+        return matchesCategory && matchesSearch;
+
+    });
+
+
+    if(!guides.length){
+
+        grid.innerHTML = `
+            <div class="empty" style="grid-column:1/-1;">
+                <h3>No guides found.</h3>
+                <p style="margin-top:8px;">
+                    Try another search or category.
+                </p>
+            </div>
+        `;
+
+        return;
+
+    }
+
+
+    grid.innerHTML =
+        guides
+        .map(createGuideCard)
+        .join("");
+
+}
+
+
+function createGuideCard(guide){
+
+    const image =
+        guide.image
+        ? `<img src="${escapeAttribute(guide.image)}" alt="${escapeAttribute(guide.title)}">`
+        : `<div class="guide-placeholder">✦</div>`;
+
+
+    return `
+
+        <article class="guide-card">
+
+            <div class="guide-image">
+                ${image}
+            </div>
+
+            <div class="guide-body">
+
+                <div class="guide-category">
+                    ${escapeHTML(guide.category)}
+                </div>
+
+                <h3>
+                    ${escapeHTML(guide.title)}
+                </h3>
+
+                <p>
+                    ${escapeHTML(guide.description)}
+                </p>
+
+                <div class="guide-footer">
+
+                    <span class="guide-meta">
+                        INVYXMAX GUIDE
+                    </span>
+
+                    <button
+                        class="btn btn-primary btn-small"
+                        onclick="openGuide('${guide.id}')"
+                    >
+                        Read →
+                    </button>
+
+                </div>
+
+            </div>
+
+        </article>
+    `;
+
+}
+
+
+function renderFeaturedGuides(){
+
+    const container =
+        document.getElementById(
+            "featuredGuides"
+        );
+
+    if(!container) return;
+
+    const guides =
+        getGuides()
+            .slice()
+            .sort(
+                (a,b) =>
+                    b.createdAt - a.createdAt
+            )
+            .slice(0,3);
+
+
+    container.innerHTML =
+        guides
+            .map(createGuideCard)
+            .join("");
+
+}
+
+
+/* =========================
+   OPEN GUIDE
+========================= */
+
+function openGuide(id){
+
+    const guide =
+        getGuides()
+            .find(g => g.id === id);
+
+    if(!guide){
+
+        showToast(
+            "Guide not found.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    if(currentUser){
+
+        let recent = getRecent();
+
+        recent =
+            recent.filter(
+                x => x !== id
+            );
+
+        recent.unshift(id);
+
+        recent =
+            recent.slice(0,10);
+
+        saveRecent(recent);
+
+    }
+
+
+    const reader =
+        document.getElementById(
+            "readerContent"
+        );
+
+
+    let attachmentHTML = "";
+
+
+    if(guide.video){
+
+        attachmentHTML += `
+
+            <div class="attachment">
+
+                <strong>Video</strong>
+
+                <br><br>
+
+                <a
+                    href="${escapeAttribute(guide.video)}"
+                    target="_blank"
+                    class="btn btn-secondary btn-small"
+                >
+                    Watch Video ↗
+                </a>
+
+            </div>
+        `;
+
+    }
+
+
+    if(guide.link){
+
+        attachmentHTML += `
+
+            <div class="attachment">
+
+                <strong>External Link</strong>
+
+                <br><br>
+
+                <a
+                    href="${escapeAttribute(guide.link)}"
+                    target="_blank"
+                    class="btn btn-secondary btn-small"
+                >
+                    Open Link ↗
+                </a>
+
+            </div>
+        `;
+
+    }
+
+
+    if(guide.fileName){
+
+        attachmentHTML += `
+
+            <div class="attachment">
+
+                <strong>Attachment</strong>
+
+                <br>
+
+                <span style="color:#888;">
+                    ${escapeHTML(guide.fileName)}
+                </span>
+
+                ${
+                    guide.fileData
+                    ?
+                    `<br><br>
+                    <a
+                        href="${guide.fileData}"
+                        download="${escapeAttribute(guide.fileName)}"
+                        class="btn btn-secondary btn-small"
+                    >
+                        Download File
+                    </a>`
+                    :
+                    ""
+                }
+
+            </div>
+        `;
+
+    }
+
+
+    reader.innerHTML = `
+
+        <article class="reader-card">
+
+            ${
+                guide.image
+                ?
+                `<img
+                    class="reader-cover"
+                    src="${escapeAttribute(guide.image)}"
+                    alt="${escapeAttribute(guide.title)}"
+                >`
+                :
+                ""
+            }
+
+            <div class="reader-content">
+
+                <div class="guide-category">
+                    ${escapeHTML(guide.category)}
+                </div>
+
+                <h1>
+                    ${escapeHTML(guide.title)}
+                </h1>
+
+                <p class="lead">
+                    ${escapeHTML(guide.description)}
+                </p>
+
+                <div class="guide-text">
+                    ${escapeHTML(guide.content)}
+                </div>
+
+                ${
+                    attachmentHTML
+                    ?
+                    `
+                    <div class="attachments">
+                        <h3>Resources</h3>
+                        ${attachmentHTML}
+                    </div>
+                    `
+                    :
+                    ""
+                }
+
+                <div style="margin-top:30px;display:flex;gap:10px;flex-wrap:wrap;">
+
+                    ${
+                        currentUser
+                        ?
+                        `
+                        <button
+                            class="btn btn-secondary"
+                            onclick="toggleBookmark('${guide.id}')"
+                        >
+                            ${isBookmarked(guide.id)
+                                ? "★ Bookmarked"
+                                : "☆ Bookmark"}
+                        </button>
+                        `
+                        :
+                        ""
+                    }
+
+                    <button
+                        class="btn btn-secondary"
+                        onclick="goBack()"
+                    >
+                        ← Previous Page
+                    </button>
+
+                </div>
+
+            </div>
+
+        </article>
+    `;
+
+
+    navigate(
+        "reader"
+    );
+
+}
+
+
+/* =========================
+   BOOKMARKS
+========================= */
+
+function isBookmarked(id){
+
+    return getBookmarks().includes(id);
+
+}
+
+
+function toggleBookmark(id){
+
+    if(!currentUser){
+
+        showToast(
+            "Login to bookmark guides.",
+            "error"
+        );
+
+        navigate("login");
+
+        return;
+
+    }
+
+
+    let bookmarks =
+        getBookmarks();
+
+
+    if(bookmarks.includes(id)){
+
+        bookmarks =
+            bookmarks.filter(
+                x => x !== id
+            );
+
+        showToast(
+            "Removed from bookmarks.",
+            "success"
+        );
+
+    }else{
+
+        bookmarks.push(id);
+
+        showToast(
+            "Guide bookmarked.",
+            "success"
+        );
+
+    }
+
+
+    saveBookmarks(bookmarks);
+
+    /*
+       Refresh the reader so the button changes.
+    */
+
+    const currentGuide =
+        location.hash;
+
+    renderEverything();
+
+}
+
+
+/* =========================
+   REVIEWS
+========================= */
+
+function submitReview(event){
+
+    event.preventDefault();
+
+    if(!currentUser){
+
+        showToast(
+            "Login to submit a review.",
+            "error"
+        );
+
+        navigate("login");
+
+        return;
+
+    }
+
+
+    const rating =
+        Number(
+            document.getElementById(
+                "reviewRating"
+            ).value
+        );
+
+    const text =
+        document.getElementById(
+            "reviewText"
+        ).value.trim();
+
+
+    if(!text){
+
+        showToast(
+            "Write a review first.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    const reviews =
+        getReviews();
+
+
+    reviews.unshift({
+
+        id:
+            "review-" +
+            Date.now(),
+
+        username:
+            currentUser.username,
+
+        rating,
+
+        text,
+
+        date:
+            new Date().toLocaleDateString()
+
+    });
+
+
+    saveReviews(reviews);
+
+
+    document.getElementById(
+        "reviewText"
+    ).value = "";
+
+
+    showToast(
+        "Review submitted.",
+        "success"
+    );
+
+
+    renderReviews();
+
+}
+
+
+function renderReviews(){
+
+    const list =
+        document.getElementById(
+            "reviewsList"
+        );
+
+    if(!list) return;
+
+
+    const reviews =
+        getReviews();
+
+
+    if(!reviews.length){
+
+        list.innerHTML = `
+
+            <div class="empty" style="grid-column:1/-1;">
+                <h3>No reviews yet.</h3>
+                <p style="margin-top:8px;">
+                    Be the first person to leave one.
+                </p>
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    list.innerHTML =
+        reviews.map(review => `
+
+            <article class="review">
+
+                <div class="review-top">
+
+                    <span class="review-name">
+                        ${escapeHTML(review.username)}
+                    </span>
+
+                    <span class="stars">
+                        ${"★".repeat(review.rating)}
+                        <span style="color:#333;">
+                            ${"★".repeat(5-review.rating)}
+                        </span>
+                    </span>
+
+                </div>
+
+                <p>
+                    ${escapeHTML(review.text)}
+                </p>
+
+                <div class="review-date">
+                    ${escapeHTML(review.date)}
+                </div>
+
+            </article>
+
+        `).join("");
+
+}
+
+
+/* =========================
+   ADMIN GUIDE MODAL
+========================= */
+
+function openGuideModal(id = null){
+
+    if(!adminLoggedIn){
+
+        navigate("admin-login");
+
+        return;
+
+    }
+
+
+    document
+        .getElementById("guideModal")
+        .classList.add("show");
+
+
+    const title =
+        document.getElementById(
+            "guideModalTitle"
+        );
+
+
+    if(id){
+
+        const guide =
+            getGuides()
+                .find(g => g.id === id);
+
+
+        if(!guide) return;
+
+
+        title.textContent =
+            "Edit Guide";
+
+
+        document.getElementById(
+            "editGuideId"
+        ).value = guide.id;
+
+
+        document.getElementById(
+            "guideTitle"
+        ).value = guide.title;
+
+
+        document.getElementById(
+            "guideCategory"
+        ).value = guide.category;
+
+
+        document.getElementById(
+            "guideDescription"
+        ).value = guide.description;
+
+
+        document.getElementById(
+            "guideContent"
+        ).value = guide.content;
+
+
+        document.getElementById(
+            "guideImage"
+        ).value = guide.image || "";
+
+
+        document.getElementById(
+            "guideVideo"
+        ).value = guide.video || "";
+
+
+        document.getElementById(
+            "guideLink"
+        ).value = guide.link || "";
+
+
+    }else{
+
+        title.textContent =
+            "Add Guide";
+
+
+        document.querySelector(
+            "#guideModal form"
+        ).reset();
+
+
+        document.getElementById(
+            "editGuideId"
+        ).value = "";
+
+    }
+
+}
+
+
+function closeGuideModal(){
+
+    document
+        .getElementById("guideModal")
+        .classList.remove("show");
+
+}
+
+
+/* =========================
+   SAVE GUIDE
+========================= */
+
+function saveGuide(event){
+
+    event.preventDefault();
+
+
+    if(!adminLoggedIn){
+
+        showToast(
+            "Admin access required.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    const id =
+        document.getElementById(
+            "editGuideId"
+        ).value;
+
+
+    const title =
+        document.getElementById(
+            "guideTitle"
+        ).value.trim();
+
+
+    const category =
+        document.getElementById(
+            "guideCategory"
+        ).value;
+
+
+    const description =
+        document.getElementById(
+            "guideDescription"
+        ).value.trim();
+
+
+    const content =
+        document.getElementById(
+            "guideContent"
+        ).value;
+
+
+    const image =
+        document.getElementById(
+            "guideImage"
+        ).value.trim();
+
+
+    const video =
+        document.getElementById(
+            "guideVideo"
+        ).value.trim();
+
+
+    const link =
+        document.getElementById(
+            "guideLink"
+        ).value.trim();
+
+
+    const fileInput =
+        document.getElementById(
+            "guideFile"
+        );
+
+
+    let guides =
+        getGuides();
+
+
+    /*
+       Convert small files to Data URLs so they can
+       be downloaded from the browser later.
+
+       Large video/ZIP files may exceed localStorage limits.
+    */
+
+    if(fileInput.files.length){
+
+        const file =
+            fileInput.files[0];
+
+
+        if(file.size > 3 * 1024 * 1024){
+
+            showToast(
+                "For this single-file demo, keep attachments under about 3MB.",
+                "error"
+            );
+
+            return;
+
+        }
+
+
+        const reader =
+            new FileReader();
+
+
+        reader.onload = function(){
+
+            saveGuideData(
+                guides,
+                id,
+                {
+                    title,
+                    category,
+                    description,
+                    content,
+                    image,
+                    video,
+                    link,
+                    fileName:file.name,
+                    fileData:reader.result
+                }
+            );
+
+        };
+
+
+        reader.readAsDataURL(file);
+
+
+    }else{
+
+        saveGuideData(
+            guides,
+            id,
+            {
+                title,
+                category,
+                description,
+                content,
+                image,
+                video,
+                link
+            }
+        );
+
+    }
+
+}
+
+
+function saveGuideData(
+    guides,
+    id,
+    data
+){
+
+    if(id){
+
+        const index =
+            guides.findIndex(
+                g => g.id === id
+            );
+
+
+        if(index !== -1){
+
+            guides[index] = {
+                ...guides[index],
+                ...data
+            };
+
+        }
+
+        showToast(
+            "Guide updated.",
+            "success"
+        );
+
+    }else{
+
+        guides.unshift({
+
+            id:
+                "guide-" +
+                Date.now(),
+
+            ...data,
+
+            createdAt:
+                Date.now()
+
+        });
+
+        showToast(
+            "Guide created.",
+            "success"
+        );
+
+    }
+
+
+    saveGuides(guides);
+
+    closeGuideModal();
+
+    renderEverything();
+
+}
+
+
+/* =========================
+   DELETE GUIDE
+========================= */
+
+function deleteGuide(id){
+
+    if(!adminLoggedIn){
+
+        showToast(
+            "Admin access required.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    const guide =
+        getGuides()
+            .find(g => g.id === id);
+
+
+    if(!guide) return;
+
+
+    if(
+        !confirm(
+            `Delete "${guide.title}"?`
+        )
+    ){
+
+        return;
+
+    }
+
+
+    const guides =
+        getGuides()
+            .filter(
+                g => g.id !== id
+            );
+
+
+    saveGuides(guides);
+
+
+    showToast(
+        "Guide deleted.",
+        "success"
+    );
+
+
+    renderEverything();
+
+}
+
+
+/* =========================
+   ADMIN RENDER
+========================= */
+
+function renderAdmin(){
+
+    if(!adminLoggedIn) return;
+
+
+    const guides =
+        getGuides();
+
+
+    const users =
+        getUsers();
+
+
+    const reviews =
+        getReviews();
+
+
+    document.getElementById(
+        "adminGuideCount"
+    ).textContent =
+        guides.length;
+
+
+    document.getElementById(
+        "adminUserCount"
+    ).textContent =
+        users.length;
+
+
+    document.getElementById(
+        "adminReviewCount"
+    ).textContent =
+        reviews.length;
+
+
+    const guideList =
+        document.getElementById(
+            "adminGuideList"
+        );
+
+
+    guideList.innerHTML =
+        guides.map(guide => `
+
+            <div class="admin-guide-row">
+
+                <div>
+
+                    <strong>
+                        ${escapeHTML(guide.title)}
+                    </strong>
+
+                    <div style="color:#777;font-size:12px;margin-top:4px;">
+                        ${escapeHTML(guide.category)}
+                    </div>
+
+                </div>
+
+                <div class="admin-guide-actions">
+
+                    <button
+                        class="btn btn-secondary btn-small"
+                        onclick="openGuideModal('${guide.id}')"
+                    >
+                        Edit
+                    </button>
+
+                    <button
+                        class="btn btn-danger btn-small"
+                        onclick="deleteGuide('${guide.id}')"
+                    >
+                        Delete
+                    </button>
+
+                </div>
+
+            </div>
+
+        `).join("");
+
+
+    const userList =
+        document.getElementById(
+            "adminUserList"
+        );
+
+
+    if(!users.length){
+
+        userList.innerHTML =
+            `<div class="empty">No registered users.</div>`;
+
+    }else{
+
+        userList.innerHTML =
+            users.map(user => `
+
+                <div class="admin-guide-row">
+
+                    <div>
+
+                        <strong>
+                            ${escapeHTML(user.username)}
+                        </strong>
+
+                        <div style="color:#777;font-size:12px;margin-top:4px;">
+                            ${escapeHTML(user.email)}
+                        </div>
+
+                    </div>
+
+                    <span style="color:#666;font-size:12px;">
+                        ${new Date(user.createdAt).toLocaleDateString()}
+                    </span>
+
+                </div>
+
+            `).join("");
+
+    }
+
+}
+
+
+/* =========================
+   DASHBOARD
+========================= */
+
+function renderDashboard(){
+
+    if(!currentUser) return;
+
+
+    document.getElementById(
+        "dashboardWelcome"
+    ).textContent =
+        "Welcome back, " +
+        currentUser.username +
+        ".";
+
+
+    document.getElementById(
+        "dashBookmarks"
+    ).textContent =
+        getBookmarks().length;
+
+
+    document.getElementById(
+        "dashRecent"
+    ).textContent =
+        getRecent().length;
+
+
+    document.getElementById(
+        "dashReviews"
+    ).textContent =
+        getReviews()
+            .filter(
+                r =>
+                    r.username ===
+                    currentUser.username
+            ).length;
+
+
+    const recentContainer =
+        document.getElementById(
+            "recentGuides"
+        );
+
+
+    const recent =
+        getRecent();
+
+
+    const guides =
+        getGuides();
+
+
+    const recentGuides =
+        recent
+            .map(id =>
+                guides.find(g => g.id === id)
+            )
+            .filter(Boolean);
+
+
+    if(!recentGuides.length){
+
+        recentContainer.innerHTML =
+            `<div class="empty">No recent guides yet.</div>`;
+
+        return;
+
+    }
+
+
+    recentContainer.innerHTML =
+        recentGuides.map(guide => `
+
+            <div class="admin-guide-row">
+
+                <div>
+
+                    <strong>
+                        ${escapeHTML(guide.title)}
+                    </strong>
+
+                    <div style="color:#777;font-size:12px;">
+                        ${escapeHTML(guide.category)}
+                    </div>
+
+                </div>
+
+                <button
+                    class="btn btn-secondary btn-small"
+                    onclick="openGuide('${guide.id}')"
+                >
+                    Open
+                </button>
+
+            </div>
+
+        `).join("");
+
+}
+
+
+/* =========================
+   GLOBAL UI
+========================= */
+
+function updateNavigation(){
+
+    const loggedIn =
+        !!currentUser;
+
+
+    document.getElementById(
+        "loginNavBtn"
+    ).style.display =
+        loggedIn
+        ? "none"
+        : "";
+
+
+    document.getElementById(
+        "registerNavBtn"
+    ).style.display =
+        loggedIn
+        ? "none"
+        : "";
+
+
+    document.getElementById(
+        "logoutNavBtn"
+    ).style.display =
+        loggedIn
+        ? ""
+        : "none";
+
+
+    document.getElementById(
+        "navDashboard"
+    ).style.display =
+        loggedIn
+        ? ""
+        : "none";
+
+
+    document.getElementById(
+        "navAdmin"
+    ).style.display =
+        adminLoggedIn
+        ? ""
+        : "none";
+
+}
+
+
+function updateStats(){
+
+    document.getElementById(
+        "homeGuideCount"
+    ).textContent =
+        getGuides().length;
+
+
+    document.getElementById(
+        "homeReviewCount"
+    ).textContent =
+        getReviews().length;
+
+}
+
+
+function renderEverything(){
+
+    updateNavigation();
+
+    updateStats();
+
+    renderFeaturedGuides();
+
+    renderGuides();
+
+    renderReviews();
+
+    renderDashboard();
+
+    renderAdmin();
+
+}
+
+
+/* =========================
+   TOAST
+========================= */
+
+function showToast(
+    message,
+    type = "success"
+){
+
+    const container =
+        document.getElementById(
+            "toastContainer"
+        );
+
+
+    const toast =
+        document.createElement("div");
+
+
+    toast.className =
+        "toast " + type;
+
+
+    toast.textContent =
+        message;
+
+
+    container.appendChild(toast);
+
+
+    setTimeout(
+        () => {
+
+            toast.style.opacity = "0";
+            toast.style.transform =
+                "translateX(30px)";
+
+            setTimeout(
+                () => toast.remove(),
+                250
+            );
+
+        },
+        3500
+    );
+
+}
+
+
+/* =========================
+   ESCAPE HTML
+========================= */
+
+function escapeHTML(value){
+
+    if(value === undefined || value === null){
+        return "";
+    }
+
+    return String(value)
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+
+}
+
+
+function escapeAttribute(value){
+
+    return escapeHTML(value);
+
+}
+
+
+/* =========================
+   CLOSE MODAL WITH ESCAPE
+========================= */
+
+document.addEventListener(
+    "keydown",
+    function(event){
+
+        if(event.key === "Escape"){
+
+            closeGuideModal();
+
+        }
+
+    }
+);
+
+
+/* =========================
+   CLICK OUTSIDE MODAL
+========================= */
+
+document
+    .getElementById("guideModal")
+    .addEventListener(
+        "click",
+        function(event){
+
+            if(
+                event.target ===
+                this
+            ){
+
+                closeGuideModal();
+
+            }
+
+        }
+    );
+
+
+/* =========================
+   INITIAL RENDER
+========================= */
+
+renderEverything();
+
+</script>
+
+</body>
+</html>
