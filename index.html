@@ -672,6 +672,7 @@ select option{ background:#11111a; color:white; }
   gap:10px;
 }
 
+.message-select-check{display:none;position:absolute;top:10px;left:10px;width:20px;height:20px;accent-color:var(--purple);z-index:3;cursor:pointer}.message-selection-mode .message-select-check{display:block}.message-selection-mode .msg-bubble{padding-left:40px}.message-bulk-bar{display:none;align-items:center;gap:8px;padding:8px 12px;background:rgba(139,92,246,.10);border:1px solid var(--border);border-radius:12px;margin:8px 12px 0}.message-bulk-bar.active{display:flex}.message-selected{outline:2px solid var(--purple);outline-offset:2px}.message-select-label{font-size:12px;color:var(--muted)}
 .msg-bubble{
   max-width:65%;
   padding:12px 16px;
@@ -851,7 +852,7 @@ td{ color:#c4c4cf; }
 }
 
 /* INVYX ENHANCEMENT LAYER */
-@keyframes invyxGlow{0%,100%{filter:drop-shadow(0 0 0 rgba(139,92,246,0))}50%{filter:drop-shadow(0 0 18px rgba(139,92,246,.32))}}
+@keyframes invyxGlow{0%,100%{filter:drop-shadow(0 0 0 rgba(139,92,246,0))}50%{filter:drop-shadow(0 0 10px rgba(139,92,246,.24))}}
 @keyframes invyxShimmer{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
 @keyframes invyxRise{from{opacity:0;transform:translateY(16px) scale(.985)}to{opacity:1;transform:none}}
 @keyframes invyxMessage{from{opacity:0;transform:translateY(9px) scale(.97)}to{opacity:1;transform:none}}
@@ -859,7 +860,7 @@ td{ color:#c4c4cf; }
 @keyframes profileBorderPulse{0%,100%{box-shadow:0 0 0 1px color-mix(in srgb,var(--profile-glow),transparent 42%),0 0 24px color-mix(in srgb,var(--profile-glow),transparent 72%),0 22px 70px rgba(0,0,0,.42)}50%{box-shadow:0 0 0 2px color-mix(in srgb,var(--profile-glow),transparent 18%),0 0 48px color-mix(in srgb,var(--profile-glow),transparent 48%),0 0 95px color-mix(in srgb,var(--profile-glow),transparent 72%),0 22px 70px rgba(0,0,0,.42)}}
 @keyframes avatarRingSpin{to{transform:rotate(360deg)}}
 @keyframes avatarGlowPulse{0%,100%{opacity:.72;filter:blur(2px)}50%{opacity:1;filter:blur(5px)}}
-.logo,.points,.avatar{animation:invyxGlow 4s ease-in-out infinite}
+.logo,.points{animation:invyxGlow 5s ease-in-out infinite}
 .card,.stat-card,.friend-item,.request-card{animation:invyxRise .45s ease both}
 .card:hover,.stat-card:hover{transform:translateY(-7px) scale(1.008)}
 .btn-primary{background-size:180% 180%;animation:invyxShimmer 7s ease infinite}
@@ -881,10 +882,10 @@ td{ color:#c4c4cf; }
 .profile-avatar-wrap:after{content:"";position:absolute;inset:-12px;border-radius:38px;box-shadow:0 0 28px color-mix(in srgb,var(--profile-glow),transparent 42%),0 0 60px color-mix(in srgb,var(--profile-glow),transparent 72%);opacity:0;z-index:0;animation:avatarGlowPulse 2.8s ease-in-out infinite}
 .profile-shell.cover-active .profile-avatar-wrap:after{opacity:.9}
 .profile-shell.cover-active .profile-avatar{position:relative;z-index:2;border-color:color-mix(in srgb,var(--profile-glow),#fff 20%);box-shadow:0 0 0 3px color-mix(in srgb,var(--profile-glow),transparent 25%),0 0 28px color-mix(in srgb,var(--profile-glow),transparent 38%),0 0 65px color-mix(in srgb,var(--profile-glow),transparent 68%)}
-.profile-card:after{content:"";position:absolute;inset:-40%;background:conic-gradient(from 90deg,transparent,rgba(139,92,246,.08),transparent 25%);animation:spin 12s linear infinite;pointer-events:none}
+.profile-card:after{content:"";position:absolute;inset:-10%;background:conic-gradient(from 90deg,transparent,rgba(139,92,246,.055),transparent 25%);animation:spin 24s linear infinite;pointer-events:none;will-change:transform}
 @keyframes spin{to{transform:rotate(360deg)}}
 .profile-avatar-wrap{position:relative;width:92px;height:92px;flex:0 0 92px}
-.profile-avatar{width:92px;height:92px;border-radius:28px;object-fit:cover;display:grid;place-items:center;background:var(--gradient2);font-size:34px;font-weight:950;border:1px solid rgba(255,255,255,.14);box-shadow:0 18px 45px rgba(0,0,0,.35)}
+.profile-avatar{width:92px;height:92px;border-radius:28px;object-fit:cover;display:grid;place-items:center;background:var(--gradient2);font-size:34px;font-weight:950;border:1px solid rgba(255,255,255,.14);box-shadow:0 18px 45px rgba(0,0,0,.35);transform:translateZ(0);backface-visibility:hidden;will-change:filter} .profile-avatar img{transform:translateZ(0);backface-visibility:hidden;will-change:transform}
 .profile-avatar-edit{position:absolute;right:-6px;bottom:-6px;width:32px;height:32px;border-radius:50%;border:1px solid rgba(255,255,255,.18);background:#141421;color:#fff;cursor:pointer}
 .profile-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
 .permission-note{margin-top:10px;padding:10px 12px;border-radius:12px;background:rgba(139,92,246,.06);border:1px solid rgba(139,92,246,.14);color:var(--muted);font-size:12px}
@@ -902,7 +903,7 @@ td{ color:#c4c4cf; }
 .profile-shell.theme-royal .profile-card{background:radial-gradient(circle at 80% 15%,rgba(250,204,21,.14),transparent 26%),linear-gradient(145deg,#15110a,#080808 58%,#17100a);box-shadow:0 0 0 1px rgba(250,204,21,.16),0 0 100px rgba(245,158,11,.18),inset 0 0 40px rgba(250,204,21,.05)}
 .profile-shell.theme-forest .profile-card{background:radial-gradient(circle at 18% 20%,rgba(34,197,94,.18),transparent 30%),radial-gradient(circle at 80% 75%,rgba(16,185,129,.12),transparent 34%),linear-gradient(145deg,#07120d,#09120f);box-shadow:0 0 100px rgba(34,197,94,.18),inset 0 0 45px rgba(16,185,129,.06)}
 .profile-shell.theme-dragon .profile-card{background:radial-gradient(circle at 75% 20%,rgba(220,38,38,.18),transparent 28%),radial-gradient(circle at 25% 80%,rgba(124,58,237,.13),transparent 34%),linear-gradient(145deg,#120707,#09070b 55%,#16090b);box-shadow:0 0 0 1px rgba(220,38,38,.22),0 0 115px rgba(220,38,38,.20),0 0 180px rgba(124,58,237,.12),inset 0 0 55px rgba(239,68,68,.05)}
-.profile-shell[class*="theme-"] .profile-avatar{animation:profileAvatarPulse 3.5s ease-in-out infinite,profileAvatarFloat 6s ease-in-out infinite;position:relative}
+.profile-shell[class*="theme-"] .profile-avatar{animation:profileAvatarPulse 3.5s ease-in-out infinite;position:relative}
 .profile-shell.theme-neon .profile-avatar{box-shadow:0 0 0 2px rgba(34,211,238,.28),0 0 28px rgba(34,211,238,.5),0 0 65px rgba(139,92,246,.34)}
 .profile-shell.theme-galaxy .profile-avatar{box-shadow:0 0 0 2px rgba(139,92,246,.24),0 0 35px rgba(139,92,246,.55),0 0 80px rgba(34,211,238,.25)}
 .profile-shell.theme-prism .profile-avatar{box-shadow:0 0 0 2px rgba(236,72,153,.25),0 0 35px rgba(236,72,153,.45),0 0 75px rgba(34,211,238,.30)}
@@ -912,8 +913,8 @@ td{ color:#c4c4cf; }
 .profile-shell.theme-royal .profile-avatar{box-shadow:0 0 0 2px rgba(250,204,21,.24),0 0 35px rgba(250,204,21,.48),0 0 75px rgba(245,158,11,.25)}
 .profile-shell.theme-forest .profile-avatar{box-shadow:0 0 0 2px rgba(34,197,94,.24),0 0 35px rgba(34,197,94,.48),0 0 75px rgba(16,185,129,.25)}
 .profile-shell.theme-dragon .profile-avatar{box-shadow:0 0 0 3px rgba(220,38,38,.24),0 0 38px rgba(220,38,38,.62),0 0 90px rgba(124,58,237,.30)}
-@keyframes profileAvatarPulse{0%,100%{filter:drop-shadow(0 0 0 rgba(139,92,246,0));transform:scale(1)}50%{filter:drop-shadow(0 0 18px rgba(139,92,246,.34));transform:scale(1.025)}}
-@keyframes profileAvatarFloat{0%,100%{margin-top:0}50%{margin-top:-5px}}
+@keyframes profileAvatarPulse{0%,100%{filter:drop-shadow(0 0 4px rgba(139,92,246,.08))}50%{filter:drop-shadow(0 0 16px rgba(139,92,246,.30))}}
+
 .profile-shell.theme-galaxy:after{content:"";position:absolute;inset:-20%;background:radial-gradient(circle,rgba(255,255,255,.16) 0 1px,transparent 2px);background-size:34px 34px;opacity:.22;animation:starDrift 14s linear infinite;pointer-events:none}
 .profile-shell.theme-cosmic:after{content:"";position:absolute;inset:-30%;background:conic-gradient(from 0deg,transparent,rgba(34,211,238,.10),transparent 20%,rgba(236,72,153,.08),transparent 40%);filter:blur(18px);animation:cosmicSpin 16s linear infinite;pointer-events:none}
 .profile-shell.theme-ocean:after{content:"";position:absolute;inset:-20%;background:radial-gradient(circle at 20% 90%,rgba(14,165,233,.16) 0 2px,transparent 3px),radial-gradient(circle at 70% 20%,rgba(45,212,191,.12) 0 2px,transparent 3px);background-size:45px 45px,60px 60px;animation:bubbleDrift 12s linear infinite;pointer-events:none}
@@ -1129,6 +1130,8 @@ td{ color:#c4c4cf; }
 .ad-preview{margin-top:12px;padding:12px;border:1px solid var(--border);border-radius:18px;background:rgba(255,255,255,.025)}
 @keyframes siteAdIn{from{opacity:0;transform:translateY(28px) scale(.96)}to{opacity:1;transform:none}}
 @keyframes siteAdFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+
+.message-tools{display:flex;gap:5px;margin-top:7px;opacity:1;transition:opacity .15s ease;flex-wrap:wrap}.message-tool{border:1px solid rgba(255,255,255,.12);background:rgba(0,0,0,.18);color:#ddd;border-radius:8px;padding:3px 7px;font-size:11px;cursor:pointer}.message-tool:hover{background:rgba(139,92,246,.22)}.msg-reply{font-size:11px;padding:7px 9px;margin-bottom:7px;border-left:3px solid #8b5cf6;background:rgba(139,92,246,.09);border-radius:8px;color:#c9c3dd}.reaction-row{display:flex;gap:4px;flex-wrap:wrap;margin-top:7px}.reaction{border:1px solid rgba(255,255,255,.12);background:rgba(0,0,0,.16);border-radius:999px;padding:2px 7px;font-size:12px;cursor:pointer}.reaction.active{border-color:#8b5cf6;background:rgba(139,92,246,.2)}.emoji-picker{position:fixed;z-index:9999;display:none;max-width:330px;padding:10px;border:1px solid var(--border2);border-radius:16px;background:#11111b;box-shadow:0 20px 60px rgba(0,0,0,.5);grid-template-columns:repeat(8,1fr);gap:4px}.emoji-picker button{border:0;background:transparent;font-size:20px;border-radius:8px;padding:5px;cursor:pointer}.emoji-picker button:hover{background:rgba(139,92,246,.2)}.reply-banner{display:none;margin:0 12px 8px;padding:8px 11px;border-left:3px solid #8b5cf6;background:rgba(139,92,246,.08);border-radius:9px;color:var(--muted);font-size:12px}.reply-banner button{float:right;border:0;background:transparent;color:#aaa;cursor:pointer}
 </style>
 </head>
 
@@ -1221,12 +1224,23 @@ td{ color:#c4c4cf; }
     <div class="chat-main">
       <div class="chat-main-head" id="chatHeader">
         <div class="friend-avatar" id="activeChatAvatar">?</div>
-        <div>
+        <div style="flex:1;min-width:0">
           <strong id="activeChatName">Select a friend</strong>
-          <small style="display:block; color:var(--muted)" id="activeChatStatus">Start messaging</small><div id="activeChatControls" style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap"></div>
+          <small style="display:block; color:var(--muted)" id="activeChatStatus">Start messaging</small>
+          <div id="activeChatControls" style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap"></div>
+        </div>
+        <div id="messageSelectionControls" style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:flex-end">
+          <button class="btn btn-light btn-small" type="button" onclick="toggleMessageSelectionMode()">☑ Select</button>
         </div>
       </div>
+      <div id="messageBulkBar" class="message-bulk-bar">
+        <span class="message-select-label" id="selectedMessageCount">0 selected</span>
+        <button class="btn btn-light btn-small" type="button" onclick="selectAllMyMessages()">Select All Mine</button>
+        <button class="btn btn-light btn-small" type="button" onclick="clearSelectedMessages()">Clear</button>
+        <button class="btn btn-danger btn-small" type="button" onclick="deleteSelectedMessages()">🗑 Delete Selected</button>
+      </div>
       <div class="chat-messages" id="chatMessages"></div>
+      <div id="replyBanner" class="reply-banner"></div>
       <div class="chat-input-area">
         <input type="file" id="chatImageInput" accept="image/*" hidden onchange="sendChatImage(this)">
         <button class="image-attach-btn" type="button" onclick="document.getElementById('chatImageInput').click()" title="Send picture">📷</button>
@@ -1581,7 +1595,8 @@ const DEFAULT_CHAT_THEMES = [];
 const DEFAULT_DB = {
   users: [],
   friends: [], 
-  messages: [], 
+  messages: [],
+  deletedMessageIds: [],
   pointRequests: [], 
   guides: [
     {
@@ -1632,6 +1647,7 @@ function loadDB(){
       users: parsed.users || [],
       friends: parsed.friends || [],
       messages: parsed.messages || [],
+      deletedMessageIds: Array.isArray(parsed.deletedMessageIds) ? parsed.deletedMessageIds : [],
       pointRequests: parsed.pointRequests || [],
       guides: parsed.guides || [],
       reviews: parsed.reviews || [],
@@ -2344,49 +2360,197 @@ function selectChatFriend(friendUser){
 function loadMessages(){
   const u = currentUser();
   const chatMsgs = document.getElementById("chatMessages");
+  if(!chatMsgs) return;
   chatMsgs.innerHTML = "";
-
   if(!activeFriendId) return;
-
-  const isFriend = db.friends.some(f => 
-    ((f.user1 === u.id && f.user2 === activeFriendId) || (f.user1 === activeFriendId && f.user2 === u.id)) && f.status === "ACCEPTED"
-  );
-
-  if(isBlocked(u,activeFriendId)){
-    chatMsgs.innerHTML = `<div style="text-align:center;color:var(--muted);margin-top:30px">This person is blocked. Unblock them to resume the conversation.</div>`;
+  if(!isConfirmedFriend(u.id, activeFriendId)){
+    chatMsgs.innerHTML = `<div style="text-align:center;color:var(--muted);margin-top:30px">You can only message confirmed friends.</div>`;
     return;
   }
-
-  if(!isFriend){
-    chatMsgs.innerHTML = `<div style="text-align:center; color:var(--muted); margin-top:30px">You can only message confirmed friends.</div>`;
-    return;
-  }
-
-  const msgs = db.messages.filter(m => (m.senderId === u.id && m.receiverId === activeFriendId) || (m.senderId === activeFriendId && m.receiverId === u.id));
+  const deleted = new Set(Array.isArray(db.deletedMessageIds) ? db.deletedMessageIds : []);
+  const msgs = db.messages.filter(m => !deleted.has(m.id) &&
+    ((m.senderId === u.id && m.receiverId === activeFriendId) ||
+     (m.senderId === activeFriendId && m.receiverId === u.id)));
+  const escapeHtml = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
   msgs.forEach(m => {
     const isSent = m.senderId === u.id;
     const div = document.createElement("div");
     div.className = `msg-bubble ${isSent ? 'sent' : 'received'}`;
+    div.dataset.messageId = m.id;
+    if(isSent){
+      const check=document.createElement('input');
+      check.type='checkbox'; check.className='message-select-check'; check.dataset.messageId=m.id;
+      check.setAttribute('aria-label','Select message');
+      check.addEventListener('change',()=>{
+        div.classList.toggle('message-selected',check.checked);
+        updateSelectedMessageCount();
+      });
+      div.appendChild(check);
+    }
+
+    if(m.replyTo){
+      const original = db.messages.find(x => x.id === m.replyTo);
+      if(original && !deleted.has(original.id)){
+        const preview = original.text || (original.image ? '📷 Picture' : 'Message');
+        div.insertAdjacentHTML('beforeend', `<div class="msg-reply">↩ ${escapeHtml(preview).slice(0,120)}</div>`);
+      }
+    }
+
+    const content = document.createElement('div');
+    content.className = 'message-content';
     if(m.text){
       const textNode = document.createElement("div");
+      textNode.className = 'message-text';
       textNode.textContent = m.text;
-      div.appendChild(textNode);
+      content.appendChild(textNode);
+      if(m.edited) content.insertAdjacentHTML('beforeend',' <small style="opacity:.6">(edited)</small>');
     }
     if(m.image){
       const img = document.createElement("img");
-      img.className = "chat-image";
-      img.src = m.image;
-      img.alt = "Shared picture";
-      img.loading = "lazy";
+      img.className = "chat-image"; img.src = m.image; img.alt = "Shared picture"; img.loading = "lazy";
       img.onclick = () => window.open(m.image, "_blank", "noopener");
-      div.appendChild(img);
+      content.appendChild(img);
     }
+    div.appendChild(content);
+
+    const tools = document.createElement('div');
+    tools.className='message-tools';
+    const replyBtn = document.createElement('button');
+    replyBtn.className='message-tool'; replyBtn.type='button'; replyBtn.textContent='↩ Reply';
+    replyBtn.addEventListener('click', e => { e.stopPropagation(); replyToMessage(m.id); });
+    tools.appendChild(replyBtn);
+    const reactBtn = document.createElement('button');
+    reactBtn.className='message-tool'; reactBtn.type='button'; reactBtn.textContent='😊 React';
+    reactBtn.addEventListener('click', e => { e.stopPropagation(); showEmojiPicker(m.id, reactBtn); });
+    tools.appendChild(reactBtn);
+
+    if(isSent){
+      const editBtn = document.createElement('button');
+      editBtn.className='message-tool'; editBtn.type='button'; editBtn.textContent='✎ Edit';
+      editBtn.addEventListener('click', e => { e.stopPropagation(); editMessage(m.id); });
+      tools.appendChild(editBtn);
+
+      const deleteBtn = document.createElement('button');
+      deleteBtn.className='message-tool'; deleteBtn.type='button'; deleteBtn.textContent='🗑 Delete';
+      deleteBtn.addEventListener('click', e => { e.stopPropagation(); deleteMessage(m.id); });
+      tools.appendChild(deleteBtn);
+    }
+    div.appendChild(tools);
+
+    const reactions = m.reactions || {};
+    const reactionRow = document.createElement('div'); reactionRow.className='reaction-row';
+    Object.entries(reactions).filter(([,users]) => Array.isArray(users) && users.length).forEach(([emoji,users])=>{
+      const r=document.createElement('button'); r.type='button'; r.className='reaction'+(users.includes(u.id)?' active':''); r.textContent=`${emoji} ${users.length}`;
+      r.onclick=()=>toggleReaction(m.id,emoji); reactionRow.appendChild(r);
+    });
+    div.appendChild(reactionRow);
     chatMsgs.appendChild(div);
   });
-
   chatMsgs.scrollTop = chatMsgs.scrollHeight;
 }
+
+let messageSelectionMode = false;
+function toggleMessageSelectionMode(){
+  messageSelectionMode=!messageSelectionMode;
+  const chat=document.getElementById('chatMessages');
+  const bar=document.getElementById('messageBulkBar');
+  if(chat) chat.classList.toggle('message-selection-mode',messageSelectionMode);
+  if(bar) bar.classList.toggle('active',messageSelectionMode);
+  const btn=document.querySelector('#messageSelectionControls button');
+  if(btn) btn.textContent=messageSelectionMode?'✕ Done':'☑ Select';
+  if(!messageSelectionMode) clearSelectedMessages();
+}
+function getSelectedMessageIds(){
+  return Array.from(document.querySelectorAll('#chatMessages .message-select-check:checked')).map(x=>x.dataset.messageId).filter(Boolean);
+}
+function updateSelectedMessageCount(){
+  const ids=getSelectedMessageIds();
+  const el=document.getElementById('selectedMessageCount');
+  if(el) el.textContent=`${ids.length} selected`;
+}
+function clearSelectedMessages(){
+  document.querySelectorAll('#chatMessages .message-select-check').forEach(c=>{c.checked=false;c.closest('.msg-bubble')?.classList.remove('message-selected');});
+  updateSelectedMessageCount();
+}
+function selectAllMyMessages(){
+  document.querySelectorAll('#chatMessages .message-select-check').forEach(c=>{c.checked=true;c.closest('.msg-bubble')?.classList.add('message-selected');});
+  updateSelectedMessageCount();
+}
+function deleteSelectedMessages(){
+  const u=currentUser();
+  if(!u)return;
+  const ids=getSelectedMessageIds();
+  if(!ids.length){toast('Select at least one message.','error');return;}
+  const ownIds=ids.filter(id=>{const m=db.messages.find(x=>String(x.id)===String(id));return m&&m.senderId===u.id;});
+  if(!ownIds.length){toast('You can only delete your own messages.','error');return;}
+  db.deletedMessageIds=Array.isArray(db.deletedMessageIds)?db.deletedMessageIds:[];
+  const blocked=new Set(db.deletedMessageIds.map(String));
+  ownIds.forEach(id=>blocked.add(String(id)));
+  db.deletedMessageIds=Array.from(blocked);
+  const ownSet=new Set(ownIds.map(String));
+  db.messages=db.messages.filter(m=>!ownSet.has(String(m.id)));
+  ownIds.forEach(id=>document.querySelector(`#chatMessages .msg-bubble[data-message-id=\"${CSS.escape(String(id))}\"]`)?.remove());
+  localStorage.setItem(DB_KEY,JSON.stringify(db));
+  clearSelectedMessages();
+  if(messageSelectionMode) toggleMessageSelectionMode();
+  loadMessages();
+  toast(`${ownIds.length} message${ownIds.length===1?'':'s'} deleted.`);
+  if(window.__INVYX_CLOUD_READY&&typeof cloudSaveDB==='function') cloudSaveDB().catch(e=>console.error('Bulk delete sync failed:',e));
+}
+
+let replyMessageId = null;
+const CHAT_EMOJIS = '😀 😃 😄 😁 😆 😅 😂 🤣 😊 😇 🙂 🙃 😉 😌 😍 🥰 😘 😗 😙 😚 😋 😛 😝 😜 🤪 🤨 🧐 🤓 😎 🤩 🥳 😏 😒 😞 😔 😟 😕 🙁 ☹️ 😣 😖 😫 😩 🥺 😢 😭 😤 😠 😡 🤬 🤯 😳 🥵 🥶 😱 😨 😰 😥 😓 🤗 🤔 🤭 🤫 🤥 😶 😐 😑 😬 🙄 😯 😦 😧 😮 😲 🥱 😴 🤤 😪 😵 🤐 🥴 🤢 🤮 🤧 😷 🤒 🤕 ❤️ 🧡 💛 💚 💙 💜 🖤 🤍 🤎 💔 ❣️ 💕 💞 💓 💗 💖 💘 💝 💟 👍 👎 👌 ✌️ 🤞 🤟 🤘 🤙 👋 🙏 👏 🙌 💪 🔥 🎉 🎊 💯 ⭐ ✨ 💎 👀 🚀 🫶'.split(' ');
+function replyToMessage(id){ const m=db.messages.find(x=>x.id===id); if(!m)return; replyMessageId=id; const b=document.getElementById('replyBanner'); if(b){b.style.display='block'; b.innerHTML=`↩ Replying to: ${String(m.text||'📷 Picture').slice(0,100)} <button type="button" onclick="cancelReply()">✕</button>`;} document.getElementById('chatInput')?.focus(); }
+function cancelReply(){replyMessageId=null;const b=document.getElementById('replyBanner');if(b){b.style.display='none';b.innerHTML='';}}
+
+async function persistChatChange(){
+  localStorage.setItem(DB_KEY, JSON.stringify(db));
+  if(window.__INVYX_CLOUD_READY && typeof cloudSaveDB === 'function'){
+    try { await cloudSaveDB(); } catch(e) { console.error(e); }
+  }
+}
+
+async function editMessage(id){
+  const u=currentUser(); const m=db.messages.find(x=>x.id===id);
+  if(!u || !m || m.senderId!==u.id || !m.text){ toast('You can only edit your own text messages.','error'); return; }
+  const next=prompt('Edit message:',m.text);
+  if(next===null) return;
+  const clean=next.trim();
+  if(!clean){toast('Message cannot be empty.','error');return;}
+  m.text=clean; m.edited=true; m.editedAt=new Date().toISOString();
+  await persistChatChange();
+  loadMessages();
+  toast('Message edited.');
+}
+
+function deleteMessage(id){
+  const u=currentUser();
+  const key=String(id);
+  const m=db.messages.find(x=>String(x.id)===key);
+  if(!m || !u || m.senderId!==u.id){toast('You can only delete your own messages.','error');return;}
+
+  // INSTANT DELETE: remove it from the in-memory database and DOM first.
+  db.deletedMessageIds=Array.isArray(db.deletedMessageIds)?db.deletedMessageIds:[];
+  if(!db.deletedMessageIds.some(x=>String(x)===key)) db.deletedMessageIds.push(key);
+  db.messages=db.messages.filter(x=>String(x.id)!==key);
+
+  // Remove the exact bubble immediately. No confirm, no await, no reload first.
+  document.querySelectorAll('#chatMessages .msg-bubble[data-message-id]').forEach(b=>{
+    if(String(b.dataset.messageId)===key) b.remove();
+  });
+  updateSelectedMessageCount();
+  localStorage.setItem(DB_KEY, JSON.stringify(db));
+  toast('Message deleted.');
+
+  // Sync only after the UI/local state is already finished.
+  if(window.__INVYX_CLOUD_READY && typeof cloudSaveDB==='function'){
+    cloudSaveDB().catch(e=>console.error('Delete sync failed:',e));
+  }
+}
+function toggleReaction(id,emoji){ const m=db.messages.find(x=>x.id===id),u=currentUser();if(!m||!u)return;m.reactions=m.reactions||{};m.reactions[emoji]=m.reactions[emoji]||[];const i=m.reactions[emoji].indexOf(u.id);if(i>=0)m.reactions[emoji].splice(i,1);else m.reactions[emoji].push(u.id);if(!m.reactions[emoji].length)delete m.reactions[emoji];saveDB();loadMessages(); }
+function showEmojiPicker(messageId,anchor){ let p=document.getElementById('chatEmojiPicker');if(!p){p=document.createElement('div');p.id='chatEmojiPicker';p.className='emoji-picker';document.body.appendChild(p);}p.innerHTML='';CHAT_EMOJIS.forEach(e=>{const b=document.createElement('button');b.textContent=e;b.onclick=()=>{toggleReaction(messageId,e);p.style.display='none';};p.appendChild(b);});const r=anchor.getBoundingClientRect();p.style.left=Math.max(8,Math.min(window.innerWidth-340,r.left))+'px';p.style.top=Math.max(8,r.top-p.offsetHeight-8)+'px';p.style.display='grid';}
+document.addEventListener('click',e=>{const p=document.getElementById('chatEmojiPicker');if(p&&p.style.display==='grid'&&!e.target.closest('.emoji-picker')&&!e.target.closest('.message-tool'))p.style.display='none';});
 
 function isConfirmedFriend(userId, friendId){
   return db.friends.some(f =>
@@ -2413,11 +2577,14 @@ function sendMessage(){
     receiverId: activeFriendId,
     text,
     image: "",
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
+    replyTo: replyMessageId || null,
+    reactions: {}
   });
 
   saveDB();
   input.value = "";
+  cancelReply();
   loadMessages();
 }
 
@@ -2450,9 +2617,12 @@ function sendChatImage(input){
       receiverId: activeFriendId,
       text: "",
       image: reader.result,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
+      replyTo: replyMessageId || null,
+      reactions: {}
     });
     saveDB();
+    cancelReply();
     loadMessages();
     toast("Picture sent!");
     input.value = "";
@@ -3834,18 +4004,28 @@ renderReviews();
     }
   }
 
-  async function cloudSaveDB(){
-    try{
-      const payload = JSON.parse(JSON.stringify(db));
-      const { error } = await supabaseClient
-        .from("app_data")
-        .upsert({ id: CLOUD_ROW_ID, payload }, { onConflict: "id" });
-      if(error) throw error;
-      localStorage.setItem(DB_KEY, JSON.stringify(db));
-    }catch(error){
-      console.error("Cloud save error:", error);
-      toast("Cloud save failed; local backup was kept.", "error");
-    }
+  let __cloudSaveQueue = Promise.resolve();
+  let __cloudSaveVersion = 0;
+
+  function cloudSaveDB(){
+    const version = ++__cloudSaveVersion;
+    const payload = JSON.parse(JSON.stringify(db));
+    __cloudSaveQueue = __cloudSaveQueue.catch(()=>{}).then(async()=>{
+      try{
+        const { error } = await supabaseClient
+          .from("app_data")
+          .upsert({ id: CLOUD_ROW_ID, payload }, { onConflict: "id" });
+        if(error) throw error;
+        // Only update local backup after this exact snapshot reached the cloud.
+        localStorage.setItem(DB_KEY, JSON.stringify(db));
+        return version;
+      }catch(error){
+        console.error("Cloud save error:", error);
+        // Do not undo the local change. A later queued save can retry it.
+        return null;
+      }
+    });
+    return __cloudSaveQueue;
   }
 
   // Replace the local-only save function with a local + cloud save.
@@ -3860,6 +4040,8 @@ renderReviews();
 
     if(cloudDB && Array.isArray(cloudDB.users)){
       db = cloudDB;
+      db.deletedMessageIds = Array.isArray(db.deletedMessageIds) ? db.deletedMessageIds : [];
+      if(db.deletedMessageIds.length){ db.messages = (db.messages || []).filter(m => !db.deletedMessageIds.includes(m.id)); }
     }else{
       // First cloud boot: upload the existing local data so current accounts
       // and content are not lost.
@@ -3871,6 +4053,8 @@ renderReviews();
     db.guides = Array.isArray(db.guides) ? db.guides : [];
     db.friends = Array.isArray(db.friends) ? db.friends : [];
     db.messages = Array.isArray(db.messages) ? db.messages : [];
+    db.deletedMessageIds = Array.isArray(db.deletedMessageIds) ? db.deletedMessageIds : [];
+    if(db.deletedMessageIds.length){ db.messages = db.messages.filter(m => !db.deletedMessageIds.includes(m.id)); }
     db.pointRequests = Array.isArray(db.pointRequests) ? db.pointRequests : [];
     db.reviews = Array.isArray(db.reviews) ? db.reviews : [];
     db.adminKeys = Array.isArray(db.adminKeys) ? db.adminKeys : [];
@@ -3920,7 +4104,12 @@ renderReviews();
     setInterval(async () => {
       const latest = await cloudLoadDB();
       if(latest && JSON.stringify(latest) !== JSON.stringify(db)){
+        const localDeleted = Array.isArray(db.deletedMessageIds) ? db.deletedMessageIds : [];
+        // Always merge local deletion tombstones into incoming cloud state.
+        // This prevents deleted messages from reappearing during synchronization.
         db = latest;
+        db.deletedMessageIds = Array.from(new Set([...(Array.isArray(db.deletedMessageIds)?db.deletedMessageIds:[]), ...localDeleted]));
+        if(db.deletedMessageIds.length){ db.messages = (db.messages || []).filter(m => !db.deletedMessageIds.includes(m.id)); }
         ensureThemeData();
         db.users?.forEach(u => { if(!Array.isArray(u.ownedGuides)) u.ownedGuides = []; });
         updateNav();
