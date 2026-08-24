@@ -635,6 +635,11 @@ select option{ background:#11111a; color:white; }
 .friend-info{ flex:1; overflow:hidden; }
 .friend-info strong{ display:block; font-size:14px; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .friend-info small{ color:var(--muted); font-size:12px; }
+.creator-badge{display:inline-flex;align-items:center;gap:4px;margin-left:7px;padding:3px 8px;border-radius:999px;border:1px solid rgba(250,204,21,.35);background:linear-gradient(135deg,rgba(250,204,21,.16),rgba(168,85,247,.12));color:#fde68a;font-size:9px;font-weight:950;letter-spacing:.5px;vertical-align:middle;box-shadow:0 0 16px rgba(250,204,21,.12)}
+.creator-name{display:inline-flex;align-items:center;gap:2px;min-width:0}
+.creator-apply-card{border:1px solid rgba(139,92,246,.28);background:linear-gradient(145deg,rgba(139,92,246,.11),rgba(15,15,25,.96));}
+.creator-rule{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.06);}
+
 
 .request-card{
   padding:12px 16px;
@@ -1188,6 +1193,12 @@ td{ color:#c4c4cf; }
     <div class="grid" id="featuredGuides"></div>
     <div style="display:flex;justify-content:space-between;align-items:center;margin-top:35px;gap:12px;flex-wrap:wrap"><div><h2>Giveaways 🎁</h2><p>Active community giveaways and their prizes.</p></div></div>
     <div class="grid" id="publicGiveaways"></div>
+    <div class="card creator-apply-card" style="margin-top:22px">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap">
+        <div><span class="badge">✦ CREATOR PROGRAM</span><h3 style="margin-top:8px">Become a Content Creator</h3><p style="color:var(--muted);margin-top:5px">Want the official Creator badge? Read the requirements and apply.</p></div>
+        <button class="btn btn-primary" onclick="openCreatorApplication()">Apply for Creator Access</button>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -1365,6 +1376,7 @@ td{ color:#c4c4cf; }
       <button onclick="ownerSection('themes',this)">Themes & Prices ✨</button><button onclick="ownerSection('ranks',this)">Ranks & Overrides 💎</button>
       <button onclick="ownerSection('guides',this)">Guides</button>
       <button onclick="ownerSection('giveaways',this)">Giveaways 🎁</button>
+      <button onclick="ownerSection('creators',this)">Content Creators ✦</button>
       <button onclick="ownerSection('logs',this)">Security Logs</button>
     </aside>
     <div class="admin-content" id="ownerContent"></div>
@@ -1496,7 +1508,7 @@ td{ color:#c4c4cf; }
     <form onsubmit="createGuide(event)">
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
         <div class="field"><label>Guide title *</label><input id="guideTitle" required placeholder="e.g. Advanced Grooming Guide"></div>
-        <div class="field"><label>Category *</label><input id="guideCategory" required placeholder="Grooming, Fitness, Style..."></div>
+        <div class="field"><label>Category *</label><div style="display:flex;gap:8px"><select id="guideCategory" required style="flex:1"><option value="">Choose a category...</option></select><button type="button" class="btn btn-light btn-small" onclick="addGuideCategory()">＋ Add Category</button></div><small style="color:var(--muted);display:block;margin-top:6px">Choose an existing category or create your own.</small></div>
       </div>
       <div class="field"><label>Short description *</label><textarea id="guideDescription" required rows="3" placeholder="Explain what readers will learn..."></textarea></div>
 
@@ -1504,7 +1516,7 @@ td{ color:#c4c4cf; }
         <div style="font-weight:900;font-size:15px;margin-bottom:4px">🔐 Access & Pricing</div>
         <div style="color:var(--muted);font-size:12px;margin-bottom:14px">Free guides are open to everyone. Premium guides stay locked until the user pays the XP price.</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
-          <div class="field" style="margin:0"><label>Guide access</label><select id="guideAccess" onchange="updateGuidePricingUI()"><option value="free">🆓 Free — everyone can open it</option><option value="points">💎 Paid — unlock with XP</option></select></div>
+          <div class="field" style="margin:0"><label>Guide access</label><select id="guideAccess" onchange="updateGuidePricingUI()"><option value="free">🆓 Free — everyone can open it</option><option value="paid">💎 Paid — unlock with XP</option></select></div>
           <div class="field" style="margin:0" id="guidePriceField"><label>XP price</label><input id="guidePrice" type="number" min="1" value="100" placeholder="100"></div>
         </div>
       </div>
@@ -1521,6 +1533,20 @@ td{ color:#c4c4cf; }
 
       <div class="field"><label>Guide content *</label><textarea id="guideContent" rows="8" required placeholder="Write the guide content here..."></textarea></div>
       <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:18px"><button type="button" class="btn btn-light" onclick="closeModal('guideModal')">Cancel</button><button class="btn btn-primary" style="min-width:180px">🚀 Publish Guide</button></div>
+    </form>
+  </div>
+</div>
+
+<div class="modal" id="creatorApplicationModal">
+  <div class="modal-box">
+    <div class="modal-head"><div><span class="badge">CREATOR PROGRAM</span><h2 style="margin-top:8px">Apply for Content Creator Access ✦</h2></div><button class="close" onclick="closeModal('creatorApplicationModal')">×</button></div>
+    <div class="card creator-apply-card" style="margin-bottom:14px">
+      <h3>Current requirements</h3><div id="creatorRulesModal" style="display:grid;gap:8px;margin-top:12px"></div>
+    </div>
+    <form onsubmit="submitCreatorApplication(event)">
+      <div class="field"><label>Why should you get Creator access?</label><textarea id="creatorReason" rows="5" required placeholder="Tell the Owner what content you create and why you should be approved..."></textarea></div>
+      <div class="field"><label>Content / Social links (optional)</label><input id="creatorLinks" placeholder="YouTube, TikTok, Instagram, portfolio, etc."></div>
+      <button class="btn btn-primary" style="width:100%">🚀 Submit Creator Application</button>
     </form>
   </div>
 </div>
@@ -1649,6 +1675,7 @@ const DEFAULT_DB = {
   customRoles: [],
   settings: {
     coverPrice: 1000,
+    guideCategories: ["Grooming","Fitness","Style","Nutrition","Mindset","Dating","Confidence"],
     profileThemes: DEFAULT_PROFILE_THEMES,
     chatThemes: DEFAULT_CHAT_THEMES,
     wheel: { cost: 20, cooldownHours: 24, resetAt: 0, prizes: [0,10,20,40,60,100,150,250] },
@@ -1688,6 +1715,7 @@ function loadDB(){
       customRoles: Array.isArray(parsed.customRoles) ? parsed.customRoles : [],
       settings: parsed.settings || {
         coverPrice: 1000,
+        guideCategories: ["Grooming","Fitness","Style","Nutrition","Mindset","Dating","Confidence"],
         profileThemes: DEFAULT_PROFILE_THEMES,
         chatThemes: DEFAULT_CHAT_THEMES,
         wheel: { cost: 20, cooldownHours: 24, resetAt: 0, prizes: [0,10,20,40,60,100,150,250] },
@@ -1707,12 +1735,43 @@ function loadDB(){
 }
 
 let db = loadDB();
+function ensureGuideCategories(){
+  db.settings = db.settings || {};
+  db.settings.guideCategories = Array.isArray(db.settings.guideCategories) && db.settings.guideCategories.length
+    ? db.settings.guideCategories
+    : ["Grooming","Fitness","Style","Nutrition","Mindset","Dating","Confidence"];
+}
+function refreshGuideCategoryOptions(){
+  const select=document.getElementById('guideCategory');
+  if(!select) return;
+  ensureGuideCategories();
+  const current=select.value;
+  select.innerHTML='<option value="">Choose a category...</option>'+db.settings.guideCategories.map(c=>`<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join('');
+  if(current && db.settings.guideCategories.includes(current)) select.value=current;
+}
+function addGuideCategory(){
+  const u=currentUser();
+  if(!u || !hasPermission('manageGuides')){ toast('You do not have permission to add categories.','error'); return; }
+  const name=prompt('Enter the new guide category:');
+  if(!name) return;
+  const clean=name.trim().replace(/\s+/g,' ');
+  if(clean.length<2){toast('Category name is too short.','error');return;}
+  ensureGuideCategories();
+  if(db.settings.guideCategories.some(c=>c.toLowerCase()===clean.toLowerCase())){toast('That category already exists.','error');return;}
+  db.settings.guideCategories.push(clean);
+  saveDB();
+  refreshGuideCategoryOptions();
+  const select=document.getElementById('guideCategory'); if(select) select.value=clean;
+  toast(`Category "${clean}" added.`);
+}
+
 
 function ensureThemeData(){
   db.giveaways = Array.isArray(db.giveaways) ? db.giveaways : [];
   db.customRoles = Array.isArray(db.customRoles) ? db.customRoles : [];
   db.customRoles.forEach(r => { if(!r.id) r.id = uid("role"); if(!Array.isArray(r.permissions)) r.permissions=[]; });
   db.settings = db.settings || {};
+  ensureCreatorSettings();
   db.settings.coverPrice = Number.isFinite(Number(db.settings.coverPrice)) ? Number(db.settings.coverPrice) : 1000;
   db.settings.pointPackages = Array.isArray(db.settings.pointPackages) && db.settings.pointPackages.length
     ? db.settings.pointPackages : DEFAULT_DB.settings.pointPackages.map(x => ({...x}));
@@ -1755,6 +1814,11 @@ function ensureThemeData(){
     if(!u.customChatTheme || typeof u.customChatTheme !== 'object') u.customChatTheme = null;
     if(!u.friendAliases || typeof u.friendAliases !== 'object') u.friendAliases = {};
     if(!Array.isArray(u.blockedUsers)) u.blockedUsers = [];
+    if(typeof u.creatorAccess !== "boolean") u.creatorAccess = false;
+    if(typeof u.creatorApplied !== "boolean") u.creatorApplied = false;
+    if(typeof u.creatorApplication !== "object" || !u.creatorApplication) u.creatorApplication = null;
+    if(typeof u.creatorApprovedAt !== "number") u.creatorApprovedAt = 0;
+    if(typeof u.creatorRemovedAt !== "number") u.creatorRemovedAt = 0;
     if(typeof u.manualRank !== "string" || !u.manualRank) u.manualRank = null;
     if(u.manualRank) u.manualRank = String(u.manualRank).toUpperCase();
     if(typeof u.rankLocked !== "boolean") u.rankLocked = !!u.manualRank;
@@ -1773,6 +1837,26 @@ function roleLabel(role){
   if(role === 'ADMIN') return 'ADMIN';
   if(!role) return 'USER';
   return getCustomRole(role)?.name || role;
+}
+function creatorBadgeHtml(user){
+  if(!user?.creatorAccess) return '';
+  return '<span class="creator-badge" title="Verified Content Creator">✦ CONTENT CREATOR</span>';
+}
+function creatorNameHtml(user, extraClass=''){
+  if(!user) return '';
+  return `<span class="creator-name ${extraClass}">${escapeHtml(user.username)}${creatorBadgeHtml(user)}</span>`;
+}
+function ensureCreatorSettings(){
+  db.settings = db.settings || {};
+  if(!Array.isArray(db.settings.creatorRules) || !db.settings.creatorRules.length){
+    db.settings.creatorRules = [
+      'Be active and consistently contribute useful content.',
+      'Publish original, high-quality content that follows INVYX rules.',
+      'Do not spam, scam, harass, or mislead members.',
+      'Respect copyright and only upload content you have permission to share.',
+      'Keep creator content appropriate for the community.'
+    ];
+  }
 }
 function hasPermission(permission){
   const u=currentUser();
@@ -2414,11 +2498,11 @@ function renderChat(){
     const reqHeader = document.createElement("div"); reqHeader.style.cssText="padding:10px 18px 5px;font-size:11px;font-weight:800;color:var(--purple);text-transform:uppercase;letter-spacing:1px;"; reqHeader.textContent="Friend Requests"; friendListEl.appendChild(reqHeader);
     incomingRequests.forEach(req=>{
       const sender=db.users.find(x=>x.id===req.user1); if(!sender)return;
-      const div=document.createElement("div"); div.className="request-card"; div.innerHTML=`<div style="display:flex;align-items:center;gap:10px;flex:1;cursor:pointer" onclick="openPublicProfile('${sender.id}')">${avatarMarkup(sender,"friend-avatar","width:34px;height:34px;font-size:12px")}<div class="friend-info"><strong>${escapeHtml(getFriendDisplayName(u,sender))}</strong><small>Wants to connect · View profile</small></div></div><div class="request-actions"><button class="btn btn-success btn-small" style="flex:1" onclick="acceptFriendRequest('${req.id}')">Accept</button><button class="btn btn-danger btn-small" style="flex:1" onclick="declineFriendRequest('${req.id}')">Decline</button></div>`; friendListEl.appendChild(div);
+      const div=document.createElement("div"); div.className="request-card"; div.innerHTML=`<div style="display:flex;align-items:center;gap:10px;flex:1;cursor:pointer" onclick="openPublicProfile('${sender.id}')">${avatarMarkup(sender,"friend-avatar","width:34px;height:34px;font-size:12px")}<div class="friend-info"><strong>${creatorNameHtml({...sender, username:getFriendDisplayName(u,sender)})}</strong><small>Wants to connect · View profile</small></div></div><div class="request-actions"><button class="btn btn-success btn-small" style="flex:1" onclick="acceptFriendRequest('${req.id}')">Accept</button><button class="btn btn-danger btn-small" style="flex:1" onclick="declineFriendRequest('${req.id}')">Decline</button></div>`; friendListEl.appendChild(div);
     });
   }
   const outgoingRequests=db.friends.filter(f=>f.user1===u.id&&f.status==="PENDING");
-  if(outgoingRequests.length){const h=document.createElement("div");h.style.cssText="padding:10px 18px 5px;font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:1px;";h.textContent="Sent Requests (Pending)";friendListEl.appendChild(h);outgoingRequests.forEach(req=>{const target=db.users.find(x=>x.id===req.user2);if(!target)return;const div=document.createElement("div");div.className="friend-item";div.style.opacity=".6";div.innerHTML=`<div style="display:flex;align-items:center;gap:10px;flex:1;cursor:pointer" onclick="openPublicProfile('${target.id}')">${avatarMarkup(target,"friend-avatar")}<div class="friend-info"><strong>${escapeHtml(getFriendDisplayName(u,target))}</strong><small>Pending Acceptance · View profile</small></div></div>`;friendListEl.appendChild(div);});}
+  if(outgoingRequests.length){const h=document.createElement("div");h.style.cssText="padding:10px 18px 5px;font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:1px;";h.textContent="Sent Requests (Pending)";friendListEl.appendChild(h);outgoingRequests.forEach(req=>{const target=db.users.find(x=>x.id===req.user2);if(!target)return;const div=document.createElement("div");div.className="friend-item";div.style.opacity=".6";div.innerHTML=`<div style="display:flex;align-items:center;gap:10px;flex:1;cursor:pointer" onclick="openPublicProfile('${target.id}')">${avatarMarkup(target,"friend-avatar")}<div class="friend-info"><strong>${creatorNameHtml({...target, username:getFriendDisplayName(u,target)})}</strong><small>Pending Acceptance · View profile</small></div></div>`;friendListEl.appendChild(div);});}
 
   const acceptedFriends=db.friends.filter(f=>(f.user1===u.id||f.user2===u.id)&&f.status==="ACCEPTED");
   const friendsHeader=document.createElement("div");friendsHeader.style.cssText="padding:10px 18px 5px;font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:1px;";friendsHeader.textContent="Friends";friendListEl.appendChild(friendsHeader);
@@ -2426,7 +2510,7 @@ function renderChat(){
   if(!visibleFriends.length){const empty=document.createElement("div");empty.style.cssText="padding:15px 18px;color:var(--muted);font-size:13px";empty.textContent="No visible friends. Send a friend request or unblock someone below.";friendListEl.appendChild(empty);}
   visibleFriends.forEach(f=>{
     const friendId=f.user1===u.id?f.user2:f.user1; const friendUser=db.users.find(x=>x.id===friendId); if(!friendUser)return;
-    const div=document.createElement("div");div.className=`friend-item ${activeFriendId===friendUser.id?'active':''}`;div.onclick=()=>selectChatFriend(friendUser);div.innerHTML=`${avatarMarkup(friendUser,"friend-avatar")}<div class="friend-info"><strong>${escapeHtml(getFriendDisplayName(u,friendUser))}</strong><small>${escapeHtml(friendUser.username)}${u.friendAliases?.[friendUser.id]?' • your name':''}</small></div><div style="display:flex;gap:4px;margin-left:auto"><button class="btn btn-light btn-small" title="View profile" onclick="event.stopPropagation();openPublicProfile('${friendUser.id}')">👤</button><button class="btn btn-light btn-small" title="Rename in your view" onclick="event.stopPropagation();openRenameFriendModal('${friendUser.id}')">✎</button><button class="btn btn-danger btn-small" title="Block" onclick="event.stopPropagation();blockUser('${friendUser.id}')">⛔</button></div>`;friendListEl.appendChild(div);
+    const div=document.createElement("div");div.className=`friend-item ${activeFriendId===friendUser.id?'active':''}`;div.onclick=()=>selectChatFriend(friendUser);div.innerHTML=`${avatarMarkup(friendUser,"friend-avatar")}<div class="friend-info"><strong>${creatorNameHtml({...friendUser, username:getFriendDisplayName(u,friendUser)})}</strong><small>${escapeHtml(friendUser.username)}${u.friendAliases?.[friendUser.id]?' • your name':''}</small></div><div style="display:flex;gap:4px;margin-left:auto"><button class="btn btn-light btn-small" title="View profile" onclick="event.stopPropagation();openPublicProfile('${friendUser.id}')">👤</button><button class="btn btn-light btn-small" title="Rename in your view" onclick="event.stopPropagation();openRenameFriendModal('${friendUser.id}')">✎</button><button class="btn btn-danger btn-small" title="Block" onclick="event.stopPropagation();blockUser('${friendUser.id}')">⛔</button></div>`;friendListEl.appendChild(div);
   });
 
   renderBlockedPeopleSection();
@@ -2760,7 +2844,7 @@ function renderBlockedPeopleSection(){
   if(!panel||!u) return;
   const blocked=(u.blockedUsers||[]).map(id=>db.users.find(x=>x.id===id)).filter(Boolean);
   panel.innerHTML=`<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px"><strong style="font-size:13px">Blocked People</strong><span class="badge">${blocked.length}</span></div>` +
-    (blocked.length ? blocked.map(person=>`<div class="friend-item" style="margin-bottom:6px">${avatarMarkup(person,"friend-avatar")}<div class="friend-info"><strong>${escapeHtml(getFriendDisplayName(u,person))}</strong><small>Blocked</small></div><button class="btn btn-light btn-small" onclick="unblockUser('${person.id}')">Unblock</button></div>`).join("") : `<div style="padding:10px 4px;color:var(--muted);font-size:12px">You haven't blocked anyone.</div>`);
+    (blocked.length ? blocked.map(person=>`<div class="friend-item" style="margin-bottom:6px">${avatarMarkup(person,"friend-avatar")}<div class="friend-info"><strong>${creatorNameHtml({...person, username:getFriendDisplayName(u,person)})}</strong><small>Blocked</small></div><button class="btn btn-light btn-small" onclick="unblockUser('${person.id}')">Unblock</button></div>`).join("") : `<div style="padding:10px 4px;color:var(--muted);font-size:12px">You haven't blocked anyone.</div>`);
 }
 
 function toggleBlockedPeopleSection(){
@@ -2804,7 +2888,7 @@ function openPublicProfile(userId){
   if(!content)return;
   content.innerHTML=`<div class="public-profile-head">
     <div class="public-profile-avatar">${person.pfp?`<img src="${escapeHtml(person.pfp)}" alt="">`:escapeHtml((person.username||"?").charAt(0).toUpperCase())}</div>
-    <div style="flex:1;min-width:200px"><span class="badge">${escapeHtml(r.cur.name)}</span><h2 style="margin-top:8px">${escapeHtml(person.username)}</h2><p style="color:var(--muted);margin-top:5px">Public profile · ${escapeHtml(person.gender||"Member")}</p><div style="margin-top:10px">${rankHtml(person)}</div></div>
+    <div style="flex:1;min-width:200px"><span class="badge">${escapeHtml(r.cur.name)}</span><h2 style="margin-top:8px">${creatorNameHtml(person)}</h2><p style="color:var(--muted);margin-top:5px">Public profile · ${escapeHtml(person.gender||"Member")}</p><div style="margin-top:10px">${rankHtml(person)}</div></div>
   </div>
   <div class="public-profile-stats"><div class="public-profile-stat"><strong>${minutes.toLocaleString()}</strong><span>Active minutes</span></div><div class="public-profile-stat"><strong>${actions.toLocaleString()}</strong><span>Interactions</span></div><div class="public-profile-stat"><strong>${sessions.toLocaleString()}</strong><span>Sessions</span></div></div>
   <div class="card" style="margin-top:14px"><h3>Socials</h3><div class="social-links-row">${renderSocialLinks(person)}</div></div>
@@ -2877,7 +2961,7 @@ function canAccessGuide(guideId){
   const u=currentUser();
   const g=(db.guides||[]).find(x=>x.id===guideId);
   if(!g) return false;
-  if(g.access !== 'points' || Number(g.price)<=0) return true;
+  if((g.access !== 'paid' && g.access !== 'points') || Number(g.price)<=0) return true;
   if(!u) return false;
   if(u.role==='OWNER' || u.role==='ADMIN') return true;
   return Array.isArray(u.ownedGuides) && u.ownedGuides.includes(g.id);
@@ -2886,7 +2970,7 @@ function canAccessGuide(guideId){
 function guideCardHtml(g){
   const u=currentUser();
   const staff = !!(u && (u.role==='OWNER' || u.role==='ADMIN'));
-  const paid = g.access === 'points' && Number(g.price)>0;
+  const paid = (g.access === 'paid' || g.access === 'points') && Number(g.price)>0;
   const owned = !!(u && Array.isArray(u.ownedGuides) && u.ownedGuides.includes(g.id));
   const unlocked = !paid || owned || staff;
   let attachmentHtml='';
@@ -2899,13 +2983,14 @@ function guideCardHtml(g){
       attachmentHtml=`<a href="${escapeHtml(g.attachmentUrl)}" target="_blank" rel="noopener" class="btn btn-light btn-small" style="display:block;text-align:center;margin-bottom:14px">🎬 Watch Video</a>`;
     }else if((g.attachmentType==='pdf'||g.attachmentType==='file') && (g.fileId||g.attachmentUrl)){
       attachmentHtml=g.fileId
-        ? `<button type="button" onclick="openGuideFile('${g.id}')" class="btn btn-success btn-small" style="display:block;width:100%;margin-bottom:14px">${g.attachmentType==='pdf'?'📄':'📎'} Open / Download ${escapeHtml(g.fileName||'Guide file')}</button>`
-        : `<a href="${escapeHtml(g.attachmentUrl)}" target="_blank" rel="noopener" download class="btn btn-success btn-small" style="display:block;text-align:center;margin-bottom:14px">${g.attachmentType==='pdf'?'📄':'📎'} Open / Download</a>`;
+        ? `<button type="button" onclick="openGuideFile('${g.id}')" class="btn btn-success btn-small" style="display:block;width:100%;margin-bottom:14px">${g.attachmentType==='pdf'?'📄':'📎'} Download ${escapeHtml(g.fileName||'Guide file')}</button>`
+        : `<a href="${escapeHtml(g.attachmentUrl)}" rel="noopener" download class="btn btn-success btn-small" style="display:block;text-align:center;margin-bottom:14px">${g.attachmentType==='pdf'?'📄':'📎'} Open / Download</a>`;
     }else if(g.attachmentType==='zip' && g.attachmentUrl){
       attachmentHtml=`<a href="${escapeHtml(g.attachmentUrl)}" target="_blank" rel="noopener" class="btn btn-success btn-small" style="display:block;text-align:center;margin-bottom:14px">🗜️ Download ZIP</a>`;
     }else if(g.attachmentType==='link' && g.attachmentUrl){
       attachmentHtml=`<a href="${escapeHtml(g.attachmentUrl)}" target="_blank" rel="noopener" class="btn btn-light btn-small" style="display:block;text-align:center;margin-bottom:14px">🔗 Open Resource</a>`;
     }
+    attachmentHtml += `<button type="button" onclick="downloadGuide('${g.id}')" class="btn btn-light btn-small" style="display:block;width:100%;margin-bottom:14px">⬇️ Download Guide</button>`;
     contentHtml=`<div style="margin-top:12px;font-size:13px;color:#aaa;white-space:pre-wrap;line-height:1.65">${escapeHtml(g.content)}</div>`;
   }else{
     attachmentHtml=`<div style="height:120px;border-radius:16px;margin-bottom:14px;display:grid;place-items:center;background:linear-gradient(145deg,rgba(139,92,246,.13),rgba(0,0,0,.25));border:1px solid rgba(139,92,246,.2)"><div style="text-align:center"><div style="font-size:30px">🔒</div><strong>Premium resource locked</strong><div style="font-size:11px;color:var(--muted);margin-top:4px">Pay ${Number(g.price)} XP to unlock</div></div></div>`;
@@ -2929,18 +3014,44 @@ function renderGuides(){
   const feat=document.getElementById('featuredGuides');
   if(!grid) return;
   const guides=Array.isArray(db.guides)?db.guides:[];
-  const free=guides.filter(g=>g.access!=='points'||Number(g.price)<=0);
-  const paid=guides.filter(g=>g.access==='points'&&Number(g.price)>0);
+  const free=guides.filter(g=>(g.access!=='paid' && g.access!=='points')||Number(g.price)<=0);
+  const paid=guides.filter(g=>(g.access==='paid'||g.access==='points')&&Number(g.price)>0);
   const renderSection=(items,title,subtitle)=>items.length?`<div style="grid-column:1/-1;margin-top:10px"><div class="section-title" style="margin-bottom:14px"><div><span class="badge">${title}</span><h2 style="font-size:28px;margin-top:8px">${title}</h2><p>${subtitle}</p></div></div></div>${items.map(guideCardHtml).join('')}`:'';
-  grid.innerHTML=renderSection(free,'🆓 FREE GUIDES','Open and readable by everyone.')+renderSection(paid,'💎 PREMIUM GUIDES','Locked until the user unlocks them with XP.');
+  grid.innerHTML=renderSection(free,'🆓 FREE GUIDES','Open and readable by everyone.')+renderSection(paid,'💎 PAID GUIDES','Locked until the user unlocks them.');
   if(feat){ const featured=guides.slice(0,3); feat.innerHTML=featured.map(guideCardHtml).join(''); }
+}
+
+function downloadGuide(guideId){
+  if(!canAccessGuide(guideId)){ toast('This premium guide is locked. Purchase it to download.','error'); return; }
+  const g=(db.guides||[]).find(x=>x.id===guideId);
+  if(!g){ toast('Guide not found.','error'); return; }
+  const safe=(g.title||'guide').replace(/[^a-z0-9 _-]/gi,'').trim().replace(/\s+/g,'-').slice(0,80)||'guide';
+  const text = [
+    g.title || 'INVYX Guide',
+    g.category ? `Category: ${g.category}` : '',
+    g.description || '',
+    '',
+    g.content || ''
+  ].filter(Boolean).join('\n\n');
+  try{
+    const blob=new Blob([text],{type:'text/plain;charset=utf-8'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');
+    a.href=url; a.download=`${safe}.txt`; a.style.display='none';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),60000);
+    toast('Guide download started.');
+  }catch(err){
+    console.error('Guide download error:',err);
+    toast('Could not download the guide.','error');
+  }
 }
 
 function purchaseGuide(guideId){
   const u=currentUser(); const g=(db.guides||[]).find(x=>x.id===guideId);
   if(!u){go('login');toast('Please login to purchase a guide','error');return;}
   if(!g){toast('Guide not found','error');return;}
-  if(g.access!=='points'||Number(g.price)<=0){toast('This guide is free.');return;}
+  if((g.access!=='paid' && g.access!=='points')||Number(g.price)<=0){toast('This guide is free.');return;}
   if(!Array.isArray(u.ownedGuides)) u.ownedGuides=[];
   if(u.ownedGuides.includes(g.id)){toast('You already own this guide.');return;}
   const price=Number(g.price);
@@ -2963,7 +3074,7 @@ function updateGuidePricingUI(){
   const field=document.getElementById('guidePriceField');
   const input=document.getElementById('guidePrice');
   if(!field||!input)return;
-  const paid=access==='points';
+  const paid=access==='paid';
   field.style.opacity=paid?'1':'.5';
   input.disabled=!paid;
   input.value=paid?(Number(input.value)>0?input.value:100):0;
@@ -2982,6 +3093,7 @@ function openGuideModal(e){
     return false;
   }
   modal.classList.add('show');
+  refreshGuideCategoryOptions();
   toggleGuideUploadField();
   const title = document.getElementById('guideTitle');
   if(title) setTimeout(() => title.focus(), 50);
@@ -3063,7 +3175,7 @@ async function createGuide(e){
   const attachmentType=document.getElementById('guideAttachmentType').value;
   const attachmentUrl=document.getElementById('guideAttachmentUrl').value.trim();
   const access=document.getElementById('guideAccess').value;
-  const price=access==='points' ? Math.max(1,parseInt(document.getElementById('guidePrice').value,10)||1) : 0;
+  const price=access==='paid' ? Math.max(1,parseInt(document.getElementById('guidePrice').value,10)||1) : 0;
   const content=document.getElementById('guideContent').value.trim();
   const fileInput=document.getElementById('guideFile');
   const file=fileInput?.files?.[0]||null;
@@ -3082,7 +3194,7 @@ async function createGuide(e){
     db.guides.push({
       id:guideId,title,description,category,attachmentType,
       attachmentUrl:attachmentUrl||'',fileId,fileName:file?.name||'',fileMime:file?.type||'',fileSize:file?.size||0,
-      access,price,content,created:new Date().toISOString()
+      access: access==='points' ? 'paid' : access,price,content,created:new Date().toISOString()
     });
     saveDB();
     if(!Array.isArray(db.guides) || !db.guides.some(g=>g.id===guideId)){ throw new Error('Guide database save failed'); }
@@ -3107,6 +3219,94 @@ async function deleteGuide(guideId){
   if(old?.fileId) await deleteStoredGuideFile(old.fileId);
   toast("Guide deleted");
   renderGuides();
+}
+
+/* CONTENT CREATOR PROGRAM */
+function openCreatorApplication(){
+  const u=currentUser(); if(!u){go('login');return;}
+  ensureCreatorSettings();
+  const rules=document.getElementById('creatorRulesModal');
+  if(rules) rules.innerHTML=db.settings.creatorRules.map(r=>`<div class="creator-rule"><span>✓</span><span>${escapeHtml(r)}</span></div>`).join('');
+  document.getElementById('creatorReason').value=u.creatorApplication?.reason||'';
+  document.getElementById('creatorLinks').value=u.creatorApplication?.links||'';
+  openModal('creatorApplicationModal');
+}
+function submitCreatorApplication(e){
+  e.preventDefault();
+  const u=currentUser(); if(!u){go('login');return;}
+  if(u.creatorAccess){toast('You already have Creator access.');return;}
+  ensureCreatorSettings();
+  u.creatorApplied=true;
+  u.creatorApplication={reason:document.getElementById('creatorReason').value.trim(),links:document.getElementById('creatorLinks').value.trim(),submittedAt:Date.now(),status:'PENDING'};
+  logAction(`Submitted Content Creator application`,u.username);
+  saveDB(); closeModal('creatorApplicationModal'); renderDashboard(); toast('Creator application submitted!');
+}
+function saveCreatorRules(){
+  if(!isOwner()){toast('Owner access required.','error');return;}
+  const raw=document.getElementById('creatorRulesInput')?.value||'';
+  const rules=raw.split('\n').map(x=>x.trim()).filter(Boolean).slice(0,30);
+  if(!rules.length){toast('Add at least one rule.','error');return;}
+  db.settings.creatorRules=rules; logAction('Updated Content Creator requirements',currentUser().username); saveDB(); ownerSection('creators'); toast('Creator rules saved.');
+}
+function approveCreator(userId){
+  if(!isOwner()){toast('Owner access required.','error');return;}
+  const u=db.users.find(x=>x.id===userId); if(!u)return;
+  u.creatorAccess=true; u.creatorApplied=false; u.creatorApprovedAt=Date.now(); u.creatorRemovedAt=0;
+  if(u.creatorApplication) u.creatorApplication.status='APPROVED';
+  logAction(`Granted Content Creator access to ${u.username}`,currentUser().username); saveDB(); ownerSection('creators'); updateNav(); toast(`${u.username} is now a Content Creator.`);
+}
+function removeCreator(userId){
+  if(!isOwner()){toast('Owner access required.','error');return;}
+  const u=db.users.find(x=>x.id===userId); if(!u)return;
+  u.creatorAccess=false; u.creatorRemovedAt=Date.now(); u.creatorApplied=false;
+  if(u.creatorApplication) u.creatorApplication.status='REMOVED';
+  logAction(`Removed Content Creator access from ${u.username}`,currentUser().username); saveDB(); ownerSection('creators'); updateNav(); toast(`Creator access removed from ${u.username}.`);
+}
+function grantCreatorDirect(userId){
+  if(!isOwner()){toast('Owner access required.','error');return;}
+  const u=db.users.find(x=>x.id===userId);
+  if(!u){toast('User not found.','error');return;}
+  u.creatorAccess=true;
+  u.creatorApplied=false;
+  u.creatorApprovedAt=Date.now();
+  u.creatorRemovedAt=0;
+  if(u.creatorApplication) u.creatorApplication.status='DIRECTLY_GRANTED';
+  logAction(`Directly granted Content Creator access to ${u.username}`,currentUser().username);
+  saveDB();
+  ownerSection('creators');
+  updateNav();
+  toast(`${u.username} is now a Content Creator.`);
+}
+function rejectCreatorApplication(userId){
+  if(!isOwner()){toast('Owner access required.','error');return;}
+  const u=db.users.find(x=>x.id===userId); if(!u)return;
+  u.creatorApplied=false; if(u.creatorApplication) u.creatorApplication.status='REJECTED';
+  logAction(`Rejected Content Creator application from ${u.username}`,currentUser().username); saveDB(); ownerSection('creators'); toast('Application rejected.');
+}
+function renderCreatorManagement(container){
+  if(!isOwner()){container.innerHTML='<div class="card"><h3>Owner access required</h3></div>';return;}
+  ensureCreatorSettings();
+  const pending=db.users.filter(u=>u.creatorApplied&&!u.creatorAccess);
+  const active=db.users.filter(u=>u.creatorAccess);
+  const rules=escapeHtml(db.settings.creatorRules.join('\n'));
+  container.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:20px"><div><span class="badge">OWNER CONTROL</span><h2 style="margin-top:8px">Content Creator Program ✦</h2><p style="color:var(--muted);margin-top:5px">Set the requirements, review applications, grant Creator access, or remove it at any time.</p></div></div>
+    <div class="card" style="margin-bottom:18px"><h3>Creator Requirements</h3><p style="color:var(--muted);font-size:12px;margin:6px 0 12px">One rule per line. These rules are shown to applicants.</p><textarea id="creatorRulesInput" rows="8" style="width:100%">${rules}</textarea><button class="btn btn-primary" style="margin-top:10px" onclick="saveCreatorRules()">💾 Save Creator Rules</button></div>
+    <div class="card" style="margin-bottom:18px"><h3>Pending Applications (${pending.length})</h3>${pending.length?pending.map(u=>`<div class="req-card" style="margin-top:10px"><div style="flex:1"><strong>${escapeHtml(u.username)}</strong><p style="color:var(--muted);font-size:12px;margin-top:5px">${escapeHtml(u.creatorApplication?.reason||'No reason provided')}</p>${u.creatorApplication?.links?`<small>${escapeHtml(u.creatorApplication.links)}</small>`:''}<small style="display:block;color:var(--muted);margin-top:5px">Submitted ${u.creatorApplication?.submittedAt?new Date(u.creatorApplication.submittedAt).toLocaleString():'—'}</small></div><div style="display:flex;gap:7px;flex-wrap:wrap"><button class="btn btn-success btn-small" onclick="approveCreator('${u.id}')">✓ Grant Access</button><button class="btn btn-danger btn-small" onclick="rejectCreatorApplication('${u.id}')">Reject</button></div></div>`).join(''):'<p style="color:var(--muted);margin-top:10px">No pending applications.</p>'}</div>
+    <div class="card" style="margin-bottom:18px">
+      <h3>Direct Creator Access ⚡</h3>
+      <p style="color:var(--muted);font-size:12px;margin:6px 0 12px">Owner-only control. Add any user as a Content Creator immediately without requiring an application.</p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:end">
+        <div class="field" style="flex:1;min-width:220px;margin:0">
+          <label>Select a user</label>
+          <select id="directCreatorUser">
+            <option value="">Choose a user...</option>
+            ${db.users.filter(u=>u.id!==currentUser()?.id && !u.creatorAccess).map(u=>`<option value="${escapeHtml(u.id)}">${escapeHtml(u.username)} · ${escapeHtml(u.role||'USER')}</option>`).join('')}
+          </select>
+        </div>
+        <button class="btn btn-primary" onclick="grantCreatorDirect(document.getElementById('directCreatorUser').value)">✦ Add as Content Creator</button>
+      </div>
+    </div>
+    <div class="card"><h3>Current Content Creators (${active.length})</h3>${active.length?`<div class="table-wrap" style="margin-top:10px"><table><thead><tr><th>User</th><th>Granted</th><th>Action</th></tr></thead><tbody>${active.map(u=>`<tr><td>${creatorNameHtml(u)}</td><td>${u.creatorApprovedAt?new Date(u.creatorApprovedAt).toLocaleString():'—'}</td><td><button class="btn btn-danger btn-small" onclick="removeCreator('${u.id}')">Remove Creator Access</button></td></tr>`).join('')}</tbody></table></div>`:'<p style="color:var(--muted);margin-top:10px">No active Content Creators.</p>'}</div>`;
 }
 
 /* GIVEAWAYS */
@@ -3320,6 +3520,7 @@ function ownerSection(sec, btn){
         </div>
       </form>`;
   }
+  else if(sec === 'creators'){ renderCreatorManagement(content); }
   else if(sec === 'themes'){ renderThemeManagement(content, true); }
   else if(sec === 'pricing'){
     const packages = Array.isArray(db.settings?.pointPackages) ? db.settings.pointPackages : [];
@@ -4492,7 +4693,7 @@ function renderDashboard(){
           </div>
           <div style="flex:1;min-width:220px">
             <span class="badge">PROFILE</span>
-            <h2 style="margin-top:8px">${u.username}</h2>
+            <h2 style="margin-top:8px">${creatorNameHtml(u)}</h2>
             <p style="color:var(--muted);margin-top:5px">Change your picture anytime. Your display name can be changed once unless the Owner grants more changes.</p>
             <div class="social-links-row">${renderSocialLinks(u)}</div>
           </div>
@@ -4509,6 +4710,13 @@ function renderDashboard(){
           ${u.coverUnlocked ? 'Animated profile frame unlocked.' : `The signature profile frame costs ${Number(db.settings?.coverPrice || 1000)} XP and wraps the entire profile with a designed animated frame.`}
           ${((u.extraNameChanges||0) > 0) ? ` You have ${u.extraNameChanges} extra name change${u.extraNameChanges===1?'':'s'} granted by the Owner.` : ''}
         </div>
+      </div>
+    </div>
+
+    <div class="card creator-apply-card" style="margin-top:18px">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap">
+        <div><span class="badge">✦ CREATOR PROGRAM</span><h3 style="margin-top:8px">Become a Content Creator</h3><p style="color:var(--muted);margin-top:5px">Apply for the official Creator badge and creator access.</p></div>
+        <div>${u.creatorAccess ? creatorBadgeHtml(u) : (u.creatorApplied ? '<span class="badge">⏳ APPLICATION PENDING</span>' : '<button class="btn btn-primary" onclick="openCreatorApplication()">Apply for Creator Access</button>')}</div>
       </div>
     </div>
 
@@ -4771,6 +4979,11 @@ renderReviews();
       if(!u.profileThemeId) u.profileThemeId = "profile-minimal";
       if(!u.chatThemeId) u.chatThemeId = "chat-clean";
       if(!u.socials || typeof u.socials !== "object") u.socials = {};
+      if(typeof u.creatorAccess !== "boolean") u.creatorAccess = false;
+      if(typeof u.creatorApplied !== "boolean") u.creatorApplied = false;
+      if(typeof u.creatorApplication !== "object" || !u.creatorApplication) u.creatorApplication = null;
+      if(typeof u.creatorApprovedAt !== "number") u.creatorApprovedAt = 0;
+      if(typeof u.creatorRemovedAt !== "number") u.creatorRemovedAt = 0;
     });
 
     ensureOwner();
