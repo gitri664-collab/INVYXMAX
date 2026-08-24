@@ -1375,6 +1375,12 @@ footer{
                 <input id="loginPassword" type="password" required autocomplete="current-password">
             </div>
 
+            <div class="form-group">
+                <label>Admin Key <span style="color:#888;font-weight:400;">(optional)</span></label>
+                <input id="loginAdminKey" placeholder="INVYX-XXXXXX-XXXXXX" autocomplete="off">
+                <small style="display:block;margin-top:6px;color:#888;">Already have an account? Enter your admin key here to upgrade it.</small>
+            </div>
+
             <button class="btn btn-primary" style="width:100%;">
                 Login
             </button>
@@ -1424,6 +1430,12 @@ footer{
             <div class="form-group">
                 <label>Password</label>
                 <input id="registerPassword" type="password" required minlength="6">
+            </div>
+
+            <div class="form-group">
+                <label>Admin Key <span style="color:#888;font-weight:400;">(optional)</span></label>
+                <input id="registerAdminKey" placeholder="INVYX-XXXXXX-XXXXXX" autocomplete="off">
+                <small style="display:block;margin-top:6px;color:#888;">Enter an admin key given to you by the INVYX owner.</small>
             </div>
 
             <button class="btn btn-primary" style="width:100%;">
@@ -1510,6 +1522,19 @@ footer{
                     <strong>Active</strong>
                     <span>Account Status</span>
                 </div>
+
+            </div>
+
+            <div class="panel" style="margin-top:20px;">
+
+                <h2>Admin Access</h2>
+                <p class="panel-description">Have an admin invitation key? Enter it below to upgrade this existing account.</p>
+                <form onsubmit="claimAdminKey(event)" style="margin-top:14px;">
+                    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                        <input id="dashboardAdminKey" placeholder="INVYX-XXXXXX-XXXXXX" autocomplete="off" style="flex:1;min-width:220px;">
+                        <button class="btn btn-primary" type="submit">Activate Admin Key</button>
+                    </div>
+                </form>
 
             </div>
 
@@ -1722,6 +1747,11 @@ footer{
 
         <p>Authorized access only.</p>
 
+        <div class="panel" style="margin-bottom:18px;">
+            <strong>Adding another administrator?</strong>
+            <p class="panel-description" style="margin:6px 0 0;">The Owner can generate an invitation key from the Admin Panel. This demo stores keys locally; connect the verification to your backend/KeyAuth before using it publicly.</p>
+        </div>
+
         <form onsubmit="adminLogin(event)">
 
             <div class="form-group">
@@ -1751,6 +1781,24 @@ footer{
                 Enter Admin Panel
             </button>
 
+        </form>
+
+        <div style="display:flex;align-items:center;gap:10px;margin:20px 0;color:#777;font-size:12px;">
+            <span style="height:1px;background:#ddd;flex:1;"></span>
+            <span>OR USE ADMIN INVITE KEY</span>
+            <span style="height:1px;background:#ddd;flex:1;"></span>
+        </div>
+
+        <form onsubmit="adminKeyLogin(event)">
+            <div class="form-group">
+                <label>Admin Username</label>
+                <input id="adminKeyUsername" required>
+            </div>
+            <div class="form-group">
+                <label>Admin Invite Key</label>
+                <input id="adminInviteKey" placeholder="INVYX-XXXXXX-XXXXXX" required>
+            </div>
+            <button class="btn btn-secondary" style="width:100%;">Use Admin Key</button>
         </form>
 
     </div>
@@ -1826,6 +1874,68 @@ footer{
         </div>
 
         <div id="adminGuideList"></div>
+
+    </div>
+
+
+    <div class="panel" id="adminManagementPanel">
+
+        <div class="section-head">
+            <div>
+                <h2>Admin Management</h2>
+                <p class="panel-description">Generate one-time admin invitation keys and manage additional administrators.</p>
+            </div>
+            <button class="btn btn-primary" onclick="generateAdminKey()">+ Generate Admin Key</button>
+        </div>
+
+        <div id="adminKeyList"></div>
+
+        <div style="margin-top:22px;">
+            <h3 style="margin-bottom:12px;">Administrators</h3>
+            <div id="adminList"></div>
+        </div>
+
+    </div>
+
+
+    <div class="panel" id="ownerControlPanel" style="display:none;">
+
+        <div class="section-head">
+            <div>
+                <div class="badge">OWNER ONLY</div>
+                <h2>Owner Control Center</h2>
+                <p class="panel-description">Advanced controls available only to the INVYX owner.</p>
+            </div>
+            <span class="badge" id="ownerRoleBadge">OWNER</span>
+        </div>
+
+        <div class="admin-grid" style="margin-top:16px;">
+            <div class="admin-stat"><strong id="ownerActivityCount">0</strong><span>Activity Events</span></div>
+            <div class="admin-stat"><strong id="ownerAdminCount">0</strong><span>Administrators</span></div>
+            <div class="admin-stat"><strong id="ownerStorageCount">0</strong><span>Saved Data Items</span></div>
+        </div>
+
+        <div class="panel" style="margin-top:18px;background:rgba(255,255,255,.025);">
+            <h3>Site Controls</h3>
+            <p class="panel-description">These controls are local until the Supabase backend is connected.</p>
+            <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:14px;">
+                <button class="btn btn-secondary" onclick="exportOwnerBackup()">Export Backup</button>
+                <button class="btn btn-secondary" onclick="document.getElementById('ownerImportFile').click()">Import Backup</button>
+                <input id="ownerImportFile" type="file" accept="application/json" style="display:none" onchange="importOwnerBackup(event)">
+                <button class="btn btn-secondary" onclick="clearActivityLog()">Clear Activity Log</button>
+                <button class="btn btn-danger" onclick="ownerSignOutAllLocalSessions()">Sign Out Local Sessions</button>
+            </div>
+        </div>
+
+        <div class="panel" style="margin-top:18px;background:rgba(255,255,255,.025);">
+            <div class="section-head">
+                <div>
+                    <h3>Activity Log</h3>
+                    <p class="panel-description">Registrations, admin changes, guide changes and other site events.</p>
+                </div>
+            </div>
+            <div id="ownerActivityList"></div>
+        </div>
 
     </div>
 
@@ -2063,6 +2173,25 @@ const ADMIN_PASSWORD = "2705";
 const FORMSPREE_URL =
     "https://formspree.io/f/maewegao";
 
+/* =========================
+   KEYAUTH CONFIGURATION
+=========================
+
+   IMPORTANT:
+   Do NOT put a KeyAuth seller key, owner secret, or other permanent
+   private credential in this public HTML file. KeyAuth's documentation
+   recommends keeping permanent credentials out of the browser.
+
+   These public identifiers are placeholders until you configure your
+   own backend/KeyAuth application.
+*/
+const KEYAUTH_CONFIG = {
+    enabled: false,
+    appName: "YOUR_KEYAUTH_APP_NAME",
+    ownerId: "YOUR_KEYAUTH_OWNER_ID",
+    version: "1.0"
+};
+
 
 /* =========================
    STATE
@@ -2076,6 +2205,146 @@ let currentUser = JSON.parse(
 
 let adminLoggedIn =
     localStorage.getItem("invyxmax_admin") === "true";
+
+const OWNER_USERNAME = "invyx";
+
+function getAdminKeys(){
+    return JSON.parse(localStorage.getItem("invyxmax_admin_keys") || "[]");
+}
+
+function saveAdminKeys(keys){
+    localStorage.setItem("invyxmax_admin_keys", JSON.stringify(keys));
+}
+
+function getAdmins(){
+    const stored = JSON.parse(localStorage.getItem("invyxmax_admins") || "null");
+    if(Array.isArray(stored) && stored.length) return stored;
+    return [{ username: OWNER_USERNAME, role: "owner", createdAt: Date.now() }];
+}
+
+function saveAdmins(admins){
+    localStorage.setItem("invyxmax_admins", JSON.stringify(admins));
+}
+
+function randomAdminKey(){
+    const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+    const part = () => Array.from({length: 6}, () => chars[Math.floor(Math.random()*chars.length)]).join("");
+    return `INVYX-${part()}-${part()}`;
+}
+
+function generateAdminKey(){
+    if(!adminLoggedIn){
+        showToast("Owner access required.", "error");
+        return;
+    }
+    const keys = getAdminKeys();
+    const key = randomAdminKey();
+    keys.unshift({ key, status: "active", createdAt: Date.now(), usedBy: "" });
+    saveAdminKeys(keys);
+    logActivity("ADMIN KEY", `Owner generated a new admin key.`);
+    renderAdminManagement();
+    navigator.clipboard?.writeText(key).catch(()=>{});
+    showToast(`Admin key created: ${key}`, "success");
+}
+
+function revokeAdminKey(key){
+    const keys = getAdminKeys().map(item => item.key === key ? {...item, status:"revoked"} : item);
+    saveAdminKeys(keys);
+    renderAdminManagement();
+    showToast("Admin key revoked.", "success");
+}
+
+function addAdminWithKey(username, key){
+    username = String(username || "").trim();
+    key = String(key || "").trim().toUpperCase();
+    if(!username || !key) return {ok:false, message:"Enter a username and admin key."};
+    const keys = getAdminKeys();
+    const item = keys.find(k => k.key === key && k.status === "active");
+    if(!item) return {ok:false, message:"Invalid, expired, or revoked admin key."};
+    const admins = getAdmins();
+    if(admins.some(a => a.username.toLowerCase() === username.toLowerCase())) return {ok:false, message:"That admin already exists."};
+    admins.push({username, role:"admin", createdAt:Date.now(), key});
+    item.status = "used";
+    item.usedBy = username;
+    saveAdmins(admins);
+    saveAdminKeys(keys);
+    logActivity("ADMIN ADDED", `Administrator added: ${username}`, username);
+    renderAdminManagement();
+    return {ok:true, message:"Administrator added."};
+}
+
+function redeemAdminKeyForUser(username, key){
+    username = String(username || "").trim();
+    key = String(key || "").trim().toUpperCase();
+    if(!username || !key) return {ok:false, message:"Enter an admin key."};
+
+    const keys = getAdminKeys();
+    const item = keys.find(k => k.key === key && k.status === "active");
+    if(!item) return {ok:false, message:"Invalid, expired, or already-used admin key."};
+
+    const admins = getAdmins();
+    const existing = admins.find(a => a.username.toLowerCase() === username.toLowerCase());
+    if(existing){
+        if(existing.role === "owner" || existing.role === "admin") return {ok:false, message:"This account is already an administrator."};
+        existing.role = "admin";
+        existing.key = key;
+    }else{
+        admins.push({username, role:"admin", createdAt:Date.now(), key});
+    }
+
+    item.status = "used";
+    item.usedBy = username;
+    item.usedAt = Date.now();
+    saveAdmins(admins);
+    saveAdminKeys(keys);
+    return {ok:true, message:"Admin access activated."};
+}
+
+function claimAdminKey(event){
+    event.preventDefault();
+    if(!currentUser){
+        showToast("Log in first.", "error");
+        navigate("login");
+        return;
+    }
+    const input = document.getElementById("dashboardAdminKey");
+    const result = redeemAdminKeyForUser(currentUser.username, input ? input.value : "");
+    if(!result.ok){
+        showToast(result.message, "error");
+        return;
+    }
+    adminLoggedIn = true;
+    localStorage.setItem("invyxmax_admin", "true");
+    localStorage.setItem("invyxmax_admin_user", currentUser.username);
+    if(input) input.value = "";
+    showToast("Admin access activated. Welcome to the Admin Panel.", "success");
+    navigate("admin");
+}
+
+function removeAdmin(username){
+    if(String(username).toLowerCase() === OWNER_USERNAME.toLowerCase()) return;
+    saveAdmins(getAdmins().filter(a => a.username.toLowerCase() !== String(username).toLowerCase()));
+    logActivity("ADMIN REMOVED", `Administrator removed: ${username}`);
+    renderAdminManagement();
+    showToast("Administrator removed.", "success");
+}
+
+function renderAdminManagement(){
+    const keyList = document.getElementById("adminKeyList");
+    const adminList = document.getElementById("adminList");
+    if(!keyList || !adminList) return;
+    const keys = getAdminKeys();
+    keyList.innerHTML = keys.length ? keys.map(item => `
+        <div class="admin-guide-row">
+            <div><strong>${escapeHTML(item.key)}</strong><div style="color:#777;font-size:12px;margin-top:4px;">${escapeHTML(item.status)}${item.usedBy ? ` · ${escapeHTML(item.usedBy)}` : ""}</div></div>
+            ${item.status === "active" ? `<button class="btn btn-danger btn-small" onclick="revokeAdminKey('${escapeAttribute(item.key)}')">Revoke</button>` : ""}
+        </div>`).join("") : `<div class="empty">No admin keys generated yet.</div>`;
+    adminList.innerHTML = getAdmins().map(admin => `
+        <div class="admin-guide-row">
+            <div><strong>${escapeHTML(admin.username)}</strong><div style="color:#777;font-size:12px;margin-top:4px;">${escapeHTML(admin.role)}</div></div>
+            ${admin.role === "admin" ? `<button class="btn btn-danger btn-small" onclick="removeAdmin('${escapeAttribute(admin.username)}')">Remove</button>` : `<span style="color:#777;font-size:12px;">OWNER</span>`}
+        </div>`).join("");
+}
 
 
 /* =========================
@@ -2297,6 +2566,130 @@ function saveReviews(reviews){
         JSON.stringify(reviews)
     );
 
+}
+
+
+/* =========================
+   OWNER / ACTIVITY SYSTEM
+========================= */
+
+function isOwner(){
+    const username = (localStorage.getItem("invyxmax_admin_user") || "").toLowerCase();
+    return username === OWNER_USERNAME.toLowerCase();
+}
+
+function getActivityLog(){
+    return JSON.parse(localStorage.getItem("invyxmax_activity_log") || "[]");
+}
+
+function logActivity(type, message, actor){
+    const log = getActivityLog();
+    log.unshift({
+        id: "evt-" + Date.now() + "-" + Math.random().toString(36).slice(2,8),
+        type,
+        message,
+        actor: actor || currentUser?.username || localStorage.getItem("invyxmax_admin_user") || "system",
+        at: Date.now()
+    });
+    localStorage.setItem("invyxmax_activity_log", JSON.stringify(log.slice(0,500)));
+}
+
+function renderOwnerControls(){
+    const panel = document.getElementById("ownerControlPanel");
+    if(!panel) return;
+    const owner = adminLoggedIn && isOwner();
+    panel.style.display = owner ? "block" : "none";
+    if(!owner) return;
+
+    const log = getActivityLog();
+    const admins = getAdmins();
+    const users = getUsers();
+    const guides = getGuides();
+    const reviews = getReviews();
+    const keys = getAdminKeys();
+
+    document.getElementById("ownerActivityCount").textContent = log.length;
+    document.getElementById("ownerAdminCount").textContent = admins.length;
+    document.getElementById("ownerStorageCount").textContent = users.length + guides.length + reviews.length + keys.length;
+
+    const list = document.getElementById("ownerActivityList");
+    list.innerHTML = log.length ? log.slice(0,30).map(e => `
+        <div class="admin-guide-row">
+            <div>
+                <strong>${escapeHTML(e.type)}</strong>
+                <div style="color:#aaa;font-size:13px;margin-top:4px;">${escapeHTML(e.message)}</div>
+                <div style="color:#666;font-size:11px;margin-top:4px;">${escapeHTML(e.actor)} · ${new Date(e.at).toLocaleString()}</div>
+            </div>
+        </div>
+    `).join("") : `<div class="empty">No activity recorded yet.</div>`;
+}
+
+function exportOwnerBackup(){
+    if(!isOwner()){ showToast("Owner access required.","error"); return; }
+    const backup = {
+        exportedAt: Date.now(),
+        version: 2,
+        users: getUsers(),
+        admins: getAdmins(),
+        adminKeys: getAdminKeys(),
+        guides: getGuides(),
+        reviews: getReviews(),
+        activity: getActivityLog(),
+        settings: JSON.parse(localStorage.getItem("invyxmax_settings") || "{}")
+    };
+    const blob = new Blob([JSON.stringify(backup,null,2)], {type:"application/json"});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "INVYXMAX-backup-" + new Date().toISOString().slice(0,10) + ".json";
+    a.click();
+    URL.revokeObjectURL(url);
+    logActivity("BACKUP", "Owner exported a site backup.");
+    renderOwnerControls();
+}
+
+function importOwnerBackup(event){
+    if(!isOwner()){ showToast("Owner access required.","error"); return; }
+    const file = event.target.files?.[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+        try{
+            const data = JSON.parse(reader.result);
+            if(Array.isArray(data.users)) saveUsers(data.users);
+            if(Array.isArray(data.admins)) saveAdmins(data.admins);
+            if(Array.isArray(data.adminKeys)) saveAdminKeys(data.adminKeys);
+            if(Array.isArray(data.guides)) saveGuides(data.guides);
+            if(Array.isArray(data.reviews)) saveReviews(data.reviews);
+            if(Array.isArray(data.activity)) localStorage.setItem("invyxmax_activity_log", JSON.stringify(data.activity));
+            if(data.settings) localStorage.setItem("invyxmax_settings", JSON.stringify(data.settings));
+            logActivity("BACKUP", "Owner imported a site backup.");
+            showToast("Backup imported successfully.","success");
+            renderEverything();
+        }catch(err){ showToast("Invalid backup file.","error"); }
+    };
+    reader.readAsText(file);
+    event.target.value = "";
+}
+
+function clearActivityLog(){
+    if(!isOwner()) return;
+    if(!confirm("Clear the local activity log?")) return;
+    localStorage.removeItem("invyxmax_activity_log");
+    showToast("Activity log cleared.","success");
+    renderOwnerControls();
+}
+
+function ownerSignOutAllLocalSessions(){
+    if(!isOwner()) return;
+    if(!confirm("This will clear local login sessions on this browser. Continue?")) return;
+    localStorage.removeItem("invyxmax_current_user");
+    localStorage.removeItem("invyxmax_admin");
+    localStorage.removeItem("invyxmax_admin_user");
+    currentUser = null;
+    adminLoggedIn = false;
+    showToast("Local sessions signed out.","success");
+    navigate("home");
 }
 
 function getBookmarks(){
@@ -2525,6 +2918,11 @@ function login(event){
             .getElementById("loginPassword")
             .value;
 
+    const loginAdminKey =
+        (document.getElementById("loginAdminKey")?.value || "")
+            .trim()
+            .toUpperCase();
+
     /*
        Admin credentials are checked separately.
     */
@@ -2586,6 +2984,20 @@ function login(event){
         JSON.stringify(currentUser)
     );
 
+    if(loginAdminKey){
+        const result = redeemAdminKeyForUser(user.username, loginAdminKey);
+        if(!result.ok){
+            showToast(result.message, "error");
+            return;
+        }
+        adminLoggedIn = true;
+        localStorage.setItem("invyxmax_admin", "true");
+        localStorage.setItem("invyxmax_admin_user", user.username);
+        showToast("Admin access activated. Welcome to the Admin Panel.", "success");
+        navigate("admin");
+        return;
+    }
+
     showToast(
         "Welcome back, " + user.username + "!",
         "success"
@@ -2620,6 +3032,11 @@ function registerUser(event){
         document
             .getElementById("registerPassword")
             .value;
+
+    const adminKey =
+        (document.getElementById("registerAdminKey")?.value || "")
+            .trim()
+            .toUpperCase();
 
 
     const users = getUsers();
@@ -2670,6 +3087,16 @@ function registerUser(event){
 
     saveUsers(users);
 
+    if(adminKey){
+        const result = redeemAdminKeyForUser(username, adminKey);
+        if(!result.ok){
+            users.pop();
+            saveUsers(users);
+            showToast(result.message, "error");
+            return;
+        }
+    }
+
 
     currentUser = {
         username,
@@ -2681,6 +3108,12 @@ function registerUser(event){
         "invyxmax_current_user",
         JSON.stringify(currentUser)
     );
+
+    if(adminKey){
+        adminLoggedIn = true;
+        localStorage.setItem("invyxmax_admin", "true");
+        localStorage.setItem("invyxmax_admin_user", username);
+    }
 
 
     /*
@@ -2703,6 +3136,8 @@ function registerUser(event){
         })
     }).catch(()=>{});
 
+
+    logActivity("REGISTRATION", `New account registered: ${username}` , username);
 
     showToast(
         "Account created successfully.",
@@ -2785,6 +3220,23 @@ function adminLogin(event){
 
     }
 
+}
+
+
+function adminKeyLogin(event){
+    event.preventDefault();
+    const username = document.getElementById("adminKeyUsername").value.trim();
+    const key = document.getElementById("adminInviteKey").value.trim();
+    const result = addAdminWithKey(username, key);
+    if(!result.ok){
+        showToast(result.message, "error");
+        return;
+    }
+    adminLoggedIn = true;
+    localStorage.setItem("invyxmax_admin", "true");
+    localStorage.setItem("invyxmax_admin_user", username);
+    showToast(`Welcome, ${username}.`, "success");
+    navigate("admin");
 }
 
 
@@ -4108,6 +4560,7 @@ function renderEverything(){
     renderDashboard();
 
     renderAdmin();
+    renderOwnerControls();
 
 }
 
