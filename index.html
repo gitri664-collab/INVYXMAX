@@ -538,7 +538,7 @@ select option{ background:#11111a; color:white; }
 /* INSTAGRAM DIRECT CHAT STYLE */
 .chat-container{
   display:grid;
-  grid-template-columns:300px 1fr;
+  grid-template-columns:320px 1fr;
   height:calc(100vh - 160px);
   min-height:550px;
   border-radius:28px;
@@ -591,10 +591,24 @@ select option{ background:#11111a; color:white; }
   place-items:center;
   font-weight:900;
   position:relative;
+  flex-shrink:0;
 }
 
-.friend-info strong{ display:block; font-size:14px; color:#fff; }
+.friend-info{ flex:1; overflow:hidden; }
+.friend-info strong{ display:block; font-size:14px; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .friend-info small{ color:var(--muted); font-size:12px; }
+
+.request-card{
+  padding:12px 16px;
+  border-bottom:1px solid rgba(255,255,255,.05);
+  background:rgba(139,92,246,.05);
+}
+
+.request-actions{
+  display:flex;
+  gap:6px;
+  margin-top:8px;
+}
 
 .chat-main{
   display:flex;
@@ -866,12 +880,12 @@ td{ color:#c4c4cf; }
 
 <section id="chat" class="page">
   <div class="section-title">
-    <div><h2>Direct Messages</h2><p>Private Instagram-style direct messaging between friends.</p></div>
+    <div><h2>Direct Messages</h2><p>Private direct messaging between confirmed friends.</p></div>
     <button class="btn btn-light" onclick="openAddFriendModal()">+ Add Friend</button>
   </div>
   <div class="chat-container">
     <div class="chat-sidebar">
-      <div class="chat-sidebar-head"><strong>Messages</strong></div>
+      <div class="chat-sidebar-head"><strong>Messages & Requests</strong></div>
       <div class="friend-list" id="friendList"></div>
     </div>
     <div class="chat-main">
@@ -1072,10 +1086,10 @@ td{ color:#c4c4cf; }
 
 <div class="modal" id="addFriendModal">
   <div class="modal-box">
-    <div class="modal-head"><h2>Add Friend</h2><button class="close" onclick="closeModal('addFriendModal')">×</button></div>
+    <div class="modal-head"><h2>Send Friend Request</h2><button class="close" onclick="closeModal('addFriendModal')">×</button></div>
     <form onsubmit="addFriend(event)">
       <div class="field"><label>Username</label><input id="friendUsername" placeholder="Enter username..." required></div>
-      <button class="btn btn-primary">Send Request / Add</button>
+      <button class="btn btn-primary">Send Friend Request</button>
     </form>
   </div>
 </div>
@@ -1101,7 +1115,7 @@ td{ color:#c4c4cf; }
 
 <script>
 /* FULL PERSISTENCE CORE DATABASE */
-const DB_KEY = "INVYX_DATABASE_V4";
+const DB_KEY = "INVYX_DATABASE_V5";
 const SESSION_KEY = "INVYX_SESSION";
 
 const DEFAULT_DB = {
@@ -1380,15 +1394,6 @@ function submitGivePoints(e){
   logAction(`Owner ${cu.username} modified points for ${user.username} (Action: ${action}, Amount: ${amount}). New Balance: ${user.points} XP`, cu.username);
   saveDB();
 
-  db.messages.push({
-    id: uid("msg"),
-    senderId: cu.id,
-    receiverId: user.id,
-    text: `💎 OWNER NOTICE: Your points balance has been updated by the Owner. Your new balance is ${user.points} XP.`,
-    timestamp: new Date().toISOString()
-  });
-  saveDB();
-
   toast(`Updated ${user.username}'s balance to ${user.points} XP`);
   closeModal("givePointsModal");
   updateNav();
@@ -1415,17 +1420,6 @@ function submitBuyRequest(e){
 
   db.pointRequests.unshift(req);
 
-  const adminsAndOwner = db.users.filter(x => x.role === "ADMIN" || x.role === "OWNER");
-  adminsAndOwner.forEach(admin => {
-    db.messages.push({
-      id: uid("msg"),
-      senderId: u.id,
-      receiverId: admin.id,
-      text: `💳 BUY POINTS REQUEST: ${u.username} requested ${amount} XP. Note: "${note}". (Pending Approval)`,
-      timestamp: new Date().toISOString()
-    });
-  });
-
   logAction(`Submitted transaction request for ${amount} XP`, u.username);
   saveDB();
   toast("Request submitted! Pending Admin/Owner approval.");
@@ -1442,14 +1436,6 @@ function approveRequest(reqId){
     targetUser.points = (targetUser.points || 0) + req.amount;
     req.status = "APPROVED";
 
-    db.messages.push({
-      id: uid("msg"),
-      senderId: currentUser().id,
-      receiverId: targetUser.id,
-      text: `✅ Your request to buy ${req.amount} XP has been APPROVED! Points added to your balance.`,
-      timestamp: new Date().toISOString()
-    });
-
     logAction(`Approved transaction of ${req.amount} XP for ${targetUser.username}`, currentUser().username);
     saveDB();
     toast(`Approved ${req.amount} XP for ${targetUser.username}!`);
@@ -1463,13 +1449,6 @@ function rejectRequest(reqId){
   if(!req || req.status !== "PENDING") return;
 
   req.status = "REJECTED";
-  db.messages.push({
-    id: uid("msg"),
-    senderId: currentUser().id,
-    receiverId: req.userId,
-    text: `❌ Your request to buy ${req.amount} XP was rejected.`,
-    timestamp: new Date().toISOString()
-  });
 
   logAction(`Rejected transaction of ${req.amount} XP for ${req.username}`, currentUser().username);
   saveDB();
@@ -1477,7 +1456,7 @@ function rejectRequest(reqId){
   if(currentUser().role === "OWNER") ownerSection('requests'); else adminSection('requests');
 }
 
-/* INSTAGRAM DIRECT CHAT */
+/* INSTAGRAM DIRECT CHAT WITH FRIEND REQUEST WORKFLOW */
 let activeFriendId = null;
 
 function renderChat(){
@@ -1487,30 +1466,95 @@ function renderChat(){
   const friendListEl = document.getElementById("friendList");
   friendListEl.innerHTML = "";
 
-  const userFriends = db.friends.filter(f => f.user1 === u.id || f.user2 === u.id);
+  // 1. Render Pending Incoming Friend Requests
+  const incomingRequests = db.friends.filter(f => f.user2 === u.id && f.status === "PENDING");
+  if(incomingRequests.length > 0){
+    const reqHeader = document.createElement("div");
+    reqHeader.style.cssText = "padding:10px 18px 5px; font-size:11px; font-weight:800; color:var(--purple); text-transform:uppercase; letter-spacing:1px;";
+    reqHeader.textContent = "Friend Requests";
+    friendListEl.appendChild(reqHeader);
 
-  if(userFriends.length === 0){
-    friendListEl.innerHTML = `<div style="padding:20px; text-align:center; color:var(--muted); font-size:13px">No friends added yet. Click "+ Add Friend" above.</div>`;
-    return;
+    incomingRequests.forEach(req => {
+      const sender = db.users.find(x => x.id === req.user1);
+      if(!sender) return;
+
+      const div = document.createElement("div");
+      div.className = "request-card";
+      div.innerHTML = `
+        <div style="display:flex; align-items:center; gap:10px">
+          <div class="friend-avatar" style="width:34px; height:34px; font-size:12px">${sender.username.charAt(0).toUpperCase()}</div>
+          <div class="friend-info">
+            <strong>${sender.username}</strong>
+            <small style="color:var(--muted)">Wants to connect</small>
+          </div>
+        </div>
+        <div class="request-actions">
+          <button class="btn btn-success btn-small" style="flex:1" onclick="acceptFriendRequest('${req.id}')">Accept</button>
+          <button class="btn btn-danger btn-small" style="flex:1" onclick="declineFriendRequest('${req.id}')">Decline</button>
+        </div>
+      `;
+      friendListEl.appendChild(div);
+    });
   }
 
-  userFriends.forEach(f => {
-    const friendId = f.user1 === u.id ? f.user2 : f.user1;
-    const friendUser = db.users.find(x => x.id === friendId);
-    if(!friendUser) return;
+  // 2. Render Pending Outgoing Friend Requests
+  const outgoingRequests = db.friends.filter(f => f.user1 === u.id && f.status === "PENDING");
+  if(outgoingRequests.length > 0){
+    const outHeader = document.createElement("div");
+    outHeader.style.cssText = "padding:10px 18px 5px; font-size:11px; font-weight:800; color:var(--muted); text-transform:uppercase; letter-spacing:1px;";
+    outHeader.textContent = "Sent Requests (Pending)";
+    friendListEl.appendChild(outHeader);
 
-    const div = document.createElement("div");
-    div.className = `friend-item ${activeFriendId === friendUser.id ? 'active' : ''}`;
-    div.onclick = () => selectChatFriend(friendUser);
-    div.innerHTML = `
-      <div class="friend-avatar">${friendUser.username.charAt(0).toUpperCase()}</div>
-      <div class="friend-info">
-        <strong>${friendUser.username}</strong>
-        <small>${friendUser.role}</small>
-      </div>
-    `;
-    friendListEl.appendChild(div);
-  });
+    outgoingRequests.forEach(req => {
+      const target = db.users.find(x => x.id === req.user2);
+      if(!target) return;
+
+      const div = document.createElement("div");
+      div.className = "friend-item";
+      div.style.opacity = "0.6";
+      div.innerHTML = `
+        <div class="friend-avatar">${target.username.charAt(0).toUpperCase()}</div>
+        <div class="friend-info">
+          <strong>${target.username}</strong>
+          <small>Pending Acceptance...</small>
+        </div>
+      `;
+      friendListEl.appendChild(div);
+    });
+  }
+
+  // 3. Render Accepted Friends
+  const acceptedFriends = db.friends.filter(f => (f.user1 === u.id || f.user2 === u.id) && f.status === "ACCEPTED");
+
+  const friendsHeader = document.createElement("div");
+  friendsHeader.style.cssText = "padding:10px 18px 5px; font-size:11px; font-weight:800; color:var(--muted); text-transform:uppercase; letter-spacing:1px;";
+  friendsHeader.textContent = "Friends";
+  friendListEl.appendChild(friendsHeader);
+
+  if(acceptedFriends.length === 0){
+    const empty = document.createElement("div");
+    empty.style.cssText = "padding:15px 18px; color:var(--muted); font-size:13px";
+    empty.textContent = "No friends added yet. Send a friend request!";
+    friendListEl.appendChild(empty);
+  } else {
+    acceptedFriends.forEach(f => {
+      const friendId = f.user1 === u.id ? f.user2 : f.user1;
+      const friendUser = db.users.find(x => x.id === friendId);
+      if(!friendUser) return;
+
+      const div = document.createElement("div");
+      div.className = `friend-item ${activeFriendId === friendUser.id ? 'active' : ''}`;
+      div.onclick = () => selectChatFriend(friendUser);
+      div.innerHTML = `
+        <div class="friend-avatar">${friendUser.username.charAt(0).toUpperCase()}</div>
+        <div class="friend-info">
+          <strong>${friendUser.username}</strong>
+          <small>${friendUser.role}</small>
+        </div>
+      `;
+      friendListEl.appendChild(div);
+    });
+  }
 
   if(activeFriendId) loadMessages();
 }
@@ -1530,6 +1574,15 @@ function loadMessages(){
 
   if(!activeFriendId) return;
 
+  const isFriend = db.friends.some(f => 
+    ((f.user1 === u.id && f.user2 === activeFriendId) || (f.user1 === activeFriendId && f.user2 === u.id)) && f.status === "ACCEPTED"
+  );
+
+  if(!isFriend){
+    chatMsgs.innerHTML = `<div style="text-align:center; color:var(--muted); margin-top:30px">You can only message confirmed friends.</div>`;
+    return;
+  }
+
   const msgs = db.messages.filter(m => (m.senderId === u.id && m.receiverId === activeFriendId) || (m.senderId === activeFriendId && m.receiverId === u.id));
 
   msgs.forEach(m => {
@@ -1548,6 +1601,15 @@ function sendMessage(){
   const input = document.getElementById("chatInput");
   const text = input.value.trim();
   if(!text || !activeFriendId || !u) return;
+
+  const isFriend = db.friends.some(f => 
+    ((f.user1 === u.id && f.user2 === activeFriendId) || (f.user1 === activeFriendId && f.user2 === u.id)) && f.status === "ACCEPTED"
+  );
+
+  if(!isFriend){
+    toast("You can only send messages to accepted friends!", "error");
+    return;
+  }
 
   db.messages.push({
     id: uid("msg"),
@@ -1573,14 +1635,49 @@ function addFriend(e){
   if(!target){ toast("User not found", "error"); return; }
   if(target.id === u.id){ toast("You cannot add yourself", "error"); return; }
 
-  const exists = db.friends.some(f => (f.user1 === u.id && f.user2 === target.id) || (f.user1 === target.id && f.user2 === u.id));
-  if(exists){ toast("Friend already added", "error"); return; }
+  const existingRelation = db.friends.find(f => (f.user1 === u.id && f.user2 === target.id) || (f.user1 === target.id && f.user2 === u.id));
+  if(existingRelation){
+    if(existingRelation.status === "ACCEPTED"){
+      toast("You are already friends!", "error");
+    } else if(existingRelation.status === "PENDING"){
+      toast("A friend request is already pending between you two.", "error");
+    }
+    return;
+  }
 
-  db.friends.push({ id: uid("fr"), user1: u.id, user2: target.id, status: "accepted" });
-  logAction(`Added friend ${target.username}`, u.username);
+  db.friends.push({ 
+    id: uid("fr"), 
+    user1: u.id, 
+    user2: target.id, 
+    status: "PENDING", 
+    date: new Date().toISOString() 
+  });
+
+  logAction(`Sent friend request to ${target.username}`, u.username);
   saveDB();
-  toast("Friend added!");
+  toast(`Friend request sent to ${target.username}!`);
   closeModal('addFriendModal');
+  renderChat();
+}
+
+function acceptFriendRequest(reqId){
+  const req = db.friends.find(f => f.id === reqId);
+  if(!req) return;
+
+  req.status = "ACCEPTED";
+  const sender = db.users.find(u => u.id === req.user1);
+  const u = currentUser();
+
+  logAction(`Accepted friend request from ${sender ? sender.username : 'User'}`, u ? u.username : 'User');
+  saveDB();
+  toast("Friend request accepted! You can now message each other.");
+  renderChat();
+}
+
+function declineFriendRequest(reqId){
+  db.friends = db.friends.filter(f => f.id !== reqId);
+  saveDB();
+  toast("Friend request declined.");
   renderChat();
 }
 
