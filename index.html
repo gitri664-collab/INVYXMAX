@@ -1173,6 +1173,436 @@ body::after{
 @media(max-width:800px){.nav-links{animation:invFadeUp .2s ease}.hero-card:hover,.card:hover,.stat:hover,.admin-stat:hover{transform:none}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.001ms!important}}
 
+
+
+/* =========================================================
+   INVYXMAX AURORA UI — premium white / red / violet system
+========================================================= */
+:root{
+    --bg:#06070a;
+    --bg2:#0d1016;
+    --card:rgba(255,255,255,.075);
+    --card2:rgba(255,255,255,.105);
+    --red:#ff3157;
+    --red2:#ff6a7f;
+    --blue:#5b8cff;
+    --violet:#a56cff;
+    --cyan:#53e7ff;
+    --text:#ffffff;
+    --muted:#aeb6c5;
+    --border:rgba(255,255,255,.14);
+    --success:#39e58c;
+    --warning:#ffc857;
+    --shadow:0 28px 90px rgba(0,0,0,.45);
+}
+
+body{
+    overflow-x:hidden;
+    background:
+      radial-gradient(700px 420px at 8% -8%,rgba(255,49,87,.20),transparent 62%),
+      radial-gradient(650px 420px at 92% 8%,rgba(91,140,255,.18),transparent 62%),
+      radial-gradient(600px 500px at 50% 100%,rgba(165,108,255,.13),transparent 62%),
+      linear-gradient(135deg,#05060a 0%,#0a0d13 48%,#07080d 100%);
+    position:relative;
+}
+
+body::before,
+body::after{
+    content:"";
+    position:fixed;
+    width:420px;height:420px;
+    border-radius:50%;
+    filter:blur(90px);
+    pointer-events:none;
+    z-index:-1;
+    opacity:.28;
+    animation:auroraFloat 12s ease-in-out infinite alternate;
+}
+body::before{background:var(--red);left:-220px;top:24%;}
+body::after{background:var(--blue);right:-220px;top:58%;animation-delay:-5s;}
+
+@keyframes auroraFloat{
+  0%{transform:translate3d(0,0,0) scale(1)}
+  50%{transform:translate3d(45px,-25px,0) scale(1.12)}
+  100%{transform:translate3d(-20px,35px,0) scale(.94)}
+}
+
+/* animated grain / light sweep */
+body .container{position:relative;z-index:1}
+
+header{
+    background:rgba(5,6,10,.62);
+    border-bottom:1px solid rgba(255,255,255,.12);
+    box-shadow:0 10px 40px rgba(0,0,0,.18);
+    transition:background .35s ease,box-shadow .35s ease;
+}
+header:hover{background:rgba(8,9,14,.78)}
+
+.nav-links button,
+.icon-btn,
+.btn,
+.card,
+.stat,
+.guide-card,
+.hero-card,
+.modal,
+.panel,
+input,textarea,select{
+    transition:
+      transform .35s cubic-bezier(.2,.8,.2,1),
+      border-color .35s ease,
+      background .35s ease,
+      box-shadow .35s ease,
+      color .25s ease;
+}
+
+.logo{
+    position:relative;
+    text-shadow:0 0 24px rgba(255,49,87,.18);
+    animation:logoPulse 4s ease-in-out infinite;
+}
+.logo::after{
+    content:"";
+    position:absolute;
+    left:0;bottom:-7px;
+    width:28px;height:2px;
+    border-radius:99px;
+    background:linear-gradient(90deg,var(--red),var(--violet),transparent);
+    animation:logoLine 3s ease-in-out infinite;
+}
+@keyframes logoPulse{50%{text-shadow:0 0 34px rgba(255,49,87,.38)}}
+@keyframes logoLine{0%,100%{width:22px;opacity:.6}50%{width:68px;opacity:1}}
+
+.nav-links button:hover,
+.nav-links button.active{
+    color:#fff;
+    background:linear-gradient(135deg,rgba(255,255,255,.13),rgba(255,255,255,.045));
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.06),0 8px 28px rgba(0,0,0,.18);
+    transform:translateY(-1px);
+}
+
+.btn{
+    position:relative;
+    overflow:hidden;
+    isolation:isolate;
+}
+.btn::before{
+    content:"";
+    position:absolute;
+    top:-120%;left:-35%;
+    width:28%;height:340%;
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,.45),transparent);
+    transform:rotate(22deg) translateX(-180%);
+    transition:transform .7s ease;
+    z-index:-1;
+}
+.btn:hover::before{transform:rotate(22deg) translateX(620%)}
+.btn:hover{transform:translateY(-4px) scale(1.015)}
+.btn:active{transform:translateY(-1px) scale(.985)}
+
+.btn-primary{
+    background:linear-gradient(135deg,#ff3157 0%,#ff405f 45%,#a56cff 130%);
+    box-shadow:0 12px 35px rgba(255,49,87,.24),0 0 0 1px rgba(255,255,255,.10) inset;
+}
+.btn-primary:hover{
+    background:linear-gradient(135deg,#ff496b,#ff6680 45%,#b887ff 130%);
+    box-shadow:0 18px 48px rgba(255,49,87,.34),0 0 30px rgba(165,108,255,.16);
+}
+.btn-secondary{
+    background:rgba(255,255,255,.075);
+    border:1px solid rgba(255,255,255,.16);
+    color:#fff;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.07);
+}
+.btn-secondary:hover{background:rgba(255,255,255,.13);border-color:rgba(255,255,255,.28)}
+
+.page.active{animation:pageReveal .65s cubic-bezier(.2,.8,.2,1)}
+@keyframes pageReveal{
+  from{opacity:0;transform:translateY(18px) scale(.985);filter:blur(5px)}
+  to{opacity:1;transform:none;filter:none}
+}
+
+.hero{
+    position:relative;
+}
+.hero::before{
+    content:"";
+    position:absolute;
+    width:260px;height:260px;
+    border-radius:50%;
+    border:1px solid rgba(255,255,255,.08);
+    box-shadow:0 0 0 40px rgba(255,255,255,.018),0 0 0 80px rgba(255,255,255,.012);
+    right:30%;top:12%;
+    animation:orbitPulse 8s ease-in-out infinite;
+    pointer-events:none;
+}
+@keyframes orbitPulse{50%{transform:scale(1.12) rotate(18deg);opacity:.45}100%{transform:scale(.96) rotate(-10deg)}}
+
+.hero h1{
+    text-shadow:0 12px 50px rgba(0,0,0,.35);
+    animation:titleIn .8s cubic-bezier(.16,1,.3,1) both;
+}
+.hero h1 span{
+    background:linear-gradient(90deg,#fff 0%,#ff496b 30%,#a56cff 70%,#53e7ff 100%);
+    background-size:220% auto;
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+    animation:gradientShift 6s ease infinite;
+}
+@keyframes titleIn{from{opacity:0;transform:translateY(28px);letter-spacing:-8px}to{opacity:1;transform:none;letter-spacing:-5px}}
+@keyframes gradientShift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+
+.badge{
+    color:#fff;
+    border-color:rgba(255,255,255,.18);
+    background:linear-gradient(90deg,rgba(255,49,87,.16),rgba(165,108,255,.12));
+    box-shadow:0 8px 30px rgba(255,49,87,.08),inset 0 1px 0 rgba(255,255,255,.08);
+    animation:badgeFloat 4s ease-in-out infinite;
+}
+@keyframes badgeFloat{50%{transform:translateY(-3px)}}
+
+.hero-card{
+    border-color:rgba(255,255,255,.16);
+    background:
+      radial-gradient(circle at 25% 20%,rgba(255,49,87,.28),transparent 35%),
+      radial-gradient(circle at 80% 75%,rgba(91,140,255,.22),transparent 38%),
+      linear-gradient(145deg,rgba(255,255,255,.11),rgba(255,255,255,.025));
+    box-shadow:var(--shadow),0 0 80px rgba(91,140,255,.06);
+    transform:perspective(1000px) rotateY(-2deg);
+}
+.hero-card:hover{transform:perspective(1000px) rotateY(0) translateY(-8px) scale(1.01);border-color:rgba(255,255,255,.28);box-shadow:0 40px 110px rgba(0,0,0,.52),0 0 70px rgba(165,108,255,.10)}
+.hero-card::before{
+    content:"";
+    position:absolute;
+    inset:-2px;
+    background:linear-gradient(120deg,transparent 25%,rgba(255,255,255,.20) 45%,transparent 65%);
+    transform:translateX(-120%);
+    animation:cardSheen 6s ease-in-out infinite;
+    pointer-events:none;
+}
+@keyframes cardSheen{0%,55%{transform:translateX(-120%)}75%,100%{transform:translateX(120%)}}
+
+.section-head h2{color:#fff;text-shadow:0 10px 30px rgba(0,0,0,.25)}
+
+.stat,
+.card,
+.guide-card,
+.panel,
+.modal{
+    background:linear-gradient(145deg,rgba(255,255,255,.085),rgba(255,255,255,.035));
+    border-color:rgba(255,255,255,.12);
+    box-shadow:0 18px 55px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.06);
+    backdrop-filter:blur(18px);
+}
+.stat:hover,
+.card:hover,
+.guide-card:hover{
+    transform:translateY(-7px);
+    border-color:rgba(255,255,255,.25);
+    background:linear-gradient(145deg,rgba(255,255,255,.12),rgba(255,255,255,.045));
+    box-shadow:0 28px 70px rgba(0,0,0,.28),0 0 45px rgba(165,108,255,.07);
+}
+
+input,textarea,select{
+    background:rgba(255,255,255,.055) !important;
+    border:1px solid rgba(255,255,255,.13) !important;
+    color:#fff !important;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.04);
+}
+input:focus,textarea:focus,select:focus{
+    outline:none;
+    border-color:rgba(91,140,255,.75) !important;
+    box-shadow:0 0 0 4px rgba(91,140,255,.12),0 10px 35px rgba(91,140,255,.08);
+    transform:translateY(-1px);
+}
+
+.icon-btn:hover{
+    border-color:rgba(255,255,255,.30);
+    background:linear-gradient(135deg,rgba(255,49,87,.15),rgba(91,140,255,.12));
+    transform:translateY(-3px) rotate(-2deg);
+    box-shadow:0 12px 30px rgba(0,0,0,.22);
+}
+
+::-webkit-scrollbar-track{background:#07080c}
+::-webkit-scrollbar-thumb{background:linear-gradient(var(--red),var(--violet));border-radius:20px}
+::-webkit-scrollbar-thumb:hover{background:linear-gradient(var(--cyan),var(--blue))}
+
+/* floating dots */
+.hero::after{
+    content:"✦  •  ✧  •  ✦";
+    position:absolute;
+    color:rgba(255,255,255,.12);
+    font-size:30px;
+    letter-spacing:24px;
+    right:4%;top:6%;
+    animation:starDrift 7s ease-in-out infinite;
+    pointer-events:none;
+}
+@keyframes starDrift{0%,100%{transform:translateY(0) rotate(0);opacity:.35}50%{transform:translateY(18px) rotate(5deg);opacity:.85}}
+
+/* Toasts/modals feel more premium if present */
+.toast,.notification{animation:toastIn .45s cubic-bezier(.2,.8,.2,1) both}
+@keyframes toastIn{from{opacity:0;transform:translateY(15px) scale(.94)}to{opacity:1;transform:none}}
+
+/* selection */
+::selection{background:rgba(255,49,87,.35);color:#fff}
+
+@media(max-width:850px){
+  .hero{grid-template-columns:1fr;gap:30px}
+  .hero::before{right:0;top:6%;width:180px;height:180px}
+  .hero-card{min-height:360px;transform:none}
+  .stats{grid-template-columns:repeat(2,1fr)}
+}
+
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms !important;animation-iteration-count:1 !important;scroll-behavior:auto !important;transition-duration:.001ms !important}
+}
+
+
+/* =========================================================
+   INVYXMAX LEVELS + POINTS SYSTEM
+========================================================= */
+.progression-panel,
+.points-giveaway-card,
+.owner-points-panel{
+    position:relative;
+    overflow:hidden;
+}
+.progression-panel::before,
+.points-giveaway-card::before,
+.owner-points-panel::before{
+    content:"";
+    position:absolute;
+    inset:-80px;
+    background:
+      radial-gradient(circle at 10% 20%,rgba(255,49,87,.15),transparent 25%),
+      radial-gradient(circle at 90% 80%,rgba(91,140,255,.13),transparent 28%),
+      radial-gradient(circle at 50% 40%,rgba(165,108,255,.10),transparent 22%);
+    filter:blur(18px);
+    animation:levelAurora 9s ease-in-out infinite alternate;
+    pointer-events:none;
+}
+.progression-panel > *,
+.points-giveaway-card > *,
+.owner-points-panel > *{position:relative;z-index:1}
+.progression-role{
+    min-width:110px;
+    text-align:center;
+    padding:13px 16px;
+    border-radius:999px;
+    color:#fff;
+    font-weight:900;
+    letter-spacing:.12em;
+    background:linear-gradient(135deg,var(--red),var(--violet),var(--blue));
+    background-size:200% 200%;
+    box-shadow:0 12px 40px rgba(165,108,255,.20);
+    animation:roleGradient 5s ease infinite, roleFloat 3s ease-in-out infinite;
+}
+.progress-track{
+    height:12px;
+    margin-top:18px;
+    border-radius:999px;
+    overflow:hidden;
+    background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.10);
+}
+.progress-fill{
+    height:100%;
+    width:0%;
+    border-radius:999px;
+    background:linear-gradient(90deg,var(--red),var(--violet),var(--cyan));
+    background-size:200% 100%;
+    box-shadow:0 0 24px rgba(91,140,255,.30);
+    transition:width .8s cubic-bezier(.2,.8,.2,1);
+    animation:progressShimmer 2.8s linear infinite;
+}
+.progress-meta{
+    display:flex;
+    justify-content:space-between;
+    gap:15px;
+    margin-top:9px;
+    color:var(--muted);
+    font-size:12px;
+}
+.points-giveaway-card{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:20px;
+    padding:20px;
+    border:1px solid rgba(255,255,255,.12);
+    border-radius:18px;
+    background:rgba(255,255,255,.045);
+}
+.guide-monetization-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:14px;
+}
+.owner-settings-grid{
+    display:grid;
+    grid-template-columns:1.4fr .8fr .8fr;
+    gap:14px;
+    align-items:end;
+    margin-bottom:16px;
+}
+.setting-toggle{
+    display:flex;
+    align-items:flex-start;
+    gap:12px;
+    padding:14px;
+    border:1px solid rgba(255,255,255,.10);
+    border-radius:14px;
+    background:rgba(255,255,255,.04);
+    cursor:pointer;
+}
+.setting-toggle input{
+    width:18px;
+    height:18px;
+    margin-top:2px;
+    accent-color:var(--red);
+}
+.setting-toggle strong{display:block}
+.setting-toggle small{display:block;color:var(--muted);margin-top:4px}
+.guide-price-badge{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    padding:5px 9px;
+    border-radius:999px;
+    font-size:11px;
+    font-weight:800;
+    color:#fff;
+    background:linear-gradient(135deg,rgba(165,108,255,.85),rgba(91,140,255,.85));
+    box-shadow:0 8px 24px rgba(91,140,255,.14);
+}
+.points-balance{
+    font-weight:900;
+    color:#fff;
+}
+@keyframes levelAurora{
+    from{transform:translate3d(-2%,0,0) scale(1)}
+    to{transform:translate3d(2%,2%,0) scale(1.08)}
+}
+@keyframes roleGradient{
+    0%,100%{background-position:0% 50%}
+    50%{background-position:100% 50%}
+}
+@keyframes roleFloat{
+    0%,100%{transform:translateY(0)}
+    50%{transform:translateY(-4px)}
+}
+@keyframes progressShimmer{
+    from{background-position:0% 50%}
+    to{background-position:200% 50%}
+}
+@media(max-width:800px){
+    .guide-monetization-grid,
+    .owner-settings-grid{grid-template-columns:1fr}
+    .points-giveaway-card{align-items:flex-start;flex-direction:column}
+}
+
 </style>
 </head>
 
@@ -1501,6 +1931,16 @@ body::after{
             </div>
 
             <div class="form-group">
+                <label>Gender</label>
+                <select id="registerGender" required>
+                    <option value="">Choose your gender</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                </select>
+                <small style="display:block;margin-top:6px;color:#888;">Used only to determine your community progression role.</small>
+            </div>
+
+            <div class="form-group">
                 <label>Password</label>
                 <input id="registerPassword" type="password" required minlength="6">
             </div>
@@ -1577,6 +2017,21 @@ body::after{
             <div class="stats">
 
                 <div class="stat">
+                    <strong id="dashTier">SUB3</strong>
+                    <span>Progression Role</span>
+                </div>
+
+                <div class="stat">
+                    <strong id="dashActiveTime">0h 0m</strong>
+                    <span>Active Time</span>
+                </div>
+
+                <div class="stat">
+                    <strong id="dashPoints">0</strong>
+                    <span>Points</span>
+                </div>
+
+                <div class="stat">
                     <strong id="dashBookmarks">0</strong>
                     <span>Bookmarks</span>
                 </div>
@@ -1596,6 +2051,32 @@ body::after{
                     <span>Account Status</span>
                 </div>
 
+            </div>
+
+            <div class="progression-panel panel" style="margin-top:20px;">
+                <div class="section-head">
+                    <div>
+                        <div class="badge">COMMUNITY PROGRESSION</div>
+                        <h3 id="dashTierTitle">SUB3</h3>
+                        <p id="dashTierDescription" class="panel-description">Keep your active time going to unlock the next role.</p>
+                    </div>
+                    <div class="progression-role" id="dashRoleBadge">SUB3</div>
+                </div>
+                <div class="progress-track">
+                    <div class="progress-fill" id="dashTierProgress"></div>
+                </div>
+                <div class="progress-meta">
+                    <span id="dashTierTime">0h 0m active</span>
+                    <span id="dashNextTier">Next: SUB5</span>
+                </div>
+                <div class="points-giveaway-card" id="dailyPointsCard" style="margin-top:18px;">
+                    <div>
+                        <div class="badge">POINTS GIVEAWAY</div>
+                        <h3>Daily Community Drop</h3>
+                        <p id="dailyPointsText" class="panel-description">Check whether today's points are available.</p>
+                    </div>
+                    <button class="btn btn-primary" id="claimPointsBtn" onclick="claimDailyPoints()">Claim Points</button>
+                </div>
             </div>
 
             <div class="panel" style="margin-top:20px;">
@@ -1988,6 +2469,38 @@ body::after{
             <div class="admin-stat"><strong id="ownerStorageCount">0</strong><span>Saved Data Items</span></div>
         </div>
 
+        <div class="panel owner-points-panel" style="margin-top:18px;background:rgba(255,255,255,.025);">
+            <div class="section-head">
+                <div>
+                    <div class="badge">OWNER ONLY</div>
+                    <h3>Points & Giveaway Controls</h3>
+                    <p class="panel-description">Turn the daily points giveaway on/off and choose the reward. Paid guides can have their own point cost.</p>
+                </div>
+            </div>
+
+            <div class="owner-settings-grid">
+                <label class="setting-toggle">
+                    <input type="checkbox" id="pointsGiveawayEnabled">
+                    <span>
+                        <strong>Enable Points Giveaways</strong>
+                        <small>Allow users to claim the scheduled points drop.</small>
+                    </span>
+                </label>
+
+                <div class="form-group">
+                    <label>Giveaway Points</label>
+                    <input id="pointsGiveawayAmount" type="number" min="1" step="1" value="100">
+                </div>
+
+                <div class="form-group">
+                    <label>Claim Cooldown (hours)</label>
+                    <input id="pointsGiveawayCooldown" type="number" min="1" step="1" value="24">
+                </div>
+            </div>
+
+            <button class="btn btn-primary" onclick="savePointsSettings()">Save Points Settings</button>
+        </div>
+
         <div class="panel" style="margin-top:18px;background:rgba(255,255,255,.025);">
             <h3>Site Controls</h3>
             <p class="panel-description">These controls are local until the Supabase backend is connected.</p>
@@ -2145,6 +2658,22 @@ body::after{
                     placeholder="https://example.com"
                 >
 
+            </div>
+
+            <div class="guide-monetization-grid">
+                <div class="form-group">
+                    <label>Guide Access</label>
+                    <select id="guideAccess">
+                        <option value="free">Free</option>
+                        <option value="paid">Paid — Points Required</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Points Cost</label>
+                    <input id="guidePoints" type="number" min="0" step="1" value="100">
+                    <small style="display:block;margin-top:6px;color:#888;">Choose how many points this guide costs.</small>
+                </div>
             </div>
 
             <div class="form-group">
@@ -2506,7 +3035,8 @@ function renderOwnerUserManagement(){
         <div class="admin-guide-row" style="align-items:flex-start;gap:14px;">
             <div style="min-width:0;flex:1;">
                 <strong>${escapeHTML(user.username)}</strong>
-                <div style="color:#777;font-size:12px;margin-top:4px;">${escapeHTML(user.email || "No email")} · ${role} · Joined ${new Date(user.createdAt).toLocaleDateString()}</div>
+                <div style="color:#777;font-size:12px;margin-top:4px;">${escapeHTML(user.email || "No email")} · ${role} · ${String(user.gender || "male").toUpperCase()} · Joined ${new Date(user.createdAt).toLocaleDateString()}</div>
+                <div style="color:#9aa3b2;font-size:12px;margin-top:5px;">${getUserTier(user).current.name} · ${formatActiveTime(user.activeSeconds || 0)} · ${Math.floor(user.points || 0)} pts</div>
                 <div style="margin-top:6px;font-size:12px;">
                     <span class="badge" style="${banned ? "border-color:#ff4d4d;color:#ff4d4d;" : ""}">${banned ? "BANNED" : "ACTIVE"}</span>
                 </div>
@@ -3135,6 +3665,10 @@ function login(event){
             "invyxmax_admin",
             "true"
         );
+        localStorage.setItem(
+            "invyxmax_admin_user",
+            username
+        );
 
         showToast(
             "Admin login successful.",
@@ -3405,6 +3939,10 @@ function adminLogin(event){
             "invyxmax_admin",
             "true"
         );
+        localStorage.setItem(
+            "invyxmax_admin_user",
+            username
+        );
 
         showToast(
             "Welcome to the admin panel.",
@@ -3448,6 +3986,9 @@ function adminLogout(){
 
     localStorage.removeItem(
         "invyxmax_admin"
+    );
+    localStorage.removeItem(
+        "invyxmax_admin_user"
     );
 
     showToast(
@@ -4560,6 +5101,9 @@ function renderAdmin(){
                         <div style="color:#777;font-size:12px;margin-top:4px;">
                             ${escapeHTML(user.email)}
                         </div>
+                        <div style="color:#9aa3b2;font-size:12px;margin-top:4px;">
+                            ${escapeHTML((user.gender || "male").toUpperCase())} · ${escapeHTML(user.currentTier || getUserTier(user).current.name)} · ${formatActiveTime(user.activeSeconds || 0)} · ${Math.floor(user.points || 0)} pts
+                        </div>
 
                     </div>
 
@@ -4763,6 +5307,8 @@ function renderEverything(){
 
     renderAdmin();
     renderOwnerControls();
+    renderAdminManagement();
+    renderOwnerUserManagement();
 
 }
 
@@ -4884,6 +5430,542 @@ document
     );
 
 
+
+/* =========================================================
+   INVYXMAX LEVELS + POINTS
+========================================================= */
+const INVYXMAX_TIERS = {
+    male: [
+        {name:"SUB3", hours:0},
+        {name:"SUB5", hours:1},
+        {name:"LTN", hours:3},
+        {name:"MTN", hours:8},
+        {name:"HTN", hours:15},
+        {name:"CHADLITE", hours:30},
+        {name:"CHAD", hours:60}
+    ],
+    female: [
+        {name:"SUB3", hours:0},
+        {name:"SUB5", hours:1},
+        {name:"LTB", hours:3},
+        {name:"MTB", hours:8},
+        {name:"HTB", hours:15},
+        {name:"STACY", hours:30}
+    ]
+};
+
+const INVYXMAX_DEFAULT_POINTS = {
+    enabled: true,
+    amount: 100,
+    cooldownHours: 24
+};
+
+function getPointsSettings(){
+    try{
+        return {
+            ...INVYXMAX_DEFAULT_POINTS,
+            ...JSON.parse(localStorage.getItem("invyxmax_points_settings") || "{}")
+        };
+    }catch(e){
+        return {...INVYXMAX_DEFAULT_POINTS};
+    }
+}
+
+function savePointsSettings(){
+    if(!isOwner()){
+        showToast("Only the Owner can change points settings.","error");
+        return;
+    }
+    const enabled = !!document.getElementById("pointsGiveawayEnabled")?.checked;
+    const amount = Math.max(1, parseInt(document.getElementById("pointsGiveawayAmount")?.value || "100",10));
+    const cooldownHours = Math.max(1, parseInt(document.getElementById("pointsGiveawayCooldown")?.value || "24",10));
+    localStorage.setItem("invyxmax_points_settings", JSON.stringify({enabled,amount,cooldownHours}));
+    logActivity("POINTS SETTINGS", `Owner ${enabled ? "enabled" : "disabled"} points giveaways; reward ${amount} points every ${cooldownHours}h.`);
+    showToast("Points settings saved.","success");
+    renderEverything();
+}
+
+function getUserRecord(username){
+    return getUsers().find(u => u.username.toLowerCase() === String(username || "").toLowerCase()) || null;
+}
+
+function saveUserRecord(updated){
+    const users = getUsers();
+    const i = users.findIndex(u => u.username.toLowerCase() === updated.username.toLowerCase());
+    if(i >= 0){
+        users[i] = updated;
+        saveUsers(users);
+    }
+}
+
+function formatActiveTime(seconds){
+    seconds = Math.max(0, Math.floor(seconds || 0));
+    const h = Math.floor(seconds/3600);
+    const m = Math.floor((seconds%3600)/60);
+    const s = seconds%60;
+    if(h) return `${h}h ${m}m`;
+    if(m) return `${m}m ${s}s`;
+    return `${s}s`;
+}
+
+function getUserTier(user){
+    const gender = user?.gender === "female" ? "female" : "male";
+    const tiers = INVYXMAX_TIERS[gender];
+    const hours = (user?.activeSeconds || 0) / 3600;
+    let current = tiers[0];
+    let next = null;
+    for(let i=0;i<tiers.length;i++){
+        if(hours >= tiers[i].hours) current = tiers[i];
+        else { next = tiers[i]; break; }
+    }
+    return {gender, tiers, current, next, hours};
+}
+
+function ensureUserProgress(user){
+    if(!user) return user;
+    let changed = false;
+    if(typeof user.activeSeconds !== "number"){ user.activeSeconds = 0; changed = true; }
+    if(typeof user.points !== "number"){ user.points = 0; changed = true; }
+    if(typeof user.lastPointsClaim !== "number"){ user.lastPointsClaim = 0; changed = true; }
+    if(!user.gender){ user.gender = "male"; changed = true; }
+    if(changed) saveUserRecord(user);
+    return user;
+}
+
+let invyxActiveTimer = null;
+let invyxLastTick = 0;
+
+function stopActivityTimer(){
+    if(invyxActiveTimer){
+        clearInterval(invyxActiveTimer);
+        invyxActiveTimer = null;
+    }
+}
+
+function startActivityTimer(){
+    stopActivityTimer();
+    if(!currentUser) return;
+    invyxLastTick = Date.now();
+    invyxActiveTimer = setInterval(()=>{
+        if(!currentUser || document.hidden) return;
+        const now = Date.now();
+        const elapsed = Math.min(10, Math.max(0, (now - invyxLastTick)/1000));
+        invyxLastTick = now;
+        if(elapsed <= 0) return;
+
+        const user = getUserRecord(currentUser.username);
+        if(!user) return;
+        ensureUserProgress(user);
+        user.activeSeconds = (user.activeSeconds || 0) + elapsed;
+        const tier = getUserTier(user);
+        user.currentTier = tier.current.name;
+        saveUserRecord(user);
+
+        currentUser.activeSeconds = user.activeSeconds;
+        currentUser.points = user.points;
+        currentUser.currentTier = user.currentTier;
+        localStorage.setItem("invyxmax_current_user", JSON.stringify(currentUser));
+
+        if(currentPage === "dashboard") renderProgression();
+    }, 5000);
+}
+
+document.addEventListener("visibilitychange", ()=>{
+    invyxLastTick = Date.now();
+});
+
+function getCurrentProgressUser(){
+    if(!currentUser) return null;
+    const user = getUserRecord(currentUser.username);
+    return user ? ensureUserProgress(user) : null;
+}
+
+function renderProgression(){
+    const user = getCurrentProgressUser();
+    if(!user) return;
+    const tier = getUserTier(user);
+    const currentIndex = tier.tiers.findIndex(t => t.name === tier.current.name);
+    const next = tier.next;
+    const currentHours = tier.hours;
+    let pct = 100;
+    if(next){
+        const span = next.hours - tier.current.hours;
+        pct = Math.max(0, Math.min(100, ((currentHours-tier.current.hours)/span)*100));
+    }
+
+    const set = (id, value)=>{
+        const el=document.getElementById(id);
+        if(el) el.textContent=value;
+    };
+    set("dashTier", tier.current.name);
+    set("dashTierTitle", tier.current.name);
+    set("dashRoleBadge", tier.current.name);
+    set("dashActiveTime", formatActiveTime(user.activeSeconds));
+    set("dashTierTime", `${formatActiveTime(user.activeSeconds)} active`);
+    set("dashNextTier", next ? `Next: ${next.name}` : "MAX TIER");
+    set("dashPoints", Math.floor(user.points || 0));
+
+    const fill=document.getElementById("dashTierProgress");
+    if(fill) fill.style.width = `${pct}%`;
+
+    const description=document.getElementById("dashTierDescription");
+    if(description){
+        description.textContent = next
+            ? `${Math.max(0, Math.ceil((next.hours-currentHours)*60))} minutes of active time until ${next.name}.`
+            : "You've reached the highest available community role.";
+    }
+
+    renderDailyPoints(user);
+}
+
+function renderDailyPoints(user){
+    const settings = getPointsSettings();
+    const card = document.getElementById("dailyPointsCard");
+    const btn = document.getElementById("claimPointsBtn");
+    const text = document.getElementById("dailyPointsText");
+    if(!card || !btn || !text) return;
+
+    if(!settings.enabled){
+        text.textContent = "The Owner has currently disabled points giveaways.";
+        btn.disabled = true;
+        btn.textContent = "Disabled";
+        return;
+    }
+
+    const cooldown = settings.cooldownHours * 3600 * 1000;
+    const remaining = Math.max(0, (user.lastPointsClaim || 0) + cooldown - Date.now());
+
+    if(remaining > 0){
+        const h = Math.floor(remaining/3600000);
+        const m = Math.ceil((remaining%3600000)/60000);
+        text.textContent = `Next giveaway available in ${h}h ${m}m. Current balance: ${Math.floor(user.points || 0)} points.`;
+        btn.disabled = true;
+        btn.textContent = "Already Claimed";
+    }else{
+        text.textContent = `Claim ${settings.amount} free points. Current balance: ${Math.floor(user.points || 0)} points.`;
+        btn.disabled = false;
+        btn.textContent = `Claim +${settings.amount}`;
+    }
+}
+
+function claimDailyPoints(){
+    const user = getCurrentProgressUser();
+    if(!user){ navigate("login"); return; }
+    const settings = getPointsSettings();
+    if(!settings.enabled){
+        showToast("Points giveaways are disabled.","error");
+        return;
+    }
+    const cooldown = settings.cooldownHours * 3600 * 1000;
+    if(Date.now() < (user.lastPointsClaim || 0) + cooldown){
+        showToast("Your next points giveaway is not ready yet.","error");
+        return;
+    }
+    user.points = Math.floor(user.points || 0) + settings.amount;
+    user.lastPointsClaim = Date.now();
+    saveUserRecord(user);
+    logActivity("POINTS CLAIMED", `${user.username} claimed ${settings.amount} points.`, user.username);
+    showToast(`+${settings.amount} points added to your balance.`,"success");
+    renderProgression();
+}
+
+function canAccessGuide(guide){
+    if(!guide?.paid) return true;
+    if(!currentUser) return false;
+    if(adminLoggedIn || isOwner()) return true;
+    const user = getCurrentProgressUser();
+    return !!user && (user.unlockedGuides || []).includes(guide.id);
+}
+
+function purchaseGuideWithPoints(id){
+    if(!currentUser){
+        showToast("Login to unlock paid guides.","error");
+        navigate("login");
+        return;
+    }
+    const guide = getGuides().find(g=>g.id===id);
+    if(!guide || !guide.paid) return;
+    if(adminLoggedIn || isOwner()){
+        openGuide(id);
+        return;
+    }
+    const user = getCurrentProgressUser();
+    const cost = Math.max(0, parseInt(guide.pointsCost || 0,10));
+    if((user.points || 0) < cost){
+        showToast(`You need ${cost - Math.floor(user.points||0)} more points.`,"error");
+        return;
+    }
+    user.points = Math.floor(user.points || 0) - cost;
+    user.unlockedGuides = Array.isArray(user.unlockedGuides) ? user.unlockedGuides : [];
+    if(!user.unlockedGuides.includes(id)) user.unlockedGuides.push(id);
+    saveUserRecord(user);
+    logActivity("GUIDE UNLOCKED", `${user.username} unlocked "${guide.title}" for ${cost} points.`, user.username);
+    showToast(`Guide unlocked for ${cost} points.`,"success");
+    openGuide(id);
+}
+
+function renderPointsOwnerSettings(){
+    if(!isOwner()) return;
+    const settings = getPointsSettings();
+    const enabled=document.getElementById("pointsGiveawayEnabled");
+    const amount=document.getElementById("pointsGiveawayAmount");
+    const cooldown=document.getElementById("pointsGiveawayCooldown");
+    if(enabled) enabled.checked=settings.enabled;
+    if(amount) amount.value=settings.amount;
+    if(cooldown) cooldown.value=settings.cooldownHours;
+}
+
+function renderAdminUserPoints(){
+    const users=getUsers();
+    users.forEach(u=>ensureUserProgress(u));
+}
+
+function applyTierToUser(user){
+    const tier=getUserTier(user);
+    user.currentTier=tier.current.name;
+    return user;
+}
+
+/* Extend guide cards with price badge / access button */
+const _originalCreateGuideCard = window.createGuideCard;
+function createGuideCard(guide){
+    const image = guide.image
+        ? `<img src="${escapeAttribute(guide.image)}" alt="${escapeAttribute(guide.title)}">`
+        : `<div class="guide-placeholder">✦</div>`;
+    const paid = !!guide.paid;
+    const unlocked = canAccessGuide(guide);
+    const price = paid ? `<span class="guide-price-badge">✦ ${Math.max(0,parseInt(guide.pointsCost||0,10))} pts</span>` : `<span class="guide-price-badge">FREE</span>`;
+    const action = paid && !unlocked
+        ? `<button class="btn btn-primary btn-small" onclick="purchaseGuideWithPoints('${guide.id}')">Unlock →</button>`
+        : `<button class="btn btn-primary btn-small" onclick="openGuide('${guide.id}')">Read →</button>`;
+    return `
+        <article class="guide-card">
+            <div class="guide-image">${image}</div>
+            <div class="guide-body">
+                <div class="guide-category">${escapeHTML(guide.category)}</div>
+                <h3>${escapeHTML(guide.title)}</h3>
+                <p>${escapeHTML(guide.description)}</p>
+                <div style="margin-top:10px;">${price}</div>
+                <div class="guide-footer">
+                    <span class="guide-meta">INVYXMAX GUIDE</span>
+                    ${action}
+                </div>
+            </div>
+        </article>`;
+}
+
+/* Patch guide modal save/open to support paid guides */
+const _originalOpenGuideModal = window.openGuideModal;
+const _originalSaveGuideData = window.saveGuideData;
+
+function openGuideModal(id=null){
+    if(typeof _originalOpenGuideModal === "function") _originalOpenGuideModal(id);
+    const guide = id ? getGuides().find(g=>g.id===id) : null;
+    const access=document.getElementById("guideAccess");
+    const points=document.getElementById("guidePoints");
+    if(access) access.value = guide?.paid ? "paid" : "free";
+    if(points) points.value = guide?.pointsCost ?? 100;
+}
+
+function saveGuide(event){
+    event.preventDefault();
+    if(!adminLoggedIn){ showToast("Admin access required.","error"); return; }
+    const id=document.getElementById("editGuideId").value;
+    const title=document.getElementById("guideTitle").value.trim();
+    const category=document.getElementById("guideCategory").value;
+    const description=document.getElementById("guideDescription").value.trim();
+    const content=document.getElementById("guideContent").value;
+    const image=document.getElementById("guideImage").value.trim();
+    const video=document.getElementById("guideVideo").value.trim();
+    const link=document.getElementById("guideLink").value.trim();
+    const access=document.getElementById("guideAccess")?.value || "free";
+    const pointsCost=Math.max(0,parseInt(document.getElementById("guidePoints")?.value || "0",10));
+    const fileInput=document.getElementById("guideFile");
+    const guides=getGuides();
+
+    const payload={title,category,description,content,image,video,link,paid:access==="paid",pointsCost};
+    if(fileInput?.files?.length){
+        const file=fileInput.files[0];
+        if(file.size > 3*1024*1024){ showToast("For this browser demo, keep attachments under about 3MB.","error"); return; }
+        const reader=new FileReader();
+        reader.onload=()=>saveGuideData(guides,id,{...payload,fileName:file.name,fileData:reader.result});
+        reader.readAsDataURL(file);
+    }else{
+        saveGuideData(guides,id,payload);
+    }
+}
+
+/* Wrap openGuide so paid guides are protected. */
+const _baseOpenGuide = window.openGuide;
+function openGuide(id){
+    const guide=getGuides().find(g=>g.id===id);
+    if(!guide){ showToast("Guide not found.","error"); return; }
+    if(guide.paid && !canAccessGuide(guide)){
+        if(!currentUser){
+            showToast("Login to unlock this paid guide.","error");
+            navigate("login");
+        }else{
+            showToast(`This guide costs ${Math.max(0,parseInt(guide.pointsCost||0,10))} points. Unlock it from the Guides page.`,"error");
+        }
+        return;
+    }
+    if(typeof _baseOpenGuide === "function") _baseOpenGuide(id);
+}
+
+/* Upgrade user registration object with gender/progression. */
+const _baseRegisterUser = window.registerUser;
+function registerUser(event){
+    event.preventDefault();
+
+    const username=document.getElementById("registerUsername").value.trim();
+    const email=document.getElementById("registerEmail").value.trim();
+    const gender=document.getElementById("registerGender")?.value || "";
+    const password=document.getElementById("registerPassword").value;
+    const adminKey=(document.getElementById("registerAdminKey")?.value || "").trim().toUpperCase();
+
+    if(!gender){
+        showToast("Choose your gender before creating the account.","error");
+        return;
+    }
+
+    const users=getUsers();
+    if(username.toLowerCase()===ADMIN_USERNAME.toLowerCase()){
+        showToast("That username is reserved.","error"); return;
+    }
+    if(users.some(u=>u.username.toLowerCase()===username.toLowerCase())){
+        showToast("Username already exists.","error"); return;
+    }
+
+    const user={
+        username,email,password,gender,
+        createdAt:Date.now(),
+        activeSeconds:0,
+        points:0,
+        lastPointsClaim:0,
+        unlockedGuides:[],
+        currentTier: gender==="female" ? "SUB3" : "SUB3"
+    };
+    users.push(user);
+    saveUsers(users);
+
+    if(adminKey){
+        const result=redeemAdminKeyForUser(username,adminKey);
+        if(!result.ok){
+            users.pop(); saveUsers(users);
+            showToast(result.message,"error"); return;
+        }
+    }
+
+    currentUser={username,email,gender,activeSeconds:0,points:0,currentTier:"SUB3"};
+    localStorage.setItem("invyxmax_current_user",JSON.stringify(currentUser));
+
+    fetch(FORMSPREE_URL,{
+        method:"POST",
+        headers:{"Content-Type":"application/json","Accept":"application/json"},
+        body:JSON.stringify({subject:"New INVYXMAX Registration",username,email,gender})
+    }).catch(()=>{});
+
+    logActivity("REGISTRATION",`New account registered: ${username}`,username);
+    showToast("Account created successfully.","success");
+    startActivityTimer();
+    navigate("dashboard");
+}
+
+/* Ensure login also loads progression fields. */
+const _baseLogin = window.login;
+function login(event){
+    event.preventDefault();
+    const username=document.getElementById("loginUsername").value.trim();
+    const password=document.getElementById("loginPassword").value;
+    const loginAdminKey=(document.getElementById("loginAdminKey")?.value || "").trim().toUpperCase();
+
+    if(username.toLowerCase()===ADMIN_USERNAME.toLowerCase() && password===ADMIN_PASSWORD){
+        adminLoggedIn=true;
+        localStorage.setItem("invyxmax_admin","true");
+        localStorage.setItem("invyxmax_admin_user",username);
+        showToast("Admin login successful.","success");
+        navigate("admin");
+        return;
+    }
+
+    const users=getUsers();
+    const user=users.find(u=>u.username.toLowerCase()===username.toLowerCase() && u.password===password);
+    if(!user){ showToast("Invalid username or password.","error"); return; }
+    if(user.banned){ showToast("This account has been banned by the Owner.","error"); return; }
+
+    ensureUserProgress(user);
+    currentUser={username:user.username,email:user.email,gender:user.gender,activeSeconds:user.activeSeconds||0,points:user.points||0,currentTier:user.currentTier||"SUB3"};
+    localStorage.setItem("invyxmax_current_user",JSON.stringify(currentUser));
+
+    if(loginAdminKey){
+        const result=redeemAdminKeyForUser(user.username,loginAdminKey);
+        if(!result.ok){ showToast(result.message,"error"); return; }
+        adminLoggedIn=true;
+        localStorage.setItem("invyxmax_admin","true");
+        localStorage.setItem("invyxmax_admin_user",user.username);
+        showToast("Admin access activated. Welcome to the Admin Panel.","success");
+        startActivityTimer();
+        navigate("admin");
+        return;
+    }
+
+    showToast("Welcome back, "+user.username+"!","success");
+    startActivityTimer();
+    navigate("dashboard");
+}
+
+/* Make logout stop the timer. */
+const _baseLogout = window.logout;
+function logout(){
+    stopActivityTimer();
+    if(typeof _baseLogout === "function") _baseLogout();
+}
+
+/* Owner: show and save points controls. */
+const _baseRenderOwnerControls = window.renderOwnerControls;
+function renderOwnerControls(){
+    if(typeof _baseRenderOwnerControls === "function") _baseRenderOwnerControls();
+    renderPointsOwnerSettings();
+}
+
+/* Add points/tier data to Owner user-management cards. */
+const _baseRenderOwnerUserManagement = window.renderOwnerUserManagement;
+function renderOwnerUserManagement(){
+    if(typeof _baseRenderOwnerUserManagement === "function") _baseRenderOwnerUserManagement();
+    const list=document.getElementById("ownerUserList");
+    if(!list || !isOwner()) return;
+    getUsers().forEach(u=>ensureUserProgress(u));
+}
+
+/* Keep dashboard current while the user stays on the site. */
+setInterval(()=>{
+    if(currentUser && currentPage==="dashboard") renderProgression();
+},5000);
+
+/* Start timer if a user was already logged in before this update. */
+if(currentUser){
+    const u=getCurrentProgressUser();
+    if(u){
+        currentUser.gender=u.gender;
+        currentUser.activeSeconds=u.activeSeconds||0;
+        currentUser.points=u.points||0;
+        currentUser.currentTier=u.currentTier||getUserTier(u).current.name;
+        localStorage.setItem("invyxmax_current_user",JSON.stringify(currentUser));
+        startActivityTimer();
+    }
+}
+
+/* =========================================================
+   PATCH BASE RENDERING
+========================================================= */
+const _baseRenderEverything = window.renderEverything;
+function renderEverything(){
+    if(typeof _baseRenderEverything === "function") _baseRenderEverything();
+    renderProgression();
+    renderPointsOwnerSettings();
+}
+
+
 /* =========================
    INITIAL RENDER
 ========================= */
@@ -4896,7 +5978,7 @@ renderEverything();
 <script>
 /* INVYXMAX persistence compatibility + safe local backup helpers */
 (function(){
-  const KEYS=['invyxmax_users','invyxmax_current_user','invyxmax_admins','invyxmax_admin_keys','invyxmax_admin_user','invyxmax_admin','invyxmax_guides','invyxmax_reviews','invyxmax_settings','invyxmax_activity_log'];
+  const KEYS=['invyxmax_users','invyxmax_current_user','invyxmax_admins','invyxmax_admin_keys','invyxmax_admin_user','invyxmax_admin','invyxmax_guides','invyxmax_reviews','invyxmax_settings','invyxmax_activity_log','invyxmax_points_settings'];
   window.INVYXMAX_DATA_KEYS=KEYS;
   window.exportINVYXMAXData=function(){
     const data={version:2,exportedAt:new Date().toISOString(),data:{}};
