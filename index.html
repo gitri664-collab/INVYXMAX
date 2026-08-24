@@ -1191,7 +1191,7 @@ td{ color:#c4c4cf; }
 <section id="guides" class="page">
   <div class="section-title">
     <div><h2>Guide Marketplace</h2><p>Explore the INVYX resource library with ZIP, Video, Picture, and Link attachments.</p></div>
-    <button id="addGuideBtn" class="btn btn-primary" style="display:none" onclick="openGuideModal()">+ Add Guide</button>
+    <button id="addGuideBtn" type="button" class="btn btn-primary" style="display:none" onclick="window.openGuideModal && window.openGuideModal(event)">+ Add Guide</button>
   </div>
   <div class="card" style="margin-bottom:20px">
     <div style="display:grid; grid-template-columns:2fr 1fr 1fr; gap:10px">
@@ -2944,9 +2944,23 @@ function toggleGuideUploadField(){
   urlField.parentElement.style.display = localFile ? "none" : "block";
 }
 
-function openGuideModal(){
-  openModal('guideModal');
+function openGuideModal(e){
+  if(e && typeof e.preventDefault === 'function') e.preventDefault();
+  const u = currentUser();
+  if(!u || !hasPermission('manageGuides')){
+    toast('You do not have permission to add guides.', 'error');
+    return false;
+  }
+  const modal = document.getElementById('guideModal');
+  if(!modal){
+    toast('Guide editor could not be loaded.', 'error');
+    return false;
+  }
+  modal.classList.add('show');
   toggleGuideUploadField();
+  const title = document.getElementById('guideTitle');
+  if(title) setTimeout(() => title.focus(), 50);
+  return false;
 }
 
 function createGuide(e){
@@ -3297,7 +3311,7 @@ function renderGuidesAdminView(container){
   container.innerHTML = `
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px">
       <h2>Guide Management</h2>
-      <button class="btn btn-primary btn-small" onclick="openGuideModal()">+ Add New Guide</button>
+      <button type="button" class="btn btn-primary btn-small" onclick="window.openGuideModal && window.openGuideModal(event)">+ Add New Guide</button>
     </div>
     <div class="grid">
       ${db.guides.map(g => `
@@ -4403,6 +4417,16 @@ function removeBrokenResourceCards(){
     }
   });
 }
+
+/* GUIDE BUTTON FALLBACK: keeps Add Guide working after dashboard re-renders */
+document.addEventListener('click', function(ev){
+  const btn = ev.target.closest('#addGuideBtn, [data-open-guide-modal]');
+  if(btn){
+    ev.preventDefault();
+    ev.stopPropagation();
+    openGuideModal(ev);
+  }
+});
 
 /* INITIAL APP INIT */
 ensureThemeData();
