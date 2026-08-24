@@ -1132,6 +1132,7 @@ td{ color:#c4c4cf; }
 @keyframes siteAdFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
 
 .message-tools{display:flex;gap:5px;margin-top:7px;opacity:1;transition:opacity .15s ease;flex-wrap:wrap}.message-tool{border:1px solid rgba(255,255,255,.12);background:rgba(0,0,0,.18);color:#ddd;border-radius:8px;padding:3px 7px;font-size:11px;cursor:pointer}.message-tool:hover{background:rgba(139,92,246,.22)}.msg-reply{font-size:11px;padding:7px 9px;margin-bottom:7px;border-left:3px solid #8b5cf6;background:rgba(139,92,246,.09);border-radius:8px;color:#c9c3dd}.reaction-row{display:flex;gap:4px;flex-wrap:wrap;margin-top:7px}.reaction{border:1px solid rgba(255,255,255,.12);background:rgba(0,0,0,.16);border-radius:999px;padding:2px 7px;font-size:12px;cursor:pointer}.reaction.active{border-color:#8b5cf6;background:rgba(139,92,246,.2)}.emoji-picker{position:fixed;z-index:9999;display:none;max-width:330px;padding:10px;border:1px solid var(--border2);border-radius:16px;background:#11111b;box-shadow:0 20px 60px rgba(0,0,0,.5);grid-template-columns:repeat(8,1fr);gap:4px}.emoji-picker button{border:0;background:transparent;font-size:20px;border-radius:8px;padding:5px;cursor:pointer}.emoji-picker button:hover{background:rgba(139,92,246,.2)}.reply-banner{display:none;margin:0 12px 8px;padding:8px 11px;border-left:3px solid #8b5cf6;background:rgba(139,92,246,.08);border-radius:9px;color:var(--muted);font-size:12px}.reply-banner button{float:right;border:0;background:transparent;color:#aaa;cursor:pointer}
+.giveaway-card{animation:none!important;transform:none!important;} .giveaway-countdown{font-variant-numeric:tabular-nums;min-width:180px;}
 </style>
 </head>
 
@@ -1185,6 +1186,8 @@ td{ color:#c4c4cf; }
       <button class="btn btn-light" onclick="go('guides')">View all</button>
     </div>
     <div class="grid" id="featuredGuides"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:35px;gap:12px;flex-wrap:wrap"><div><h2>Giveaways 🎁</h2><p>Active community giveaways and their prizes.</p></div></div>
+    <div class="grid" id="publicGiveaways"></div>
   </div>
 </section>
 
@@ -1361,6 +1364,7 @@ td{ color:#c4c4cf; }
       <button onclick="ownerSection('ads',this)">Site Ad / Announcement 📢</button>
       <button onclick="ownerSection('themes',this)">Themes & Prices ✨</button><button onclick="ownerSection('ranks',this)">Ranks & Overrides 💎</button>
       <button onclick="ownerSection('guides',this)">Guides</button>
+      <button onclick="ownerSection('giveaways',this)">Giveaways 🎁</button>
       <button onclick="ownerSection('logs',this)">Security Logs</button>
     </aside>
     <div class="admin-content" id="ownerContent"></div>
@@ -1484,33 +1488,54 @@ td{ color:#c4c4cf; }
 </div>
 
 <div class="modal" id="guideModal">
-  <div class="modal-box">
-    <div class="modal-head"><h2>Add guide</h2><button class="close" onclick="closeModal('guideModal')">×</button></div>
+  <div class="modal-box" style="width:min(760px,100%)">
+    <div class="modal-head">
+      <div><span class="badge">GUIDE STUDIO</span><h2 style="margin-top:8px">Publish a Guide</h2><p style="color:var(--muted);margin:6px 0 0">Create a polished free or premium guide and attach a file from your PC.</p></div>
+      <button class="close" onclick="closeModal('guideModal')">×</button>
+    </div>
     <form onsubmit="createGuide(event)">
-      <div class="field"><label>Title</label><input id="guideTitle" required></div>
-      <div class="field"><label>Description</label><textarea id="guideDescription" required></textarea></div>
-      <div class="field"><label>Category</label><input id="guideCategory" required></div>
-      <div class="field">
-        <label>Attachment Type</label>
-        <select id="guideAttachmentType" onchange="toggleGuideUploadField()">
-          <option value="none">Text Only</option>
-          <option value="zip">ZIP File Link</option>
-          <option value="video">Video Link / Embed</option>
-          <option value="picture">Picture URL</option>
-          <option value="pdf">PDF from PC</option>
-          <option value="file">File from PC</option>
-          <option value="link">General External Link</option>
-        </select>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+        <div class="field"><label>Guide title *</label><input id="guideTitle" required placeholder="e.g. Advanced Grooming Guide"></div>
+        <div class="field"><label>Category *</label><input id="guideCategory" required placeholder="Grooming, Fitness, Style..."></div>
       </div>
-      <div class="field"><label>Attachment URL / Link</label><input id="guideAttachmentUrl" placeholder="https://..."></div>
-      <div class="field" id="guideFileField" style="display:none"><label>Upload from PC</label><input id="guideFile" type="file" accept=".pdf,.zip,.png,.jpg,.jpeg,.gif,.webp,.mp4,.webm,.txt,.doc,.docx,.ppt,.pptx,.xlsx,.csv"><small style="color:var(--muted);display:block;margin-top:6px">Files are stored with the guide. No artificial file-size limit is imposed by the app; actual limits depend on your browser and storage provider.</small></div>
-      <div class="field">
-        <label>Access</label>
-        <select id="guideAccess"><option value="free">Free</option><option value="points">Points only</option></select>
+      <div class="field"><label>Short description *</label><textarea id="guideDescription" required rows="3" placeholder="Explain what readers will learn..."></textarea></div>
+
+      <div style="margin:18px 0 10px;padding:16px;border:1px solid var(--border2);border-radius:18px;background:rgba(139,92,246,.045)">
+        <div style="font-weight:900;font-size:15px;margin-bottom:4px">🔐 Access & Pricing</div>
+        <div style="color:var(--muted);font-size:12px;margin-bottom:14px">Free guides are open to everyone. Premium guides stay locked until the user pays the XP price.</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+          <div class="field" style="margin:0"><label>Guide access</label><select id="guideAccess" onchange="updateGuidePricingUI()"><option value="free">🆓 Free — everyone can open it</option><option value="points">💎 Paid — unlock with XP</option></select></div>
+          <div class="field" style="margin:0" id="guidePriceField"><label>XP price</label><input id="guidePrice" type="number" min="1" value="100" placeholder="100"></div>
+        </div>
       </div>
-      <div class="field"><label>Points price</label><input id="guidePrice" type="number" min="0" value="0"></div>
-      <div class="field"><label>Content</label><textarea id="guideContent" rows="5" required></textarea></div>
-      <button class="btn btn-primary">Create guide</button>
+
+      <div style="margin:18px 0 10px;padding:16px;border:1px solid var(--border2);border-radius:18px;background:rgba(34,197,94,.035)">
+        <div style="font-weight:900;font-size:15px;margin-bottom:4px">📎 Guide resource</div>
+        <div style="color:var(--muted);font-size:12px;margin-bottom:14px">Choose one resource. PC uploads are stored separately from the main database so large files don't break guide publishing.</div>
+        <div class="field"><label>Resource type</label><select id="guideAttachmentType" onchange="toggleGuideUploadField()">
+          <option value="none">📝 Text only</option><option value="pdf">📄 PDF from PC</option><option value="file">📦 File from PC</option><option value="picture">🖼️ Picture URL</option><option value="video">🎬 Video link</option><option value="link">🔗 External link</option><option value="zip">🗜️ ZIP link</option>
+        </select></div>
+        <div class="field" id="guideFileField" style="display:none"><label>Choose file from PC</label><input id="guideFile" type="file" accept=".pdf,.zip,.png,.jpg,.jpeg,.gif,.webp,.mp4,.webm,.txt,.doc,.docx,.ppt,.pptx,.xlsx,.csv"><small style="color:var(--muted);display:block;margin-top:6px">No artificial file-size limit is enforced by INVYX. Your browser/device/storage provider still determines the real maximum.</small></div>
+        <div class="field" id="guideUrlField"><label>Resource URL</label><input id="guideAttachmentUrl" placeholder="https://..."></div>
+      </div>
+
+      <div class="field"><label>Guide content *</label><textarea id="guideContent" rows="8" required placeholder="Write the guide content here..."></textarea></div>
+      <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:18px"><button type="button" class="btn btn-light" onclick="closeModal('guideModal')">Cancel</button><button class="btn btn-primary" style="min-width:180px">🚀 Publish Guide</button></div>
+    </form>
+  </div>
+</div>
+
+<div class="modal" id="giveawayModal">
+  <div class="modal-box">
+    <div class="modal-head"><h2>Create Giveaway 🎁</h2><button class="close" onclick="closeModal('giveawayModal')">×</button></div>
+    <form onsubmit="createGiveaway(event)">
+      <div class="field"><label>Giveaway Title</label><input id="giveawayTitle" required placeholder="Summer Giveaway"></div>
+      <div class="field"><label>Description</label><textarea id="giveawayDescription" required placeholder="Tell people what they can win..."></textarea></div>
+      <div class="field"><label>Prize</label><input id="giveawayPrize" required placeholder="Gaming headset, VIP role, 1000 XP, etc."></div>
+      <div class="field"><label>Prize Type</label><select id="giveawayPrizeType"><option value="custom">Custom / Physical</option><option value="points">Points / XP</option><option value="role">Role</option><option value="theme">Theme</option><option value="guide">Guide</option></select></div>
+      <div class="field"><label>Ends At</label><input id="giveawayEndsAt" type="datetime-local" required></div>
+      <div class="field"><label>Winner Count</label><input id="giveawayWinners" type="number" min="1" value="1" required></div>
+      <button class="btn btn-primary">Publish Giveaway</button>
     </form>
   </div>
 </div>
@@ -1684,6 +1709,7 @@ function loadDB(){
 let db = loadDB();
 
 function ensureThemeData(){
+  db.giveaways = Array.isArray(db.giveaways) ? db.giveaways : [];
   db.customRoles = Array.isArray(db.customRoles) ? db.customRoles : [];
   db.customRoles.forEach(r => { if(!r.id) r.id = uid("role"); if(!Array.isArray(r.permissions)) r.permissions=[]; });
   db.settings = db.settings || {};
@@ -2051,6 +2077,7 @@ function go(page){
   window.history.pushState({page}, "", "#"+page);
 
   if(page==="guides") renderGuides();
+  if(page==="home") renderGiveaways();
   if(page==="reviews") renderReviews();
   if(page==="chat") renderChat();
   if(page==="dashboard") renderDashboard();
@@ -2846,102 +2873,100 @@ function declineFriendRequest(reqId){
 }
 
 /* GUIDES */
+function canAccessGuide(guideId){
+  const u=currentUser();
+  const g=(db.guides||[]).find(x=>x.id===guideId);
+  if(!g) return false;
+  if(g.access !== 'points' || Number(g.price)<=0) return true;
+  if(!u) return false;
+  if(u.role==='OWNER' || u.role==='ADMIN') return true;
+  return Array.isArray(u.ownedGuides) && u.ownedGuides.includes(g.id);
+}
+
+function guideCardHtml(g){
+  const u=currentUser();
+  const staff = !!(u && (u.role==='OWNER' || u.role==='ADMIN'));
+  const paid = g.access === 'points' && Number(g.price)>0;
+  const owned = !!(u && Array.isArray(u.ownedGuides) && u.ownedGuides.includes(g.id));
+  const unlocked = !paid || owned || staff;
+  let attachmentHtml='';
+  let contentHtml='';
+
+  if(unlocked){
+    if(g.attachmentType==='picture' && g.attachmentUrl){
+      attachmentHtml=`<img src="${escapeHtml(g.attachmentUrl)}" alt="${escapeHtml(g.title)}" style="width:100%;height:180px;object-fit:cover;border-radius:16px;margin-bottom:14px">`;
+    }else if(g.attachmentType==='video' && g.attachmentUrl){
+      attachmentHtml=`<a href="${escapeHtml(g.attachmentUrl)}" target="_blank" rel="noopener" class="btn btn-light btn-small" style="display:block;text-align:center;margin-bottom:14px">🎬 Watch Video</a>`;
+    }else if((g.attachmentType==='pdf'||g.attachmentType==='file') && (g.fileId||g.attachmentUrl)){
+      attachmentHtml=g.fileId
+        ? `<button type="button" onclick="openGuideFile('${g.id}')" class="btn btn-success btn-small" style="display:block;width:100%;margin-bottom:14px">${g.attachmentType==='pdf'?'📄':'📎'} Open / Download ${escapeHtml(g.fileName||'Guide file')}</button>`
+        : `<a href="${escapeHtml(g.attachmentUrl)}" target="_blank" rel="noopener" download class="btn btn-success btn-small" style="display:block;text-align:center;margin-bottom:14px">${g.attachmentType==='pdf'?'📄':'📎'} Open / Download</a>`;
+    }else if(g.attachmentType==='zip' && g.attachmentUrl){
+      attachmentHtml=`<a href="${escapeHtml(g.attachmentUrl)}" target="_blank" rel="noopener" class="btn btn-success btn-small" style="display:block;text-align:center;margin-bottom:14px">🗜️ Download ZIP</a>`;
+    }else if(g.attachmentType==='link' && g.attachmentUrl){
+      attachmentHtml=`<a href="${escapeHtml(g.attachmentUrl)}" target="_blank" rel="noopener" class="btn btn-light btn-small" style="display:block;text-align:center;margin-bottom:14px">🔗 Open Resource</a>`;
+    }
+    contentHtml=`<div style="margin-top:12px;font-size:13px;color:#aaa;white-space:pre-wrap;line-height:1.65">${escapeHtml(g.content)}</div>`;
+  }else{
+    attachmentHtml=`<div style="height:120px;border-radius:16px;margin-bottom:14px;display:grid;place-items:center;background:linear-gradient(145deg,rgba(139,92,246,.13),rgba(0,0,0,.25));border:1px solid rgba(139,92,246,.2)"><div style="text-align:center"><div style="font-size:30px">🔒</div><strong>Premium resource locked</strong><div style="font-size:11px;color:var(--muted);margin-top:4px">Pay ${Number(g.price)} XP to unlock</div></div></div>`;
+    contentHtml=`<div style="margin-top:12px;padding:15px;border:1px solid rgba(139,92,246,.18);border-radius:14px;background:rgba(139,92,246,.05);color:var(--muted)">🔒 Full content and downloadable files are hidden until this guide is unlocked.</div>`;
+  }
+
+  let action='';
+  if(paid && !owned && !staff){
+    action=u ? `<button class="btn btn-primary btn-small" style="margin-top:14px;width:100%" onclick="purchaseGuide('${g.id}')">💎 Unlock for ${Number(g.price)} XP</button>` : `<button class="btn btn-light btn-small" style="margin-top:14px;width:100%" onclick="go('login')">Login to unlock</button>`;
+  }else if(paid && owned){ action=`<span class="badge" style="margin-top:14px;background:rgba(34,197,94,.15);color:#70e5a0">✓ Unlocked</span>`; }
+  if(staff) action += `<button class="btn btn-danger btn-small" style="margin-top:10px" onclick="deleteGuide('${g.id}')">Delete Guide</button>`;
+
+  return `<article class="card" style="position:relative;overflow:hidden;border:1px solid ${paid?'rgba(168,85,247,.28)':'var(--border)'};background:${paid?'linear-gradient(145deg,rgba(139,92,246,.09),rgba(10,10,16,.98))':'linear-gradient(145deg,rgba(255,255,255,.035),rgba(10,10,16,.98))'}">
+    <div style="display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:10px"><span class="badge">${paid?'💎 PAID':'🆓 FREE'} • ${escapeHtml(g.category)}</span>${paid?`<span style="font-weight:900;color:#c4b5fd">${Number(g.price)} XP</span>`:`<span style="color:#86efac;font-weight:800;font-size:11px">OPEN TO EVERYONE</span>`}</div>
+    ${attachmentHtml}<h3>${escapeHtml(g.title)}</h3><p>${escapeHtml(g.description)}</p>${contentHtml}${action}
+  </article>`;
+}
+
 function renderGuides(){
-  const grid = document.getElementById("guidesGrid");
-  const feat = document.getElementById("featuredGuides");
+  const grid=document.getElementById('guidesGrid');
+  const feat=document.getElementById('featuredGuides');
   if(!grid) return;
-
-  grid.innerHTML = ""; if(feat) feat.innerHTML = "";
-  const u = currentUser();
-
-  db.guides.forEach(g => {
-    const isAdmin = u && (u.role === 'ADMIN' || u.role === 'OWNER');
-    const owned = !!(u && Array.isArray(u.ownedGuides) && u.ownedGuides.includes(g.id));
-    const isFree = g.access !== "points" || !Number(g.price);
-
-    let attachmentHtml = "";
-    let contentHtml = "";
-
-    if(isFree || owned || isAdmin){
-      if(g.attachmentType === "picture" && g.attachmentUrl){
-        attachmentHtml = `<img src="${g.attachmentUrl}" style="width:100%; height:160px; object-fit:cover; border-radius:12px; margin-bottom:12px;">`;
-      }else if(g.attachmentType === "video" && g.attachmentUrl){
-        attachmentHtml = `<div style="margin-bottom:12px"><a href="${g.attachmentUrl}" target="_blank" rel="noopener" class="btn btn-light btn-small" style="display:block; text-align:center">🎬 Watch Video Guide</a></div>`;
-      }else if(g.attachmentType === "pdf" && g.attachmentUrl){
-        attachmentHtml = `<div style="margin-bottom:12px"><a href="${g.attachmentUrl}" target="_blank" rel="noopener" download="${g.fileName || 'guide.pdf'}" class="btn btn-success btn-small" style="display:block; text-align:center">📄 Open / Download PDF${g.fileName ? ` — ${g.fileName}` : ''}</a></div>`;
-      }else if(g.attachmentType === "file" && g.attachmentUrl){
-        attachmentHtml = `<div style="margin-bottom:12px"><a href="${g.attachmentUrl}" target="_blank" rel="noopener" download="${g.fileName || 'guide-file'}" class="btn btn-success btn-small" style="display:block; text-align:center">📎 Open / Download File${g.fileName ? ` — ${g.fileName}` : ''}</a></div>`;
-      }else if(g.attachmentType === "zip" && g.attachmentUrl){
-        attachmentHtml = `<div style="margin-bottom:12px"><a href="${g.attachmentUrl}" target="_blank" rel="noopener" class="btn btn-success btn-small" style="display:block; text-align:center">📦 Download ZIP File</a></div>`;
-      }else if(g.attachmentType === "link" && g.attachmentUrl){
-        attachmentHtml = `<div style="margin-bottom:12px"><a href="${g.attachmentUrl}" target="_blank" rel="noopener" class="btn btn-light btn-small" style="display:block; text-align:center">🔗 Resource Link</a></div>`;
-      }
-      contentHtml = `<div style="margin-top:12px; font-size:13px; color:#aaa; white-space:pre-wrap;">${g.content}</div>`;
-    }else{
-      contentHtml = `
-        <div style="margin-top:12px; padding:14px; border:1px solid rgba(139,92,246,.18); border-radius:14px; background:rgba(139,92,246,.05); color:var(--muted);">
-          🔒 This guide is locked. Purchase it to unlock the full content and resources.
-        </div>
-      `;
-    }
-
-    let purchaseHtml = "";
-    if(g.access === "points" && Number(g.price) > 0 && u && !owned && !isAdmin){
-      purchaseHtml = `<button class="btn btn-primary btn-small" style="margin-top:12px" onclick="purchaseGuide('${g.id}')">Unlock for ${Number(g.price)} XP</button>`;
-    }else if(g.access === "points" && Number(g.price) > 0 && u && owned){
-      purchaseHtml = `<span class="badge" style="margin-top:12px; background:rgba(34,197,94,.15); color:#70e5a0;">✓ Purchased</span>`;
-    }else if(g.access === "points" && Number(g.price) > 0 && !u){
-      purchaseHtml = `<button class="btn btn-light btn-small" style="margin-top:12px" onclick="go('login')">Login to purchase</button>`;
-    }
-
-    const card = `
-      <div class="card">
-        ${attachmentHtml}
-        <span class="badge">${g.category}</span>
-        <h3>${g.title}</h3>
-        <p>${g.description}</p>
-        ${contentHtml}
-        ${purchaseHtml}
-        ${isAdmin ? `<button class="btn btn-danger btn-small" style="margin-top:10px" onclick="deleteGuide('${g.id}')">Delete Guide</button>` : ''}
-      </div>
-    `;
-    grid.innerHTML += card;
-    if(feat) feat.innerHTML += card;
-  });
+  const guides=Array.isArray(db.guides)?db.guides:[];
+  const free=guides.filter(g=>g.access!=='points'||Number(g.price)<=0);
+  const paid=guides.filter(g=>g.access==='points'&&Number(g.price)>0);
+  const renderSection=(items,title,subtitle)=>items.length?`<div style="grid-column:1/-1;margin-top:10px"><div class="section-title" style="margin-bottom:14px"><div><span class="badge">${title}</span><h2 style="font-size:28px;margin-top:8px">${title}</h2><p>${subtitle}</p></div></div></div>${items.map(guideCardHtml).join('')}`:'';
+  grid.innerHTML=renderSection(free,'🆓 FREE GUIDES','Open and readable by everyone.')+renderSection(paid,'💎 PREMIUM GUIDES','Locked until the user unlocks them with XP.');
+  if(feat){ const featured=guides.slice(0,3); feat.innerHTML=featured.map(guideCardHtml).join(''); }
 }
 
 function purchaseGuide(guideId){
-  const u = currentUser();
-  const g = db.guides.find(x => x.id === guideId);
-  if(!u){ go("login"); toast("Please login to purchase a guide", "error"); return; }
-  if(!g){ toast("Guide not found", "error"); return; }
-  if(g.access !== "points" || Number(g.price) <= 0){ toast("This guide is already free."); return; }
-
-  if(!Array.isArray(u.ownedGuides)) u.ownedGuides = [];
-  if(u.ownedGuides.includes(g.id)){ toast("You already own this guide."); return; }
-
-  const price = Number(g.price);
-  if((u.points || 0) < price){
-    toast(`You need ${price - (u.points || 0)} more XP.`, "error");
-    return;
-  }
-
-  u.points -= price;
-  u.ownedGuides.push(g.id);
-  logAction(`Purchased guide "${g.title}" for ${price} XP`, u.username);
-  saveDB();
-  updateNav();
-  renderGuides();
-  toast(`Guide unlocked! ${price} XP spent.`);
+  const u=currentUser(); const g=(db.guides||[]).find(x=>x.id===guideId);
+  if(!u){go('login');toast('Please login to purchase a guide','error');return;}
+  if(!g){toast('Guide not found','error');return;}
+  if(g.access!=='points'||Number(g.price)<=0){toast('This guide is free.');return;}
+  if(!Array.isArray(u.ownedGuides)) u.ownedGuides=[];
+  if(u.ownedGuides.includes(g.id)){toast('You already own this guide.');return;}
+  const price=Number(g.price);
+  if(Number(u.points||0)<price){toast(`You need ${price-Number(u.points||0)} more XP.`,'error');return;}
+  u.points-=price;u.ownedGuides.push(g.id);
+  logAction(`Purchased guide "${g.title}" for ${price} XP`,u.username);
+  saveDB();updateNav();renderGuides();toast(`Guide unlocked! ${price} XP spent.`);
 }
 function toggleGuideUploadField(){
-  const type = document.getElementById("guideAttachmentType").value;
-  const fileField = document.getElementById("guideFileField");
-  const urlField = document.getElementById("guideAttachmentUrl");
-  if(!fileField || !urlField) return;
-  const localFile = type === "pdf" || type === "file";
-  fileField.style.display = localFile ? "block" : "none";
-  urlField.parentElement.style.display = localFile ? "none" : "block";
+  const type=document.getElementById('guideAttachmentType')?.value;
+  const fileField=document.getElementById('guideFileField');
+  const urlField=document.getElementById('guideUrlField');
+  if(!fileField||!urlField)return;
+  const localFile=type==='pdf'||type==='file';
+  fileField.style.display=localFile?'block':'none';
+  urlField.style.display=localFile?'none':'block';
+}
+function updateGuidePricingUI(){
+  const access=document.getElementById('guideAccess')?.value;
+  const field=document.getElementById('guidePriceField');
+  const input=document.getElementById('guidePrice');
+  if(!field||!input)return;
+  const paid=access==='points';
+  field.style.opacity=paid?'1':'.5';
+  input.disabled=!paid;
+  input.value=paid?(Number(input.value)>0?input.value:100):0;
 }
 
 function openGuideModal(e){
@@ -2963,51 +2988,229 @@ function openGuideModal(e){
   return false;
 }
 
-function createGuide(e){
-  e.preventDefault();
-  const title = document.getElementById("guideTitle").value.trim();
-  const description = document.getElementById("guideDescription").value.trim();
-  const category = document.getElementById("guideCategory").value.trim();
-  const attachmentType = document.getElementById("guideAttachmentType").value;
-  const attachmentUrl = document.getElementById("guideAttachmentUrl").value.trim();
-  const access = document.getElementById("guideAccess").value;
-  const price = parseInt(document.getElementById("guidePrice").value) || 0;
-  const content = document.getElementById("guideContent").value;
-  const fileInput = document.getElementById("guideFile");
-  const file = fileInput?.files?.[0];
+const GUIDE_FILE_DB_NAME = 'INVYX_GuideFiles';
+const GUIDE_FILE_STORE = 'files';
 
-  const finish = (storedUrl = attachmentUrl, fileName = "", fileMime = "") => {
-    db.guides.push({
-      id: uid("g"), title, description, category, attachmentType,
-      attachmentUrl: storedUrl, fileName, fileMime,
-      access, price, content, created: new Date().toISOString()
-    });
-    logAction(`Created persistent guide: ${title}`, currentUser().username);
-    saveDB();
-    toast("Guide created and saved!");
-    closeModal('guideModal');
-    renderGuides();
-  };
-
-  if(attachmentType === "pdf" || attachmentType === "file"){
-    if(!file){ toast("Choose a file from your PC first.", "error"); return; }
-    if(attachmentType === "pdf" && file.type !== "application/pdf"){ toast("Please choose a PDF file.", "error"); return; }
-    const reader = new FileReader();
-    reader.onload = () => finish(reader.result, file.name, file.type || "application/octet-stream");
-    reader.onerror = () => toast("Could not read the selected file.", "error");
-    reader.readAsDataURL(file);
-    return;
-  }
-
-  finish();
+function openGuideFileDB(){
+  return new Promise((resolve,reject)=>{
+    const req=indexedDB.open(GUIDE_FILE_DB_NAME,1);
+    req.onupgradeneeded=()=>{
+      const dbx=req.result;
+      if(!dbx.objectStoreNames.contains(GUIDE_FILE_STORE)) dbx.createObjectStore(GUIDE_FILE_STORE,{keyPath:'id'});
+    };
+    req.onsuccess=()=>resolve(req.result);
+    req.onerror=()=>reject(req.error);
+  });
 }
 
-function deleteGuide(guideId){
+async function storeGuideFile(id,file){
+  const dbx=await openGuideFileDB();
+  return new Promise((resolve,reject)=>{
+    const tx=dbx.transaction(GUIDE_FILE_STORE,'readwrite');
+    tx.objectStore(GUIDE_FILE_STORE).put({id,file,name:file.name,type:file.type||'application/octet-stream',size:file.size});
+    tx.oncomplete=()=>{dbx.close();resolve();};
+    tx.onerror=()=>{dbx.close();reject(tx.error);};
+  });
+}
+
+async function openGuideFile(guideId){
+  if(!canAccessGuide(guideId)){ toast('This premium guide is locked. Purchase it to access the file.','error'); return; }
+  const guide=(db.guides||[]).find(g=>g.id===guideId);
+  const fileId=guide?.fileId;
+  if(!fileId){ toast('Guide file is not available.','error'); return; }
+  try{
+    const dbx=await openGuideFileDB();
+    const record=await new Promise((resolve,reject)=>{
+      const req=dbx.transaction(GUIDE_FILE_STORE,'readonly').objectStore(GUIDE_FILE_STORE).get(fileId);
+      req.onsuccess=()=>resolve(req.result);
+      req.onerror=()=>reject(req.error);
+    });
+    dbx.close();
+    if(!record?.file){ toast('Guide file is not available on this device.','error'); return; }
+    const url=URL.createObjectURL(record.file);
+    const a=document.createElement('a');
+    a.href=url;
+    a.download=record.name||'guide-file';
+    a.target='_blank';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),60000);
+  }catch(err){
+    console.error('Guide file open error:',err);
+    toast('Could not open the guide file.','error');
+  }
+}
+
+async function deleteStoredGuideFile(fileId){
+  if(!fileId) return;
+  try{
+    const dbx=await openGuideFileDB();
+    await new Promise((resolve,reject)=>{
+      const tx=dbx.transaction(GUIDE_FILE_STORE,'readwrite');
+      tx.objectStore(GUIDE_FILE_STORE).delete(fileId);
+      tx.oncomplete=resolve; tx.onerror=()=>reject(tx.error);
+    });
+    dbx.close();
+  }catch(err){ console.warn('Guide file delete failed',err); }
+}
+
+async function createGuide(e){
+  e.preventDefault();
+  const u=currentUser();
+  if(!u || !hasPermission('manageGuides')){ toast('You do not have permission to publish guides.','error'); return; }
+  const title=document.getElementById('guideTitle').value.trim();
+  const description=document.getElementById('guideDescription').value.trim();
+  const category=document.getElementById('guideCategory').value.trim();
+  const attachmentType=document.getElementById('guideAttachmentType').value;
+  const attachmentUrl=document.getElementById('guideAttachmentUrl').value.trim();
+  const access=document.getElementById('guideAccess').value;
+  const price=access==='points' ? Math.max(1,parseInt(document.getElementById('guidePrice').value,10)||1) : 0;
+  const content=document.getElementById('guideContent').value.trim();
+  const fileInput=document.getElementById('guideFile');
+  const file=fileInput?.files?.[0]||null;
+  if(!title||!description||!category||!content){ toast('Fill in all required guide fields.','error'); return; }
+  if(attachmentType==='pdf' || attachmentType==='file'){
+    if(!file){ toast('Choose a file from your PC first.','error'); return; }
+    if(attachmentType==='pdf' && file.type!=='application/pdf'){ toast('Please choose a PDF file.','error'); return; }
+  }
+
+  const guideId=uid('g');
+  const fileId=file ? uid('guidefile') : '';
+  try{
+    // Never put the file bytes/base64 into localStorage or the JSON cloud payload.
+    // IndexedDB accepts large Blob/File objects without the old artificial size limit.
+    if(file) await storeGuideFile(fileId,file);
+    db.guides.push({
+      id:guideId,title,description,category,attachmentType,
+      attachmentUrl:attachmentUrl||'',fileId,fileName:file?.name||'',fileMime:file?.type||'',fileSize:file?.size||0,
+      access,price,content,created:new Date().toISOString()
+    });
+    saveDB();
+    if(!Array.isArray(db.guides) || !db.guides.some(g=>g.id===guideId)){ throw new Error('Guide database save failed'); }
+    logAction(`Published guide: ${title}`,u.username);
+    closeModal('guideModal');
+    document.querySelector('#guideModal form')?.reset();
+    toggleGuideUploadField();
+    renderGuides();
+    toast('Guide published successfully!');
+  }catch(err){
+    console.error('Guide publish error:',err);
+    if(fileId) await deleteStoredGuideFile(fileId);
+    toast('Guide could not be published. Please try again.','error');
+  }
+}
+
+async function deleteGuide(guideId){
+  const old=(db.guides||[]).find(g=>g.id===guideId);
   db.guides = db.guides.filter(g => g.id !== guideId);
   logAction(`Deleted guide ID ${guideId}`, currentUser().username);
   saveDB();
+  if(old?.fileId) await deleteStoredGuideFile(old.fileId);
   toast("Guide deleted");
   renderGuides();
+}
+
+/* GIVEAWAYS */
+function ensureGiveawayData(){
+  db.giveaways = Array.isArray(db.giveaways) ? db.giveaways : [];
+  db.giveaways.forEach(g=>{
+    g.participants = Array.isArray(g.participants) ? g.participants : [];
+    g.winnersList = Array.isArray(g.winnersList) ? g.winnersList : [];
+    g.status = g.status || 'active';
+    g.winners = Math.max(1, Number(g.winners)||1);
+  });
+}
+function giveawayActive(g){ return g && g.status==='active' && Number(new Date(g.endsAt).getTime()) > Date.now(); }
+function joinGiveaway(id){
+  const u=currentUser();
+  if(!u){ toast('Please log in to join a giveaway.','error'); go('login'); return; }
+  ensureGiveawayData();
+  const g=db.giveaways.find(x=>x.id===id);
+  if(!g){ toast('Giveaway not found.','error'); return; }
+  if(!giveawayActive(g)){ toast('This giveaway has ended.','error'); renderGiveaways(); return; }
+  if(g.participants.some(p=>p.userId===u.id)){ toast('You already joined this giveaway.'); return; }
+  g.participants.push({userId:u.id,username:u.username,joinedAt:new Date().toISOString()});
+  saveDB();
+  renderGiveaways();
+  if(document.getElementById('ownerContent') && document.querySelector('#owner.active')) ownerSection('giveaways');
+  toast(`You're entered in ${g.title}!`);
+}
+function leaveGiveaway(id){
+  const u=currentUser(); if(!u) return;
+  ensureGiveawayData();
+  const g=db.giveaways.find(x=>x.id===id); if(!g) return;
+  if(!giveawayActive(g)){ toast('This giveaway has ended.','error'); return; }
+  g.participants=g.participants.filter(p=>p.userId!==u.id);
+  saveDB(); renderGiveaways(); toast('You left the giveaway.');
+}
+function renderGiveaways(targetId='publicGiveaways'){
+  const grid=document.getElementById(targetId); if(!grid) return;
+  ensureGiveawayData();
+  const active=(db.giveaways||[]).filter(giveawayActive);
+  if(!active.length){ grid.innerHTML='<div class="card"><span class="badge">🎁 GIVEAWAYS</span><h3 style="margin-top:10px">No active giveaways</h3><p style="color:var(--muted);margin-top:6px">Check back later for the next prize.</p></div>'; return; }
+  const u=currentUser();
+  grid.innerHTML=active.map(g=>{
+    const joined=!!u && g.participants.some(p=>p.userId===u.id);
+    const count=g.participants.length;
+    return `<div class="card giveaway-card" style="position:relative;overflow:hidden;border:1px solid rgba(139,92,246,.28);background:linear-gradient(145deg,rgba(139,92,246,.12),rgba(15,15,25,.96))">
+      <div style="position:absolute;inset:0;background:radial-gradient(circle at 85% 10%,rgba(168,85,247,.18),transparent 35%);pointer-events:none"></div>
+      <span class="badge">🎁 ACTIVE GIVEAWAY</span>
+      <h3 style="font-size:22px;margin-top:10px">${escapeHtml(g.title)}</h3>
+      <p style="color:var(--muted);margin-top:7px">${escapeHtml(g.description||'')}</p>
+      <div style="margin-top:15px;padding:14px;border-radius:14px;background:rgba(0,0,0,.22);border:1px solid rgba(255,255,255,.06)"><small style="color:var(--muted)">PRIZE</small><div style="font-size:18px;font-weight:800;margin-top:4px">${escapeHtml(g.prize)}</div><small style="color:var(--muted)">${escapeHtml(g.prizeType||'Custom')} • ${g.winners} winner${g.winners==1?'':'s'}</small></div>
+      <div style="margin-top:14px;color:#c4b5fd;font-weight:700">Ends: ${new Date(g.endsAt).toLocaleString()}</div>
+      <div class="giveaway-countdown" data-end="${new Date(g.endsAt).toISOString()}" style="margin-top:6px;color:var(--muted)">Calculating...</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:14px"><span style="color:var(--muted);font-size:13px">👥 ${count} joined</span>${u ? `<button class="btn ${joined?'btn-light':'btn-primary'} btn-small" onclick="${joined?`leaveGiveaway('${g.id}')`:`joinGiveaway('${g.id}')`}">${joined?'✓ Joined — Leave':'🎟️ Join Giveaway'}</button>` : `<button class="btn btn-primary btn-small" onclick="go('login')">Login to Join</button>`}</div>
+    </div>`;
+  }).join('');
+  updateGiveawayCountdowns();
+}
+function updateGiveawayCountdowns(){
+  document.querySelectorAll('.giveaway-countdown').forEach(el=>{
+    const ms=new Date(el.dataset.end).getTime()-Date.now();
+    if(ms<=0){el.textContent='Ended'; return;}
+    const d=Math.floor(ms/86400000),h=Math.floor(ms/3600000)%24,m=Math.floor(ms/60000)%60,s=Math.floor(ms/1000)%60;
+    el.textContent=`Time remaining: ${d}d ${h}h ${m}m ${s}s`;
+  });
+}
+function openGiveawayModal(){
+  const u=currentUser(); if(!u||u.role!=='OWNER'){toast('Owner access required.','error');return;}
+  const modal=document.getElementById('giveawayModal'); if(!modal)return;
+  const dt=document.getElementById('giveawayEndsAt'); const future=new Date(Date.now()+86400000); future.setSeconds(0,0);
+  dt.value=new Date(future.getTime()-future.getTimezoneOffset()*60000).toISOString().slice(0,16); modal.classList.add('show');
+}
+function createGiveaway(e){
+  e.preventDefault(); const u=currentUser(); if(!u||u.role!=='OWNER'){toast('Owner access required.','error');return;}
+  const title=document.getElementById('giveawayTitle').value.trim(), prize=document.getElementById('giveawayPrize').value.trim(), ends=document.getElementById('giveawayEndsAt').value;
+  if(!title||!prize||!ends||new Date(ends).getTime()<=Date.now()){toast('Enter a title, prize and future end time.','error');return;}
+  ensureGiveawayData();
+  const g={id:uid('give'),title,description:document.getElementById('giveawayDescription').value.trim(),prize,prizeType:document.getElementById('giveawayPrizeType').value,endsAt:new Date(ends).toISOString(),winners:Math.max(1,parseInt(document.getElementById('giveawayWinners').value)||1),participants:[],winnersList:[],status:'active',createdAt:new Date().toISOString(),createdBy:u.username};
+  db.giveaways.unshift(g); logAction(`Created giveaway "${g.title}"`,u.username); saveDB(); closeModal('giveawayModal'); renderGiveaways(); ownerSection('giveaways'); toast('Giveaway published!');
+}
+function endGiveaway(id){
+  const u=currentUser(); if(!u||u.role!=='OWNER')return;
+  ensureGiveawayData(); const g=db.giveaways.find(x=>x.id===id); if(!g)return;
+  g.status='ended'; g.endsAt=new Date().toISOString(); drawGiveawayWinners(id,true); saveDB(); ownerSection('giveaways'); renderGiveaways(); toast('Giveaway ended.');
+}
+function drawGiveawayWinners(id,force=false){
+  const u=currentUser(); if(!u||u.role!=='OWNER'){toast('Owner access required.','error');return;}
+  ensureGiveawayData(); const g=db.giveaways.find(x=>x.id===id); if(!g)return;
+  if(!force && giveawayActive(g)){toast('Wait until the giveaway ends before drawing winners.','error');return;}
+  if(g.winnersList.length){toast('Winners have already been drawn.');return;}
+  const pool=[...g.participants]; for(let i=pool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]];}
+  g.winnersList=pool.slice(0,g.winners).map(p=>({...p,selectedAt:new Date().toISOString()})); g.status='ended';
+  logAction(`Drew winners for giveaway "${g.title}"`,u.username); saveDB(); ownerSection('giveaways'); renderGiveaways();
+  toast(g.winnersList.length?`Winner${g.winnersList.length>1?'s':''}: ${g.winnersList.map(x=>x.username).join(', ')}`:'No participants to draw.');
+}
+function deleteGiveaway(id){
+  const u=currentUser(); if(!u||u.role!=='OWNER'){toast('Owner access required.','error');return;}
+  db.giveaways=(db.giveaways||[]).filter(g=>g.id!==id); logAction(`Deleted giveaway ${id}`,u.username); saveDB(); ownerSection('giveaways'); renderGiveaways(); toast('Giveaway deleted.');
+}
+function renderGiveawaysAdminView(container){
+  if(!container){ return; }
+  if(!isOwner()){ container.innerHTML='<div class="card"><h3>Owner access required</h3></div>'; return; }
+  ensureGiveawayData();
+  db.giveaways = (db.giveaways || []).map(g => ({ participants:[], winnersList:[], winners:1, status:'active', ...g, participants:Array.isArray(g.participants)?g.participants:[], winnersList:Array.isArray(g.winnersList)?g.winnersList:[] }));
+  container.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;gap:12px;flex-wrap:wrap"><div><span class="badge">OWNER CONTROL</span><h2 style="margin-top:8px">Giveaway Manager 🎁</h2><p style="color:var(--muted);margin-top:5px">Create, end, draw winners and manage every giveaway.</p></div><button class="btn btn-primary" onclick="openGiveawayModal()">＋ Create Giveaway</button></div><div class="grid">${(db.giveaways||[]).map(g=>{const active=giveawayActive(g);return `<div class="card"><span class="badge">${active?'ACTIVE':'ENDED'}</span><h3 style="margin-top:10px">${escapeHtml(g.title)}</h3><p>${escapeHtml(g.description||'')}</p><div style="margin-top:10px;font-weight:800">🎁 ${escapeHtml(g.prize)}</div><p style="color:var(--muted);margin-top:7px">${g.participants.length} joined • ${g.winners} winner${g.winners==1?'':'s'} • Ends ${new Date(g.endsAt).toLocaleString()}</p>${g.winnersList.length?`<div style="margin-top:10px;padding:10px;border-radius:12px;background:rgba(34,197,94,.08)"><b>🏆 Winners:</b> ${g.winnersList.map(x=>escapeHtml(x.username)).join(', ')}</div>`:''}<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">${active?`<button class="btn btn-light btn-small" onclick="endGiveaway('${g.id}')">⏹ End Now</button>`:''}${!active&&!g.winnersList.length?`<button class="btn btn-primary btn-small" onclick="drawGiveawayWinners('${g.id}')">🏆 Draw Winners</button>`:''}<button class="btn btn-danger btn-small" onclick="deleteGiveaway('${g.id}')">Delete</button></div></div>`}).join('')||'<div class="card"><h3>No giveaways yet</h3><p style="color:var(--muted)">Create your first giveaway.</p></div>'}</div>`;
 }
 
 /* ADMIN DASHBOARD */
@@ -3035,6 +3238,7 @@ function adminSection(sec, btn){
   else if(sec === 'requests'){ renderRequestsView(content); }
   else if(sec === 'users'){ renderUsersView(content); }
   else if(sec === 'guides'){ renderGuidesAdminView(content); }
+  else if(sec === 'giveaways'){ renderGiveawaysAdminView(content); }
   else if(sec === 'reviews'){ renderReviewsAdminView(content); }
   else if(sec === 'themes'){ renderThemeManagement(content, false); }
   else if(sec === 'ranks'){ renderOwnerRankManagement(content); }
@@ -3065,6 +3269,10 @@ function ownerSection(sec, btn){
   else if(sec === 'requests'){ renderRequestsView(content); }
   else if(sec === 'users'){ renderOwnerUsersView(content); }
   else if(sec === 'guides'){ renderGuidesAdminView(content); }
+  else if(sec === 'giveaways'){
+    if(!isOwner()){ toast('Owner access required.','error'); return; }
+    renderGiveawaysAdminView(content);
+  }
   else if(sec === 'profilePermissions'){
     const rows = db.users.map(user => `
       <tr>
@@ -3927,6 +4135,7 @@ function startKeyExpiryTicker(){
   updateKeyCountdowns();
   // Check every second so a role is removed at the exact expiry boundary.
   roleExpiryTicker = setInterval(() => {
+  updateGiveawayCountdowns();
     const changed = expireRoleKeysAndRoles(true);
     if(changed){
       updateNav();
@@ -4435,6 +4644,7 @@ refreshBuyPackageOptions();
 setTimeout(()=>showSiteAd(),50);
 removeBrokenResourceCards();
 renderGuides();
+renderGiveaways();
 renderReviews();
 </script>
 <!-- SUPABASE CLOUD DATABASE ENGINE -->
@@ -4536,6 +4746,7 @@ renderReviews();
     db.reviews = Array.isArray(db.reviews) ? db.reviews : [];
     db.adminKeys = Array.isArray(db.adminKeys) ? db.adminKeys : [];
     db.ownerKeys = Array.isArray(db.ownerKeys) ? db.ownerKeys : [];
+    db.giveaways = Array.isArray(db.giveaways) ? db.giveaways : [];
     db.logs = Array.isArray(db.logs) ? db.logs : [];
     db.settings = db.settings || { coverPrice: 1000, profileThemes: DEFAULT_PROFILE_THEMES, chatThemes: DEFAULT_CHAT_THEMES, pointPackages: [
       { amount: 100, price: 5 }, { amount: 500, price: 20 },
@@ -4634,5 +4845,6 @@ renderReviews();
 })();
 </script>
 
+<script>setInterval(()=>{ try{ updateGiveawayCountdowns(); }catch(e){} },1000);</script>
 </body>
 </html>
