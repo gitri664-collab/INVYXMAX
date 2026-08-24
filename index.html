@@ -1111,6 +1111,23 @@ td{ color:#c4c4cf; }
   </div>
 </div>
 
+<div class="modal" id="roleKeyModal">
+  <div class="modal-box">
+    <div class="modal-head"><h2>Redeem Admin / Owner Key</h2><button class="close" onclick="closeModal('roleKeyModal')">×</button></div>
+    <p style="color:var(--muted); margin-bottom:18px; line-height:1.6">
+      Enter an unused Admin or Owner key generated and approved through the key generator.
+      Your existing account will be upgraded; no new account will be created.
+    </p>
+    <form onsubmit="redeemRoleKey(event)">
+      <div class="field">
+        <label>Admin / Owner Key</label>
+        <input id="roleKeyInput" placeholder="ADMIN-XXXXXXXX or OWNER-XXXXXXXX" autocomplete="off" required>
+      </div>
+      <button class="btn btn-primary">Redeem Key</button>
+    </form>
+  </div>
+</div>
+
 <div class="toasts" id="toasts"></div>
 
 <script>
@@ -1273,6 +1290,68 @@ function updateNav(){
     document.getElementById("authBtn").textContent = "Login";
     document.getElementById("authBtn").onclick = () => go("login");
   }
+}
+
+/* EXISTING ACCOUNT ADMIN / OWNER KEY REDEMPTION */
+function openRoleKeyModal(){
+  const u = currentUser();
+  if(!u){ go("login"); toast("Please login to redeem a role key", "error"); return; }
+  document.getElementById("roleKeyInput").value = "";
+  openModal("roleKeyModal");
+}
+
+function redeemRoleKey(e){
+  e.preventDefault();
+
+  const u = currentUser();
+  if(!u){ toast("Please login first", "error"); return; }
+
+  const keyStr = document.getElementById("roleKeyInput").value.trim();
+  if(!keyStr){ toast("Enter a key", "error"); return; }
+
+  const now = new Date();
+  let keyRecord = db.adminKeys.find(k => k.key === keyStr && !k.redeemed);
+  let newRole = "ADMIN";
+
+  if(!keyRecord){
+    keyRecord = db.ownerKeys.find(k => k.key === keyStr && !k.redeemed);
+    newRole = "OWNER";
+  }
+
+  if(!keyRecord){
+    toast("Invalid, already redeemed, or unapproved key!", "error");
+    return;
+  }
+
+  if(keyRecord.expiresAt && new Date(keyRecord.expiresAt) < now){
+    toast(`${newRole === "OWNER" ? "Owner" : "Admin"} Key has expired!`, "error");
+    return;
+  }
+
+  // Do not allow an Admin key to downgrade an existing Owner.
+  if(u.role === "OWNER"){
+    toast("This account already has Owner access.", "error");
+    return;
+  }
+
+  if(u.role === "ADMIN" && newRole === "ADMIN"){
+    toast("This account already has Admin access.", "error");
+    return;
+  }
+
+  u.role = newRole;
+  keyRecord.redeemed = true;
+  keyRecord.redeemedBy = u.username;
+  keyRecord.redeemedByUserId = u.id;
+  keyRecord.redeemedAt = new Date().toISOString();
+
+  logAction(`Redeemed approved ${newRole} Key ${keyRecord.key} for existing account`, u.username);
+  saveDB();
+
+  closeModal("roleKeyModal");
+  toast(`Key redeemed successfully! Your account is now ${newRole}.`);
+  updateNav();
+  renderDashboard();
 }
 
 /* AUTHENTICATION & ROLE REGISTRATION */
@@ -2114,7 +2193,10 @@ function renderDashboard(){
         <h1>Welcome back, <span class="gradient-text">${u.username}</span>!</h1>
         <p style="color:var(--muted); margin-top:5px">Track your points, purchase requests, and system status.</p>
       </div>
-      <button class="btn btn-primary" onclick="openBuyModal()">💳 Buy Points / XP</button>
+      <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end">
+        <button class="btn btn-light" onclick="openRoleKeyModal()">🔑 Redeem Admin / Owner Key</button>
+        <button class="btn btn-primary" onclick="openBuyModal()">💳 Buy Points / XP</button>
+      </div>
     </div>
 
     <div class="dash-stats">
