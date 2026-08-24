@@ -1117,6 +1117,7 @@ td{ color:#c4c4cf; }
 /* FULL PERSISTENCE CORE DATABASE */
 const DB_KEY = "INVYX_DATABASE_V5";
 const SESSION_KEY = "INVYX_SESSION";
+const CLOUD_ROW_ID = 1;
 
 const DEFAULT_DB = {
   users: [],
@@ -1138,6 +1139,7 @@ const DEFAULT_DB = {
     }
   ],
   reviews: [],
+  ownedGuides: [],
   adminKeys: [],
   ownerKeys: [],
   logs: [
@@ -1161,6 +1163,7 @@ function loadDB(){
       pointRequests: parsed.pointRequests || [],
       guides: parsed.guides || [],
       reviews: parsed.reviews || [],
+      ownedGuides: parsed.ownedGuides || [],
       adminKeys: parsed.adminKeys || [],
       ownerKeys: parsed.ownerKeys || [],
       logs: parsed.logs || []
@@ -1195,7 +1198,7 @@ function hashPassword(password){
 }
 
 function currentUser(){
-  const id = sessionStorage.getItem(SESSION_KEY);
+  const id = localStorage.getItem(SESSION_KEY);
   return db.users.find(u => u.id === id) || null;
 }
 
@@ -1315,6 +1318,7 @@ function register(e){
     gender, 
     role: assignedRole, 
     points: 100, 
+    ownedGuides: [],
     banned: false, 
     joined: new Date().toISOString() 
   };
@@ -1323,7 +1327,7 @@ function register(e){
   logAction(`User account registered as ${assignedRole}`, username);
   saveDB();
 
-  sessionStorage.setItem(SESSION_KEY, u.id);
+  localStorage.setItem(SESSION_KEY, u.id);
   toast(`Account created as ${assignedRole}!`);
   updateNav(); 
   go("dashboard");
@@ -1338,7 +1342,7 @@ function login(e){
   if(!u){ toast("Invalid credentials", "error"); return; }
   if(u.banned){ toast("Account is banned.", "error"); return; }
 
-  sessionStorage.setItem(SESSION_KEY, u.id);
+  localStorage.setItem(SESSION_KEY, u.id);
   logAction("User logged in", u.username);
   saveDB();
   toast("Logged in successfully");
@@ -1349,7 +1353,7 @@ function login(e){
 function logout(){
   const u = currentUser();
   if(u) logAction("User logged out", u.username);
-  sessionStorage.removeItem(SESSION_KEY);
+  localStorage.removeItem(SESSION_KEY);
   toast("Logged out");
   updateNav(); 
   go("home");
@@ -1688,17 +1692,42 @@ function renderGuides(){
   if(!grid) return;
 
   grid.innerHTML = ""; if(feat) feat.innerHTML = "";
+  const u = currentUser();
 
   db.guides.forEach(g => {
+    const isAdmin = u && (u.role === 'ADMIN' || u.role === 'OWNER');
+    const owned = !!(u && Array.isArray(u.ownedGuides) && u.ownedGuides.includes(g.id));
+    const isFree = g.access !== "points" || !Number(g.price);
+
     let attachmentHtml = "";
-    if(g.attachmentType === "picture" && g.attachmentUrl){
-      attachmentHtml = `<img src="${g.attachmentUrl}" style="width:100%; height:160px; object-fit:cover; border-radius:12px; margin-bottom:12px;">`;
-    }else if(g.attachmentType === "video" && g.attachmentUrl){
-      attachmentHtml = `<div style="margin-bottom:12px"><a href="${g.attachmentUrl}" target="_blank" class="btn btn-light btn-small" style="display:block; text-align:center">🎬 Watch Video Guide</a></div>`;
-    }else if(g.attachmentType === "zip" && g.attachmentUrl){
-      attachmentHtml = `<div style="margin-bottom:12px"><a href="${g.attachmentUrl}" target="_blank" class="btn btn-success btn-small" style="display:block; text-align:center">📦 Download ZIP File</a></div>`;
-    }else if(g.attachmentType === "link" && g.attachmentUrl){
-      attachmentHtml = `<div style="margin-bottom:12px"><a href="${g.attachmentUrl}" target="_blank" class="btn btn-light btn-small" style="display:block; text-align:center">🔗 Resource Link</a></div>`;
+    let contentHtml = "";
+
+    if(isFree || owned || isAdmin){
+      if(g.attachmentType === "picture" && g.attachmentUrl){
+        attachmentHtml = `<img src="${g.attachmentUrl}" style="width:100%; height:160px; object-fit:cover; border-radius:12px; margin-bottom:12px;">`;
+      }else if(g.attachmentType === "video" && g.attachmentUrl){
+        attachmentHtml = `<div style="margin-bottom:12px"><a href="${g.attachmentUrl}" target="_blank" rel="noopener" class="btn btn-light btn-small" style="display:block; text-align:center">🎬 Watch Video Guide</a></div>`;
+      }else if(g.attachmentType === "zip" && g.attachmentUrl){
+        attachmentHtml = `<div style="margin-bottom:12px"><a href="${g.attachmentUrl}" target="_blank" rel="noopener" class="btn btn-success btn-small" style="display:block; text-align:center">📦 Download ZIP File</a></div>`;
+      }else if(g.attachmentType === "link" && g.attachmentUrl){
+        attachmentHtml = `<div style="margin-bottom:12px"><a href="${g.attachmentUrl}" target="_blank" rel="noopener" class="btn btn-light btn-small" style="display:block; text-align:center">🔗 Resource Link</a></div>`;
+      }
+      contentHtml = `<div style="margin-top:12px; font-size:13px; color:#aaa; white-space:pre-wrap;">${g.content}</div>`;
+    }else{
+      contentHtml = `
+        <div style="margin-top:12px; padding:14px; border:1px solid rgba(139,92,246,.18); border-radius:14px; background:rgba(139,92,246,.05); color:var(--muted);">
+          🔒 This guide is locked. Purchase it to unlock the full content and resources.
+        </div>
+      `;
+    }
+
+    let purchaseHtml = "";
+    if(g.access === "points" && Number(g.price) > 0 && u && !owned && !isAdmin){
+      purchaseHtml = `<button class="btn btn-primary btn-small" style="margin-top:12px" onclick="purchaseGuide('${g.id}')">Unlock for ${Number(g.price)} XP</button>`;
+    }else if(g.access === "points" && Number(g.price) > 0 && u && owned){
+      purchaseHtml = `<span class="badge" style="margin-top:12px; background:rgba(34,197,94,.15); color:#70e5a0;">✓ Purchased</span>`;
+    }else if(g.access === "points" && Number(g.price) > 0 && !u){
+      purchaseHtml = `<button class="btn btn-light btn-small" style="margin-top:12px" onclick="go('login')">Login to purchase</button>`;
     }
 
     const card = `
@@ -1707,8 +1736,9 @@ function renderGuides(){
         <span class="badge">${g.category}</span>
         <h3>${g.title}</h3>
         <p>${g.description}</p>
-        <div style="margin-top:12px; font-size:13px; color:#aaa; white-space:pre-wrap;">${g.content}</div>
-        ${currentUser() && (currentUser().role === 'ADMIN' || currentUser().role === 'OWNER') ? `<button class="btn btn-danger btn-small" style="margin-top:10px" onclick="deleteGuide('${g.id}')">Delete Guide</button>` : ''}
+        ${contentHtml}
+        ${purchaseHtml}
+        ${isAdmin ? `<button class="btn btn-danger btn-small" style="margin-top:10px" onclick="deleteGuide('${g.id}')">Delete Guide</button>` : ''}
       </div>
     `;
     grid.innerHTML += card;
@@ -1716,6 +1746,30 @@ function renderGuides(){
   });
 }
 
+function purchaseGuide(guideId){
+  const u = currentUser();
+  const g = db.guides.find(x => x.id === guideId);
+  if(!u){ go("login"); toast("Please login to purchase a guide", "error"); return; }
+  if(!g){ toast("Guide not found", "error"); return; }
+  if(g.access !== "points" || Number(g.price) <= 0){ toast("This guide is already free."); return; }
+
+  if(!Array.isArray(u.ownedGuides)) u.ownedGuides = [];
+  if(u.ownedGuides.includes(g.id)){ toast("You already own this guide."); return; }
+
+  const price = Number(g.price);
+  if((u.points || 0) < price){
+    toast(`You need ${price - (u.points || 0)} more XP.`, "error");
+    return;
+  }
+
+  u.points -= price;
+  u.ownedGuides.push(g.id);
+  logAction(`Purchased guide "${g.title}" for ${price} XP`, u.username);
+  saveDB();
+  updateNav();
+  renderGuides();
+  toast(`Guide unlocked! ${price} XP spent.`);
+}
 function openGuideModal(){ openModal('guideModal'); }
 
 function createGuide(e){
@@ -2173,42 +2227,125 @@ renderReviews();
 <!-- SUPABASE CLOUD DATABASE ENGINE -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+  /*
+   * CLOUD PERSISTENCE
+   * The existing app_data table stores the complete app state as JSONB.
+   * This makes accounts, XP, guide purchases, requests, guides, reviews,
+   * friends/messages and logs survive browser/device changes.
+   *
+   * IMPORTANT: this is a persistence layer for the current prototype.
+   * For production, move authentication and authorization to Supabase Auth
+   * + normal tables with Row Level Security.
+   */
   const SUPABASE_URL = "https://opwnzmuswljkivzwsigv.supabase.co";
-  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9wd256bXVzd2xqa2l2endzaWd2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDAxNzE3NTMsImV4cCI6MjA1NTc0Nzc1M30.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9wd256bXVzd2xqa2l2endzaWd2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDAxNzE3NTMsImV4cCI6MjA1NTc0Nzc1M30.eyJh";
-  const ROW_ID = 1;
-
+  const SUPABASE_ANON_KEY = "sb_publishable_55mx8AnP1-ggaJP951_dcw_rvtKIuro";
   const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-  // Override loadDB to fetch from Supabase cloud
-  async function loadDB() {
-    try {
+  async function cloudLoadDB(){
+    try{
       const { data, error } = await supabaseClient
-        .from('app_data')
-        .select('payload')
-        .eq('id', ROW_ID)
-        .single();
+        .from("app_data")
+        .select("payload")
+        .eq("id", CLOUD_ROW_ID)
+        .maybeSingle();
 
-      if (error || !data) {
-        return typeof DEFAULT_DB !== 'undefined' ? structuredClone(DEFAULT_DB) : {};
+      if(error) throw error;
+      return data?.payload || null;
+    }catch(error){
+      console.error("Cloud load error:", error);
+      toast("Cloud database unavailable. Using local backup.", "error");
+      return null;
+    }
+  }
+
+  async function cloudSaveDB(){
+    try{
+      const payload = JSON.parse(JSON.stringify(db));
+      const { error } = await supabaseClient
+        .from("app_data")
+        .upsert({ id: CLOUD_ROW_ID, payload }, { onConflict: "id" });
+      if(error) throw error;
+      localStorage.setItem(DB_KEY, JSON.stringify(db));
+    }catch(error){
+      console.error("Cloud save error:", error);
+      toast("Cloud save failed; local backup was kept.", "error");
+    }
+  }
+
+  // Replace the local-only save function with a local + cloud save.
+  const localSaveDB = saveDB;
+  saveDB = function(){
+    localSaveDB();
+    if(window.__INVYX_CLOUD_READY) cloudSaveDB();
+  };
+
+  async function initCloudPersistence(){
+    const cloudDB = await cloudLoadDB();
+
+    if(cloudDB && Array.isArray(cloudDB.users)){
+      db = cloudDB;
+    }else{
+      // First cloud boot: upload the existing local data so current accounts
+      // and content are not lost.
+      ensureOwner();
+      await cloudSaveDB();
+    }
+
+    db.users = Array.isArray(db.users) ? db.users : [];
+    db.guides = Array.isArray(db.guides) ? db.guides : [];
+    db.friends = Array.isArray(db.friends) ? db.friends : [];
+    db.messages = Array.isArray(db.messages) ? db.messages : [];
+    db.pointRequests = Array.isArray(db.pointRequests) ? db.pointRequests : [];
+    db.reviews = Array.isArray(db.reviews) ? db.reviews : [];
+    db.adminKeys = Array.isArray(db.adminKeys) ? db.adminKeys : [];
+    db.ownerKeys = Array.isArray(db.ownerKeys) ? db.ownerKeys : [];
+    db.logs = Array.isArray(db.logs) ? db.logs : [];
+
+    db.users.forEach(u => {
+      if(!Array.isArray(u.ownedGuides)) u.ownedGuides = [];
+    });
+
+    ensureOwner();
+    window.__INVYX_CLOUD_READY = true;
+    await cloudSaveDB();
+
+    updateNav();
+    renderGuides();
+    renderReviews();
+
+    const active = document.querySelector(".page.active")?.id;
+    if(active === "dashboard") renderDashboard();
+    if(active === "chat") renderChat();
+    if(active === "admin") renderAdmin();
+    if(active === "owner") renderOwner();
+
+    // Keep multiple open tabs reasonably synchronized.
+    setInterval(async () => {
+      const latest = await cloudLoadDB();
+      if(latest && JSON.stringify(latest) !== JSON.stringify(db)){
+        db = latest;
+        db.users?.forEach(u => { if(!Array.isArray(u.ownedGuides)) u.ownedGuides = []; });
+        updateNav();
+        renderGuides();
+        renderReviews();
+        const activePage = document.querySelector(".page.active")?.id;
+        if(activePage === "dashboard") renderDashboard();
       }
-      return data.payload;
-    } catch (e) {
-      console.error("Cloud load error:", e);
-      return typeof DEFAULT_DB !== 'undefined' ? structuredClone(DEFAULT_DB) : {};
-    }
+    }, 15000);
   }
 
-  // Override saveDB to push updates to Supabase cloud
-  async function saveDB() {
-    try {
-      if (typeof db === 'undefined') return;
-      await supabaseClient
-        .from('app_data')
-        .upsert({ id: ROW_ID, payload: db });
-    } catch (e) {
-      console.error("Cloud save error:", e);
-    }
-  }
+  initCloudPersistence();
 </script>
+
+<script>
+(function(){
+  const requiredKey = "sb_publishable_55mx8AnP1-ggaJP951_dcw_rvtKIuroR";
+  if (typeof SUPABASE_ANON_KEY !== "undefined" &&
+      SUPABASE_ANON_KEY === requiredKey) {
+    console.warn("INVYX: Supabase key is not configured yet. Local persistence will be used.");
+  }
+})();
+</script>
+
 </body>
 </html>
