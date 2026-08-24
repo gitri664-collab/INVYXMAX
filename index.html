@@ -991,7 +991,7 @@ td{ color:#c4c4cf; }
       <button onclick="ownerSection('admins',this)">Admins List</button>
       <button onclick="ownerSection('adminKeys',this)">Admin Keys Generator</button>
       <button onclick="ownerSection('ownerKeys',this)">Owner Keys Generator</button>
-      <button onclick="ownerSection('users',this)">Users</button>
+      <button onclick="ownerSection('users',this)">Users & Points Control 💎</button>
       <button onclick="ownerSection('guides',this)">Guides</button>
       <button onclick="ownerSection('logs',this)">Security Logs</button>
     </aside>
@@ -1017,6 +1017,26 @@ td{ color:#c4c4cf; }
       <div class="field"><label>Payment Method / Note to Admin</label><textarea id="buyNote" placeholder="e.g. Paid via Paypal/Crypto ref #123456" required></textarea></div>
       <p style="font-size:12px; color:var(--muted); margin-bottom:15px;">⚠️ Your request will be sent to Admins & Owner. Points will be added to your account ONLY after manual approval.</p>
       <button class="btn btn-primary">Send Buy Request</button>
+    </form>
+  </div>
+</div>
+
+<div class="modal" id="givePointsModal">
+  <div class="modal-box">
+    <div class="modal-head"><h2>Manage User Points</h2><button class="close" onclick="closeModal('givePointsModal')">×</button></div>
+    <form onsubmit="submitGivePoints(event)">
+      <input type="hidden" id="givePointsUserId">
+      <div class="field"><label>Target User</label><input id="givePointsUsername" readonly style="opacity:0.7"></div>
+      <div class="field">
+        <label>Action</label>
+        <select id="givePointsAction">
+          <option value="add">Add Points (+)</option>
+          <option value="set">Set Exact Points (=)</option>
+          <option value="remove">Remove / Deduct Points (-)</option>
+        </select>
+      </div>
+      <div class="field"><label>Points Amount</label><input type="number" id="givePointsAmount" min="0" required></div>
+      <button class="btn btn-primary">Apply Points Adjustment</button>
     </form>
   </div>
 </div>
@@ -1269,8 +1289,7 @@ function register(e){
         ok.redeemed = true; 
         ok.redeemedBy = username;
       } else {
-        toast("Invalid or redeemed key!", "error"); return;
-      }
+        toast("Invalid or redeemed key!", "error"); return; }
     }
   }
 
@@ -1322,8 +1341,59 @@ function logout(){
   go("home");
 }
 
-/* TRANSACTION SYSTEM */
+/* TRANSACTION & OWNER POINTS MANAGEMENT SYSTEM */
 function openBuyModal(){ openModal('buyPointsModal'); }
+
+function openGivePointsModal(userId, username){
+  document.getElementById("givePointsUserId").value = userId;
+  document.getElementById("givePointsUsername").value = username;
+  document.getElementById("givePointsAmount").value = "";
+  openModal("givePointsModal");
+}
+
+function submitGivePoints(e){
+  e.preventDefault();
+  const cu = currentUser();
+  if(!cu || cu.role !== "OWNER"){
+    toast("Unauthorized action", "error");
+    return;
+  }
+
+  const targetId = document.getElementById("givePointsUserId").value;
+  const action = document.getElementById("givePointsAction").value;
+  const amount = parseInt(document.getElementById("givePointsAmount").value) || 0;
+
+  const user = db.users.find(u => u.id === targetId);
+  if(!user){
+    toast("User not found", "error");
+    return;
+  }
+
+  if(action === "add"){
+    user.points = (user.points || 0) + amount;
+  } else if(action === "set"){
+    user.points = amount;
+  } else if(action === "remove"){
+    user.points = Math.max(0, (user.points || 0) - amount);
+  }
+
+  logAction(`Owner ${cu.username} modified points for ${user.username} (Action: ${action}, Amount: ${amount}). New Balance: ${user.points} XP`, cu.username);
+  saveDB();
+
+  db.messages.push({
+    id: uid("msg"),
+    senderId: cu.id,
+    receiverId: user.id,
+    text: `💎 OWNER NOTICE: Your points balance has been updated by the Owner. Your new balance is ${user.points} XP.`,
+    timestamp: new Date().toISOString()
+  });
+  saveDB();
+
+  toast(`Updated ${user.username}'s balance to ${user.points} XP`);
+  closeModal("givePointsModal");
+  updateNav();
+  ownerSection('users');
+}
 
 function submitBuyRequest(e){
   e.preventDefault();
@@ -1641,7 +1711,7 @@ function ownerSection(sec, btn){
     `;
   }
   else if(sec === 'requests'){ renderRequestsView(content); }
-  else if(sec === 'users'){ renderUsersView(content); }
+  else if(sec === 'users'){ renderOwnerUsersView(content); }
   else if(sec === 'guides'){ renderGuidesAdminView(content); }
   else if(sec === 'logs'){
     let logRows = (db.logs || []).map(l => `
@@ -1771,6 +1841,32 @@ function renderUsersView(container){
   `;
 }
 
+function renderOwnerUsersView(container){
+  let rows = db.users.map(u => `
+    <tr>
+      <td><strong>${u.username}</strong></td>
+      <td>${u.email}</td>
+      <td><span class="badge">${u.role}</span></td>
+      <td><strong style="color:var(--cyan); font-size:14px">${u.points} XP</strong></td>
+      <td style="display:flex; gap:6px">
+        <button class="btn btn-primary btn-small" onclick="openGivePointsModal('${u.id}', '${u.username}')">💎 Manage Points</button>
+        ${u.role !== 'OWNER' ? `<button class="btn btn-danger btn-small" onclick="toggleBanUser('${u.id}')">${u.banned?'Unban':'Ban'}</button>` : ''}
+      </td>
+    </tr>
+  `).join('');
+
+  container.innerHTML = `
+    <h2>Users & Points Control</h2>
+    <p style="color:var(--muted); font-size:13px; margin-top:5px; margin-bottom:15px">Owner can set, grant, or deduct points for any user. Point balances never expire automatically.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Username</th><th>Email</th><th>Role</th><th>Current Points</th><th>Actions</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>
+  `;
+}
+
 function renderGuidesAdminView(container){
   container.innerHTML = `
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px">
@@ -1874,7 +1970,7 @@ function renderDashboard(){
       <div class="stat-card">
         <small>XP Balance</small>
         <h2>${u.points} XP</h2>
-        <span>Available to spend</span>
+        <span>Never Expires</span>
       </div>
       <div class="stat-card">
         <small>Buy Requests</small>
