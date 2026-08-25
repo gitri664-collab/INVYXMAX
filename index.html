@@ -1138,6 +1138,146 @@ td{ color:#c4c4cf; }
 
 .message-tools{display:flex;gap:5px;margin-top:7px;opacity:1;transition:opacity .15s ease;flex-wrap:wrap}.message-tool{border:1px solid rgba(255,255,255,.12);background:rgba(0,0,0,.18);color:#ddd;border-radius:8px;padding:3px 7px;font-size:11px;cursor:pointer}.message-tool:hover{background:rgba(139,92,246,.22)}.msg-reply{font-size:11px;padding:7px 9px;margin-bottom:7px;border-left:3px solid #8b5cf6;background:rgba(139,92,246,.09);border-radius:8px;color:#c9c3dd}.reaction-row{display:flex;gap:4px;flex-wrap:wrap;margin-top:7px}.reaction{border:1px solid rgba(255,255,255,.12);background:rgba(0,0,0,.16);border-radius:999px;padding:2px 7px;font-size:12px;cursor:pointer}.reaction.active{border-color:#8b5cf6;background:rgba(139,92,246,.2)}.emoji-picker{position:fixed;z-index:9999;display:none;max-width:330px;padding:10px;border:1px solid var(--border2);border-radius:16px;background:#11111b;box-shadow:0 20px 60px rgba(0,0,0,.5);grid-template-columns:repeat(8,1fr);gap:4px}.emoji-picker button{border:0;background:transparent;font-size:20px;border-radius:8px;padding:5px;cursor:pointer}.emoji-picker button:hover{background:rgba(139,92,246,.2)}.reply-banner{display:none;margin:0 12px 8px;padding:8px 11px;border-left:3px solid #8b5cf6;background:rgba(139,92,246,.08);border-radius:9px;color:var(--muted);font-size:12px}.reply-banner button{float:right;border:0;background:transparent;color:#aaa;cursor:pointer}
 .giveaway-card{animation:none!important;transform:none!important;} .giveaway-countdown{font-variant-numeric:tabular-nums;min-width:180px;}
+
+
+/* INVYX — smooth interaction layer */
+html{scroll-behavior:smooth}
+*,*::before,*::after{box-sizing:border-box}
+button,.btn,a,.nav-item,.sidebar-item,.tab,.card,.guide-card,.giveaway-card,.profile-card,.action,.icon-btn,[role="button"]{
+  -webkit-tap-highlight-color:transparent;
+}
+button,.btn,.action,.icon-btn,[role="button"]{
+  position:relative;
+  overflow:hidden;
+  transition:transform .18s cubic-bezier(.22,1,.36,1),
+             box-shadow .22s ease,
+             background-color .22s ease,
+             border-color .22s ease,
+             color .18s ease,
+             opacity .18s ease;
+  will-change:transform;
+}
+button:hover,.btn:hover,.action:hover,.icon-btn:hover,[role="button"]:hover{
+  transform:translateY(-1px);
+}
+button:active,.btn:active,.action:active,.icon-btn:active,[role="button"]:active{
+  transform:translateY(1px) scale(.985);
+  transition-duration:.07s;
+}
+button:focus-visible,.btn:focus-visible,.action:focus-visible,.icon-btn:focus-visible,[role="button"]:focus-visible,
+a:focus-visible,.nav-item:focus-visible,.tab:focus-visible{
+  outline:2px solid rgba(139,92,246,.72);
+  outline-offset:3px;
+}
+.nav-item,.sidebar-item,.tab,a{
+  transition:transform .2s cubic-bezier(.22,1,.36,1),color .2s ease,background .22s ease,opacity .2s ease;
+}
+.nav-item:hover,.sidebar-item:hover,.tab:hover{transform:translateX(2px)}
+a:hover{opacity:.92}
+.card,.guide-card,.giveaway-card,.profile-card{
+  transition:transform .28s cubic-bezier(.22,1,.36,1),box-shadow .3s ease,border-color .25s ease,background .3s ease;
+}
+.card:hover,.guide-card:hover,.giveaway-card:hover{transform:translateY(-3px)}
+.profile-card:hover{transform:translateY(-2px)}
+input,textarea,select{
+  transition:border-color .2s ease,box-shadow .22s ease,background-color .22s ease,transform .18s ease;
+}
+input:focus,textarea:focus,select:focus{
+  transform:translateY(-1px);
+  box-shadow:0 0 0 3px rgba(139,92,246,.12),0 8px 28px rgba(0,0,0,.12);
+}
+.modal,.modal-overlay,.drawer,.dropdown,.toast,.notification,.tooltip{
+  animation:invyxSmoothIn .24s cubic-bezier(.22,1,.36,1);
+}
+@keyframes invyxSmoothIn{
+  from{opacity:0;transform:translateY(8px) scale(.985)}
+  to{opacity:1;transform:translateY(0) scale(1)}
+}
+.ripple-effect{
+  position:absolute;
+  width:18px;height:18px;
+  border-radius:999px;
+  pointer-events:none;
+  background:rgba(255,255,255,.26);
+  transform:translate(-50%,-50%) scale(0);
+  animation:invyxRipple .55s ease-out forwards;
+}
+@keyframes invyxRipple{
+  to{transform:translate(-50%,-50%) scale(14);opacity:0}
+}
+/* Keep decorative/spinning UI independent from interaction transforms. */
+.wheel,.wheel-wrap,.wheel-container,.wheel-pointer{transform-origin:center}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+}
+
+</style>
+
+<style id="invyx-premium-redesign">
+/* INVYX — premium visual redesign */
+:root{
+  --bg:#05050a;--bg2:#080811;--surface:rgba(15,15,27,.78);--surface2:rgba(20,20,35,.82);--surface3:#1a1a2b;
+  --border:rgba(255,255,255,.08);--border2:rgba(255,255,255,.15);--text:#fafaff;--muted:#9c9cb0;--muted2:#69697b;
+  --purple:#9b6cff;--purple2:#6d3df0;--blue:#4d8dff;--cyan:#39d9ff;--pink:#ff55c8;--green:#4de1a4;
+  --shadow:0 24px 80px rgba(0,0,0,.42);--glow:0 0 70px rgba(139,92,246,.18)
+}
+body{
+ background:
+ radial-gradient(900px 500px at 8% -8%,rgba(139,92,246,.16),transparent 65%),
+ radial-gradient(800px 480px at 95% 12%,rgba(34,211,238,.10),transparent 65%),
+ radial-gradient(700px 500px at 50% 100%,rgba(255,85,200,.07),transparent 70%),#05050a;
+ color:var(--text);overflow-x:hidden
+}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;opacity:.24;background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:56px 56px;mask-image:linear-gradient(to bottom,black,transparent 85%)}
+.nav{background:rgba(5,5,10,.72)!important;border-bottom:1px solid rgba(255,255,255,.07)!important;backdrop-filter:blur(22px) saturate(150%);box-shadow:0 12px 40px rgba(0,0,0,.22)}
+.nav-inner{min-height:72px!important}
+.logo{font-size:21px!important;letter-spacing:.14em!important;font-weight:1000!important;text-shadow:0 0 24px rgba(139,92,246,.45);transition:transform .3s ease,text-shadow .3s ease}.logo:hover{transform:translateY(-1px) scale(1.03);text-shadow:0 0 35px rgba(139,92,246,.75)}
+.nav-links{gap:4px!important}.nav-links button{border-radius:12px!important;padding:9px 12px!important;color:#a7a7ba!important}.nav-links button:hover{color:#fff!important;background:rgba(255,255,255,.055)!important}
+.nav-actions{gap:10px!important}.points{border:1px solid rgba(155,108,255,.22)!important;background:linear-gradient(135deg,rgba(139,92,246,.14),rgba(34,211,238,.06))!important;box-shadow:0 0 25px rgba(139,92,246,.08)}
+.avatar{border:1px solid rgba(255,255,255,.15)!important;box-shadow:0 0 0 4px rgba(139,92,246,.05),0 8px 24px rgba(0,0,0,.35)}
+.container{max-width:1320px!important;padding-top:28px!important}
+.page{animation:pageReveal .42s cubic-bezier(.22,1,.36,1)}
+@keyframes pageReveal{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.hero{position:relative;min-height:560px!important;padding:72px 0 60px!important;display:grid!important;grid-template-columns:1.05fr .95fr!important;gap:45px!important;align-items:center!important}
+.hero:before{content:"";position:absolute;width:520px;height:520px;left:-180px;top:0;background:radial-gradient(circle,rgba(139,92,246,.18),transparent 68%);filter:blur(8px);pointer-events:none}
+.hero>div:first-child{position:relative;z-index:2}.hero h1{font-size:clamp(48px,6vw,82px)!important;line-height:.98!important;letter-spacing:-.055em!important;max-width:760px!important;margin:18px 0!important}.hero p{max-width:670px!important;font-size:17px!important;line-height:1.75!important;color:#a9a9bc!important}
+.badge{border:1px solid rgba(155,108,255,.28)!important;background:linear-gradient(135deg,rgba(155,108,255,.14),rgba(34,211,238,.06))!important;box-shadow:0 0 28px rgba(139,92,246,.10);letter-spacing:.1em!important}
+.gradient-text{display:inline!important;position:relative!important;background:linear-gradient(100deg,#fff 0%,#b48cff 38%,#55dfff 72%,#ff76d4 100%)!important;background-size:200% auto!important;background-color:transparent!important;animation:gradientShift 7s ease infinite;background-clip:text!important;-webkit-background-clip:text!important;-webkit-text-fill-color:transparent!important;color:transparent!important;box-decoration-break:clone;-webkit-box-decoration-break:clone;line-height:inherit!important}
+@keyframes gradientShift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+.hero-buttons{gap:12px!important;margin-top:28px!important}.btn{border-radius:13px!important;font-weight:800!important;letter-spacing:-.01em}.btn-primary{background:linear-gradient(135deg,#8b5cf6,#5d42f1 52%,#3f8cff)!important;border:1px solid rgba(255,255,255,.18)!important;box-shadow:0 14px 35px rgba(100,70,240,.28),inset 0 1px 0 rgba(255,255,255,.25)!important}.btn-primary:hover{box-shadow:0 18px 45px rgba(100,70,240,.38),0 0 28px rgba(139,92,246,.18)!important}
+.btn-light{background:rgba(255,255,255,.045)!important;border:1px solid rgba(255,255,255,.12)!important;backdrop-filter:blur(12px)}
+.hero-visual{position:relative;min-height:450px!important;border-radius:34px;border:1px solid rgba(255,255,255,.09);background:linear-gradient(145deg,rgba(255,255,255,.055),rgba(255,255,255,.015));box-shadow:var(--shadow),var(--glow);overflow:hidden}
+.hero-visual:before{content:"";position:absolute;inset:15%;border-radius:50%;background:radial-gradient(circle,rgba(139,92,246,.25),rgba(34,211,238,.08) 35%,transparent 68%);filter:blur(10px);animation:heroPulse 5s ease-in-out infinite}.hero-visual:after{content:"INVYX";position:absolute;inset:0;display:grid;place-items:center;font-size:120px;font-weight:1000;letter-spacing:.12em;color:rgba(255,255,255,.035);text-shadow:0 0 80px rgba(139,92,246,.25)}
+@keyframes heroPulse{50%{transform:scale(1.08);opacity:.75}}
+.orb{z-index:2!important;filter:blur(1px);box-shadow:0 0 35px currentColor}.floating-card{z-index:3!important;background:rgba(10,10,18,.68)!important;border:1px solid rgba(255,255,255,.12)!important;backdrop-filter:blur(18px)!important;box-shadow:0 18px 50px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.07)!important;border-radius:18px!important}
+.section{padding:30px 0 65px!important}.section-title{margin-bottom:22px!important}.section-title h2{font-size:30px!important;letter-spacing:-.035em!important}.section-title p{color:#89899d!important}
+.card,.guide-card,.giveaway-card,.profile-card,.chat-container,.sidebar,.dashboard-card{background:linear-gradient(145deg,rgba(20,20,34,.82),rgba(10,10,18,.78))!important;border:1px solid rgba(255,255,255,.085)!important;box-shadow:0 20px 60px rgba(0,0,0,.25),inset 0 1px 0 rgba(255,255,255,.035)!important;backdrop-filter:blur(16px)}
+.card:hover,.guide-card:hover,.giveaway-card:hover{border-color:rgba(155,108,255,.24)!important;box-shadow:0 26px 70px rgba(0,0,0,.32),0 0 32px rgba(139,92,246,.08)!important}
+.grid{gap:18px!important}.guide-card,.giveaway-card{border-radius:20px!important;overflow:hidden}.guide-card:before,.giveaway-card:before{content:"";display:block;height:2px;background:linear-gradient(90deg,transparent,#8b5cf6,#22d3ee,#ff55c8,transparent);opacity:.55}
+input,textarea,select{background:rgba(255,255,255,.035)!important;border:1px solid rgba(255,255,255,.10)!important;border-radius:12px!important;color:#fff!important}input::placeholder,textarea::placeholder{color:#68687b!important}input:focus,textarea:focus,select:focus{border-color:rgba(139,92,246,.55)!important;box-shadow:0 0 0 4px rgba(139,92,246,.09),0 12px 30px rgba(0,0,0,.18)!important}
+select option{background:#11111c;color:#fff}
+.creator-apply-card{position:relative;overflow:hidden!important}.creator-apply-card:after{content:"✦";position:absolute;right:35px;top:15px;font-size:110px;color:rgba(139,92,246,.045);transform:rotate(15deg)}
+/* premium section accents */
+#guides .card[style*="margin-bottom"]{padding:14px!important;background:rgba(10,10,18,.72)!important}.chat-container{border-radius:24px!important}.modal{border:1px solid rgba(255,255,255,.12)!important;box-shadow:0 30px 100px rgba(0,0,0,.65),0 0 50px rgba(139,92,246,.12)!important;backdrop-filter:blur(24px)}
+.toast{border:1px solid rgba(255,255,255,.12)!important;box-shadow:0 18px 50px rgba(0,0,0,.45)!important;background:rgba(17,17,28,.9)!important;backdrop-filter:blur(18px)}
+/* creator badge */
+.creator-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 8px;border-radius:999px;background:linear-gradient(135deg,rgba(139,92,246,.22),rgba(34,211,238,.10));border:1px solid rgba(139,92,246,.28);color:#d9cbff;box-shadow:0 0 18px rgba(139,92,246,.12)}
+@media(max-width:900px){.hero{grid-template-columns:1fr!important;min-height:auto!important;padding-top:42px!important}.hero-visual{min-height:330px!important}.hero h1{font-size:52px!important}.nav-links{display:none}.container{padding-left:18px!important;padding-right:18px!important}}
+@media(max-width:560px){.hero h1{font-size:42px!important}.hero-visual{min-height:280px!important}.floating-card{transform:scale(.88)}.section-title h2{font-size:25px!important}.grid{grid-template-columns:1fr!important}}
+</style>
+
+<style id="invyx-stability-fixes">
+/* Stability fixes: prevent dynamic sections from flashing/restarting animations. */
+.giveaway-card,.card,.profile-card,.guide-card{animation:none !important;}
+.giveaway-card *, .giveaway-card::before, .giveaway-card::after{animation:none !important;}
+.page.active{animation:invyxPageIn .22s ease both;}
+@keyframes invyxPageIn{from{opacity:.98;transform:translateY(2px)}to{opacity:1;transform:none}}
+.modal.show .modal-card,.modal.show .modal-content{animation:invyxModalIn .2s ease both;}
+@keyframes invyxModalIn{from{opacity:0;transform:translateY(8px) scale(.985)}to{opacity:1;transform:none}}
+button,.btn,.action,.icon-btn,[role="button"],input,select,textarea{transition:transform .16s ease,opacity .16s ease,background-color .16s ease,border-color .16s ease,box-shadow .16s ease,color .16s ease !important;}
+button:active,.btn:active,.action:active,.icon-btn:active,[role="button"]:active{transform:translateY(1px) scale(.985);}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.001ms !important;animation-iteration-count:1 !important;scroll-behavior:auto !important;transition-duration:.001ms !important;}}
 </style>
 </head>
 
@@ -3303,7 +3443,13 @@ function renderCreatorManagement(container){
             ${db.users.filter(u=>u.id!==currentUser()?.id && !u.creatorAccess).map(u=>`<option value="${escapeHtml(u.id)}">${escapeHtml(u.username)} · ${escapeHtml(u.role||'USER')}</option>`).join('')}
           </select>
         </div>
-        <button class="btn btn-primary" onclick="grantCreatorDirect(document.getElementById('directCreatorUser').value)">✦ Add as Content Creator</button>
+        <button class="btn btn-primary" type="button" onclick="grantCreatorDirect(document.getElementById('directCreatorUser').value)">✦ Add as Content Creator</button>
+        <button class="btn btn-light" type="button" onclick="grantCreatorDirect(currentUser().id)">👑 Give Myself Creator Access</button>
+      </div>
+      <div class="card" style="margin-top:12px;background:rgba(250,204,21,.05)">
+        <strong>Owner Creator Status</strong>
+        <p style="color:var(--muted);font-size:12px;margin:6px 0 10px">${currentUser()?.creatorAccess ? 'You currently have the ✦ Content Creator badge.' : 'You currently do not have the Content Creator badge.'}</p>
+        ${currentUser()?.creatorAccess ? `<button class="btn btn-danger btn-small" type="button" onclick="removeCreator(currentUser().id)">Remove My Creator Access</button>` : `<button class="btn btn-primary btn-small" type="button" onclick="grantCreatorDirect(currentUser().id)">✦ Give Myself Creator Access</button>`}
       </div>
     </div>
     <div class="card"><h3>Current Content Creators (${active.length})</h3>${active.length?`<div class="table-wrap" style="margin-top:10px"><table><thead><tr><th>User</th><th>Granted</th><th>Action</th></tr></thead><tbody>${active.map(u=>`<tr><td>${creatorNameHtml(u)}</td><td>${u.creatorApprovedAt?new Date(u.creatorApprovedAt).toLocaleString():'—'}</td><td><button class="btn btn-danger btn-small" onclick="removeCreator('${u.id}')">Remove Creator Access</button></td></tr>`).join('')}</tbody></table></div>`:'<p style="color:var(--muted);margin-top:10px">No active Content Creators.</p>'}</div>`;
@@ -3555,6 +3701,20 @@ function ownerSection(sec, btn){
         </div>
         <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn btn-primary">Save Wheel Settings</button><button type="button" class="btn btn-light" onclick="resetAllWheelTimes()">🔄 Reset Wheel Time For Everyone</button></div>
       </form>
+      <div class="card" style="margin-top:18px">
+        <h3>Reset One Player's Wheel ⏱️</h3>
+        <p style="color:var(--muted);font-size:12px;margin:6px 0 12px">Choose exactly who should get their waiting time reset. This does not affect anyone else.</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:end">
+          <div class="field" style="flex:1;min-width:240px;margin:0">
+            <label>Player</label>
+            <select id="wheelResetUser">
+              <option value="">Choose a player...</option>
+              ${db.users.map(u=>`<option value="${escapeHtml(u.id)}">${escapeHtml(u.username)} · ${escapeHtml(roleLabel(u.role))}${u.lastWheelAt ? ` · Last spin ${new Date(u.lastWheelAt).toLocaleString()}` : ' · Ready'}</option>`).join('')}
+            </select>
+          </div>
+          <button class="btn btn-primary" type="button" onclick="resetWheelForUser(document.getElementById('wheelResetUser').value)">⏱️ Reset This Player</button>
+        </div>
+      </div>
       <div class="card" style="margin-top:18px">
         <strong>Current setup</strong>
         <p style="color:var(--muted);font-size:12px;margin-top:6px">${Number(w.cost)} XP per spin · ${Number(w.cooldownHours)} hour cooldown · Rewards: ${w.prizes.map(x=>`${Number(x)} XP`).join(' · ')}</p>
@@ -3994,6 +4154,18 @@ function resetAllWheelTimes(){
   ownerSection("wheel");
   renderWheelVisual();
   updateWheelState();
+}
+function resetWheelForUser(userId){
+  if(!isOwner()) return toast("Owner access required.","error");
+  if(!userId) return toast("Choose a player first.","error");
+  const u=db.users.find(x=>x.id===userId);
+  if(!u) return toast("Player not found.","error");
+  u.lastWheelAt=0;
+  logAction(`Owner reset Daily Wheel cooldown for ${u.username}`,currentUser().username);
+  saveDB();
+  toast(`🎡 ${u.username} can spin the wheel again.`);
+  ownerSection("wheel");
+  if(currentUser()?.id===u.id) updateWheelState();
 }
 
 function renderThemeManagement(container, ownerMode=false){
@@ -5058,6 +5230,24 @@ renderReviews();
 })();
 </script>
 
-<script>setInterval(()=>{ try{ updateGiveawayCountdowns(); }catch(e){} },1000);</script>
+
+<script>
+/* INVYX — lightweight click/ripple feedback; delegated so dynamic UI keeps it. */
+(function(){
+  const selector='button,.btn,.action,.icon-btn,[role="button"]';
+  document.addEventListener('pointerdown',function(e){
+    const el=e.target.closest?.(selector);
+    if(!el || el.disabled || el.dataset.noRipple==='true') return;
+    const r=el.getBoundingClientRect();
+    const dot=document.createElement('span');
+    dot.className='ripple-effect';
+    dot.style.left=(e.clientX-r.left)+'px';
+    dot.style.top=(e.clientY-r.top)+'px';
+    el.appendChild(dot);
+    dot.addEventListener('animationend',()=>dot.remove(),{once:true});
+  },{passive:true});
+})();
+</script>
+
 </body>
 </html>
